@@ -3,6 +3,7 @@
 <head>
     <title>Excel to JSON Converter</title>
     <link rel="icon" type="image/png" href="./icons/nttcmis.png">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -112,6 +113,25 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* Add styles for file name display */
+        .file-name {
+            margin-top: 0.5rem;
+            color: #4CAF50;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Add styles for error state */
+        .upload-area.error {
+            border-color: #ff3333;
+        }
+
+        /* Add disabled state for button */
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -122,11 +142,12 @@
                 <p>Drag & Drop your Excel file here or</p>
                 <input type="file" id="fileInput" name="excelFile" accept=".xlsx,.xls" required>
                 <button type="button" class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                <div class="file-name" id="fileName"></div>
             </div>
             <div class="progress-bar" id="progressBar">
                 <div class="progress" id="progress"></div>
             </div>
-            <button type="submit" class="btn">Convert to JSON</button>
+            <button type="submit" class="btn" id="convertBtn" disabled>Convert to JSON</button>
         </form>
         <div id="status"></div>
     </div>
