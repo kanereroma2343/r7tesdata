@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const uploadForm = document.getElementById('uploadForm');
@@ -6,33 +6,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const progress = document.getElementById('progress');
     const status = document.getElementById('status');
 
-    // Drag and drop handlers
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = '#4CAF50';
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
     });
 
-    dropZone.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = '#ccc';
+    // Highlight drop zone when dragging over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
     });
 
-    dropZone.addEventListener('drop', (e) => {
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    // Handle file input change
+    fileInput.addEventListener('change', handleFiles);
+
+    // Handle form submission
+    uploadForm.addEventListener('submit', handleSubmit);
+
+    function preventDefaults(e) {
         e.preventDefault();
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            status.textContent = `File selected: ${files[0].name}`;
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+        dropZone.classList.add('hover');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('hover');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        handleFiles();
+    }
+
+    function handleFiles() {
+        const file = fileInput.files[0];
+        if (file) {
+            status.textContent = `Selected file: ${file.name}`;
         }
-    });
+    }
 
-    // Form submission handler
-    uploadForm.addEventListener('submit', async (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
         const file = fileInput.files[0];
         
         if (!file) {
             status.textContent = 'Please select a file first.';
+            return;
+        }
+
+        if (!file.name.match(/\.(xlsx|xls)$/)) {
+            status.textContent = 'Please select an Excel file (.xlsx or .xls)';
             return;
         }
 
@@ -45,38 +80,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const response = await fetch('/convert', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    progress.style.width = percentCompleted + '%';
+                }
             });
 
             if (!response.ok) {
-                throw new Error('Conversion failed');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const jsonData = await response.json();
+            const result = await response.json();
             
             // Create and trigger download of JSON file
-            const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
+            a.style.display = 'none';
             a.href = url;
-            a.download = file.name.replace(/\.[^/.]+$/, '') + '.json';
+            a.download = file.name.replace(/\.(xlsx|xls)$/, '.json');
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-
-            status.textContent = 'Conversion completed! File downloaded.';
-            progress.style.width = '100%';
+            
+            status.textContent = 'Conversion completed! JSON file downloaded.';
         } catch (error) {
-            status.textContent = 'Error: ' + error.message;
+            console.error('Error:', error);
+            status.textContent = 'Error during conversion. Please try again.';
+        } finally {
+            progress.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+            }, 1000);
         }
-    });
-
-    // File input change handler
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            status.textContent = `File selected: ${file.name}`;
-        }
-    });
+    }
 });
