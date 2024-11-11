@@ -45,32 +45,48 @@ document.addEventListener('DOMContentLoaded', function() {
             progressBar.style.display = 'block';
             progress.style.width = '50%';
 
-            const formData = new FormData();
-            formData.append('excelFile', file);
+            // Read the file using FileReader
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    // Convert the Excel data to JSON using XLSX
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get the first worksheet
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    // Convert to JSON
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                    
+                    progress.style.width = '100%';
+                    status.textContent = 'Conversion successful!';
 
-            const response = await fetch('/convert', {
-                method: 'POST',
-                body: formData
-            });
+                    // Download the JSON file
+                    const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = file.name.replace(/\.[^/.]+$/, '') + '.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error('Error:', error);
+                    status.textContent = 'Error: Conversion failed';
+                    progress.style.width = '0%';
+                }
+            };
 
-            if (!response.ok) {
-                throw new Error('Conversion failed');
-            }
+            reader.onerror = function() {
+                status.textContent = 'Error: Failed to read file';
+                progress.style.width = '0%';
+            };
 
-            const result = await response.json();
-            progress.style.width = '100%';
-            status.textContent = 'Conversion successful!';
-
-            // Download the JSON file
-            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = file.name.replace(/\.[^/.]+$/, '') + '.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            // Read the file as array buffer
+            reader.readAsArrayBuffer(file);
 
         } catch (error) {
             console.error('Error:', error);
