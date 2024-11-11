@@ -55,11 +55,3 @@ function downloadJSON(jsonString, filename) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
-
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const file = document.getElementById('fileInput').files[0];
-    if (file) {
-        processExcelFile(file);
-    }
-}); 
