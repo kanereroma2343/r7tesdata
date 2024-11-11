@@ -151,6 +151,63 @@
         </form>
         <div id="status"></div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const statusDiv = document.getElementById('status');
+        const uploadForm = document.getElementById('uploadForm');
+
+        // Show file name when a file is selected
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = `Selected File: ${file.name}`;
+                fileNameDisplay.style.display = 'block';
+                convertBtn.disabled = false; // Enable the convert button
+            }
+        });
+
+        // Handle form submission
+        uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const file = fileInput.files[0];
+            if (!file) {
+                statusDiv.textContent = 'No file selected';
+                statusDiv.style.color = 'red';
+                return;
+            }
+
+            // Read the Excel file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
+
+                // Convert the first sheet to JSON
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                // Show the result in the status div
+                statusDiv.textContent = 'Conversion successful!';
+                statusDiv.style.color = 'green';
+
+                // Log the JSON data (you can also send it to a server)
+                console.log(jsonData);
+
+                // Optionally, you can add code here to save the JSON file to the client's computer
+            };
+
+            reader.onerror = function(error) {
+                statusDiv.textContent = 'Error reading the file';
+                statusDiv.style.color = 'red';
+            };
+
+            // Start reading the file
+            reader.readAsBinaryString(file);
+        });
+    </script>
 </body>
 </html>
