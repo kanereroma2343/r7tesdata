@@ -1,25 +1,33 @@
 const express = require('express');
-const multer = require('multer');
-const XLSX = require('xlsx');
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const port = 3000;
 
-app.use(express.static('public'));
+app.use(express.json());
 
-app.post('/convert', upload.single('excelFile'), (req, res) => {
-    try {
-        const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        
-        res.json(jsonData);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+// Serve the HTML file
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle saving JSON to a file
+app.post('/save-json', (req, res) => {
+    const jsonData = req.body;
+
+    // Path to save the data.json file
+    const filePath = path.join(__dirname, 'data.json');
+
+    // Write the JSON data to the file
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+        if (err) {
+            console.error('Error writing to file', err);
+            return res.status(500).json({ message: 'Error saving the data' });
+        }
+        res.status(200).json({ message: 'Data saved successfully' });
+    });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
