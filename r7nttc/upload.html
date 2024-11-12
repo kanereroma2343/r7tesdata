@@ -178,12 +178,15 @@
                     body: JSON.stringify({ data: convertedData })
                 });
 
+                // Log the response for debugging
+                const responseText = await response.text(); // Get the response as text
+                console.log('Response from server:', responseText); // Log the response
+
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Server returned ' + response.status);
+                    throw new Error('Server returned ' + response.status);
                 }
 
-                const result = await response.json();
+                const result = JSON.parse(responseText); // Parse the response as JSON
                 statusDiv.textContent = 'Data successfully updated!';
                 statusDiv.style.color = 'green';
                 
