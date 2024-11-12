@@ -3,113 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Excel and Convert to JSON</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #000428, #004e92);
-            color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 600px;
-            background: linear-gradient(135deg, #333, #004e92);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            text-align: center;
-        }
-        h2 {
-            color: #ffffff;
-        }
-        .btn {
-            background: linear-gradient(135deg, #004e92, #3498db);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin: 5px 0;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background: linear-gradient(135deg, #00366f, #2980b9);
-        }
-    </style>
+    <title>Upload JSON File</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Upload Excel File to Convert to JSON</h2>
-        <input type="file" id="fileInput" accept=".xlsx, .xls">
-        <button class="btn" id="uploadButton">Convert and Upload</button>
-    </div>
-
-    <!-- Include xlsx library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script>
-        document.getElementById('uploadButton').addEventListener('click', function() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const data = new Uint8Array(event.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetName = workbook.SheetNames[0];
-                    const sheet = workbook.Sheets[sheetName];
-
-                    // Parse the sheet to JSON, starting from row 7
-                    const rawData = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 6 });
-
-                    // Filter and map only the required columns
-                    const filteredData = rawData.map(row => ({
-                        "D": row[3],  // Column D
-                        "E": row[4],  // Column E
-                        "F": row[5],  // Column F
-                        "G": row[6],  // Column G
-                        "S": row[18], // Column S
-                        "V": row[21], // Column V
-                        "AD": row[29],// Column AD
-                        "AE": row[30],// Column AE
-                        "AG": row[32] // Column AG
-                    })).filter(row => Object.values(row).some(value => value !== undefined));
-
-                    // Convert filtered data to JSON
-                    const jsonData = JSON.stringify(filteredData);
-
-                    // Send JSON data to the server to update data.json
-                    fetch('/api/update-data', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: jsonData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Data updated successfully!');
-                        } else {
-                            alert('Error updating data.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error updating data.');
-                    });
-                };
-                reader.readAsArrayBuffer(file);
-            } else {
-                alert('Please select an Excel file to upload.');
-            }
-        });
-    </script>
+    <h1>Upload JSON File</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="jsonFile">Choose a JSON file:</label>
+        <input type="file" id="jsonFile" name="jsonFile" accept=".json" required>
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
 </body>
 </html>
