@@ -1,20 +1,15 @@
-// /api/save-json.js
-import { promises as fs } from 'fs';
+// api/api-savejson.js
+const express = require('express');
+const router = express.Router();
 
-export default async (req, res) => {
-    if (req.method === 'POST') {
-        try {
-            const { data } = req.body;
+router.post('/save-json', (req, res) => {
+    const data = req.body.data; // Access the data sent in the request body
 
-            // Save the data to a JSON file
-            await fs.writeFile('/tmp/data.json', JSON.stringify(data, null, 2));
+    // Process the data as needed
+    console.log('Received data:', data);
 
-            return res.status(200).json({ message: 'Data saved successfully' });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Error saving data' });
-        }
-    } else {
-        return res.status(405).json({ message: 'Method not allowed' });
-    }
-};
+    // Send a response back to the client
+    res.status(200).json({ message: 'Data saved successfully!' });
+});
+
+module.exports = router;
