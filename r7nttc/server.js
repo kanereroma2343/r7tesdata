@@ -3,7 +3,7 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'upload/' });
 
 app.post('/upload', upload.single('jsonFile'), (req, res) => {
     // Check if a file was uploaded
