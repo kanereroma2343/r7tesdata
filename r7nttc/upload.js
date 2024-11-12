@@ -1,22 +1,42 @@
-// Function to handle file upload
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const message = document.getElementById('message');
 
-        const formData = new FormData(this);
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle success response
-            document.getElementById('message').innerText = 'File uploaded successfully!';
-        })
-        .catch(error => {
-            // Handle error response
-            document.getElementById('message').innerText = 'Error uploading file.';
-        });
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = fileInput.files[0];
+        if (!file) {
+            message.textContent = 'Please select a file.';
+            message.className = 'mt-4 text-center text-red-500';
+            return;
+        }
+
+        if (file.name !== 'data.json') {
+            message.textContent = 'Please select a file named data.json.';
+            message.className = 'mt-4 text-center text-red-500';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                message.textContent = 'File uploaded successfully!';
+                message.className = 'mt-4 text-center text-green-500';
+            } else {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            message.textContent = 'Error uploading file. Please try again.';
+            message.className = 'mt-4 text-center text-red-500';
+        }
     });
-}); 
+});
