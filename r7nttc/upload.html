@@ -5,28 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload JSON</title>
     <style>
-        /* Add your CSS styles here */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #000428, #004e92);
+            color: #f0f0f0;
+            margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        h1 {
-            color: #333;
+
+        .container {
+            max-width: 600px;
+            background: linear-gradient(135deg, #333, #004e92);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            text-align: center;
         }
-        input[type="file"] {
-            margin-bottom: 10px;
+
+        h2 {
+            color: #ffffff;
         }
-        button {
-            padding: 10px 15px;
-            background-color: #5cb85c;
+
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: #004e92;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #004e92, #3498db);
             color: white;
             border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
             cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin: 5px 0;
+            transition: background 0.3s;
         }
-        button:hover {
-            background-color: #4cae4c;
+
+        .btn:hover {
+            background: linear-gradient(135deg, #00366f, #2980b9);
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .progress {
+            height: 20px;
+            width: 0;
+            background-color: #3498db;
+            border-radius: 5px;
+        }
+
+        #status {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
