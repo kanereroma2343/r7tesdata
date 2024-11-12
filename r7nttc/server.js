@@ -1,32 +1,42 @@
-// server.js
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const message = document.getElementById('message');
 
-const app = express();
-const PORT = 3000;
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-// Set up storage for uploaded files
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'upload'); // Save to 'upload' folder
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // Use original file name
-    }
-});
+        const file = fileInput.files[0];
+        if (!file) {
+            message.textContent = 'Please select a file.';
+            message.className = 'mt-4 text-center text-red-500';
+            return;
+        }
 
-const upload = multer({ storage: storage });
+        if (file.name !== 'data.json') {
+            message.textContent = 'Please select a file named data.json.';
+            message.className = 'mt-4 text-center text-red-500';
+            return;
+        }
 
-// Serve static files (HTML)
-app.use(express.static(__dirname));
+        const formData = new FormData();
+        formData.append('file', file);
 
-// Handle file upload
-app.post('/upload', upload.single('jsonFile'), (req, res) => {
-    res.send('File uploaded successfully!');
-});
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+            if (response.ok) {
+                message.textContent = 'File uploaded successfully!';
+                message.className = 'mt-4 text-center text-green-500';
+            } else {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            message.textContent = 'Error uploading file. Please try again.';
+            message.className = 'mt-4 text-center text-red-500';
+        }
+    });
 });
