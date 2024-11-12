@@ -142,6 +142,9 @@
                 statusDiv.textContent = 'Conversion successful! Click Update to save the data.';
                 statusDiv.style.color = 'green';
 
+                // Automatically download the JSON file
+                downloadJSON(convertedData, 'data.json');
+
                 // Hide convert button and show update button
                 convertBtn.style.display = 'none';
                 updateBtn.style.display = 'block';
@@ -178,15 +181,12 @@
                     body: JSON.stringify({ data: convertedData })
                 });
 
-                // Log the response for debugging
-                const responseText = await response.text(); // Get the response as text
-                console.log('Response from server:', responseText); // Log the response
-
                 if (!response.ok) {
-                    throw new Error('Server returned ' + response.status);
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Server returned ' + response.status);
                 }
 
-                const result = JSON.parse(responseText); // Parse the response as JSON
+                const result = await response.json();
                 statusDiv.textContent = 'Data successfully updated!';
                 statusDiv.style.color = 'green';
                 
@@ -204,6 +204,19 @@
                 updateBtn.disabled = false;
             }
         });
+
+        // Function to download JSON data as a file
+        function downloadJSON(data, filename) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
