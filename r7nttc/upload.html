@@ -100,19 +100,18 @@
         <input type="file" id="fileInput" accept=".json">
         <button class="btn" id="uploadButton">Upload</button>
     </div>
-
     <script>
         document.getElementById('uploadButton').addEventListener('click', function() {
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
-
+    
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const jsonData = event.target.result;
-
+    
                     // Send the JSON data to the server to update data.json
-                    fetch('/update-data', {
+                    fetch('/api/update-data', {  // Make sure this matches your API path
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
