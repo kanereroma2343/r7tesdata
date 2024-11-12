@@ -3,115 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload JSON</title>
+    <title>Upload Excel and Convert to JSON</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #000428, #004e92);
             color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
-
         .container {
             max-width: 600px;
-            background: linear-gradient(135deg, #1e1e1e, #004e92);
+            background: linear-gradient(135deg, #333, #004e92);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        h1 {
-            color: #ffffff;
-            margin-bottom: 20px;
-        }
-
-        .upload-area {
-            border: 2px dashed #3498db;
-            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
-            color: #f0f0f0;
-            transition: background-color 0.3s, border-color 0.3s;
+            text-align: center;
         }
-
-        .upload-area:hover {
-            background-color: rgba(52, 152, 219, 0.2);
-            border-color: #004e92;
+        h2 {
+            color: #ffffff;
         }
-
         .btn {
             background: linear-gradient(135deg, #004e92, #3498db);
-            color: #ffffff;
+            color: white;
             border: none;
             border-radius: 5px;
-            padding: 12px 20px;
+            padding: 10px 15px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
-            margin: 10px 0;
+            margin: 5px 0;
             transition: background 0.3s;
         }
-
         .btn:hover {
             background: linear-gradient(135deg, #00366f, #2980b9);
-        }
-
-        input[type="file"] {
-            color: #ffffff;
-            margin: 10px 0;
-            width: 100%;
-            padding: 10px;
-            background-color: #1e1e1e;
-            border: 2px solid #3498db;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="file"]::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-        
-        input[type="file"]::before {
-            content: 'Choose File';
-            display: inline-block;
-            color: #3498db;
-            background: transparent;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        input[type="file"]:hover::before {
-            background-color: rgba(52, 152, 219, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Upload JSON File</h1>
-        <input type="file" id="fileInput" accept=".json">
-        <button class="btn" id="uploadButton">Upload</button>
+        <h2>Upload Excel File to Convert to JSON</h2>
+        <input type="file" id="fileInput" accept=".xlsx, .xls">
+        <button class="btn" id="uploadButton">Convert and Upload</button>
     </div>
+
+    <!-- Include xlsx library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script>
         document.getElementById('uploadButton').addEventListener('click', function() {
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
-    
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    const jsonData = event.target.result;
-    
-                    // Send the JSON data to the server to update data.json
-                    fetch('r7tesdata/r7nttc/api/update-data', {  // Updated API path
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+
+                    // Parse the sheet to JSON, starting from row 7
+                    const rawData = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 6 });
+
+                    // Filter and map only the required columns
+                    const filteredData = rawData.map(row => ({
+                        "D": row[3],  // Column D
+                        "E": row[4],  // Column E
+                        "F": row[5],  // Column F
+                        "G": row[6],  // Column G
+                        "S": row[18], // Column S
+                        "V": row[21], // Column V
+                        "AD": row[29],// Column AD
+                        "AE": row[30],// Column AE
+                        "AG": row[32] // Column AG
+                    })).filter(row => Object.values(row).some(value => value !== undefined));
+
+                    // Convert filtered data to JSON
+                    const jsonData = JSON.stringify(filteredData);
+
+                    // Send JSON data to the server to update data.json
+                    fetch('/api/update-data', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -130,9 +105,9 @@
                         alert('Error updating data.');
                     });
                 };
-                reader.readAsText(file);
+                reader.readAsArrayBuffer(file);
             } else {
-                alert('Please select a JSON file to upload.');
+                alert('Please select an Excel file to upload.');
             }
         });
     </script>
