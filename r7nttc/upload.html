@@ -3,143 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload JSON File</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fc;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        label {
-            font-size: 16px;
-            color: #555;
-            display: block;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            background-color: #fafafa;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .info-message {
-            color: #ff6f61;
-            margin-top: 10px;
-        }
-
-    </style>
+    <title>Upload data.json</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div>
-        <h1>Upload JSON File</h1>
-        <form id="uploadForm">
-            <label for="jsonFile">Choose a JSON file:</label>
-            <input type="file" id="jsonFile" name="jsonFile" accept=".json" required>
-            <div class="info-message" id="fileInfo"></div>
-            <br>
-            <button type="submit">Upload</button>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-2xl font-bold mb-4">Upload data.json</h1>
+        <form id="uploadForm" class="space-y-4">
+            <div>
+                <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Select data.json file:</label>
+                <input type="file" id="fileInput" name="file" accept=".json" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Upload</button>
         </form>
+        <div id="message" class="mt-4 text-center"></div>
     </div>
-
-    <script>
-        const fileInput = document.getElementById('jsonFile');
-        const fileInfo = document.getElementById('fileInfo');
-        const uploadForm = document.getElementById('uploadForm');
-
-        fileInput.addEventListener('change', function() {
-            const file = fileInput.files[0];
-            if (file) {
-                if (file.type !== 'application/json') {
-                    fileInfo.textContent = 'Please select a valid JSON file.';
-                } else {
-                    fileInfo.textContent = '';
-                }
-            }
-        });
-
-        uploadForm.addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent the form from submitting normally
-
-            const file = fileInput.files[0];
-
-            if (!file) {
-                fileInfo.textContent = 'Please select a file to upload.';
-                return;
-            }
-
-            // Check if it's a valid JSON file
-            if (file.type !== 'application/json') {
-                fileInfo.textContent = 'Please select a valid JSON file.';
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('jsonFile', file);
-
-            // Send the file using Fetch API to your backend function
-            fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    fileInfo.textContent = 'File uploaded successfully!';
-                    fileInfo.style.color = 'green';
-                } else {
-                    fileInfo.textContent = 'Failed to upload the file.';
-                    fileInfo.style.color = 'red';
-                }
-            })
-            .catch(error => {
-                fileInfo.textContent = 'Error uploading file.';
-                fileInfo.style.color = 'red';
-            });
-        });
-    </script>
+    <script src="upload.js"></script>
 </body>
 </html>
