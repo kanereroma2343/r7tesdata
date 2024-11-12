@@ -2,7 +2,7 @@
     "routes": [
       {
         "src": "/api/update-data",
-        "dest": "api/update-data.js"
+        "dest": "r7nttc/api/update-data.js"
       }
     ]
   }
