@@ -139,10 +139,10 @@
                 const worksheet = workbook.Sheets[sheetName];
 
                 const range = XLSX.utils.decode_range(worksheet['!ref']);
-                const desiredColumns = ['D', 'E', 'F', 'G', 'S', 'V', 'AD', 'AE', 'AG'];
+                const desiredColumns = ['B', 'C', 'D', 'G', 'I', 'J', 'K', 'L', 'M'];
                 const filteredData = [];
 
-                for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
+                for (let rowIndex = 1; rowIndex <= range.e.r; rowIndex++) {
                     const row = {};
                     desiredColumns.forEach(col => {
                         const cellAddress = col + (rowIndex + 1);
