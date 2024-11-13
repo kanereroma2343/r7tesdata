@@ -38,9 +38,13 @@ export default async (req, res) => {
 
     // Move the file to the uploads folder with its original name
     const newFilePath = path.join(uploadsDir, uploadedFile.originalFilename);
-    fs.renameSync(uploadedFile.filepath, newFilePath);
+    try {
+      fs.renameSync(uploadedFile.filepath, newFilePath);
+    } catch (renameError) {
+      return res.status(500).json({ message: 'Error moving the file' });
+    }
 
     res.status(200).json({ message: 'File uploaded successfully' });
-    res.redirect('/upload.html');
+    // res.redirect('/upload.html'); // This line won't work after sending JSON
   });
 };
