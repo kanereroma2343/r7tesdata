@@ -8,52 +8,72 @@
     <script>
         // Function to show the success modal
         function showSuccessModal() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('success')) {
-                const modal = document.getElementById('successModal');
-                modal.style.display = 'block'; // Show the modal
-            }
+            const modal = document.getElementById('successModal');
+            const overlay = document.getElementById('overlay');
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
         }
 
         // Function to close the modal
         function closeModal() {
             const modal = document.getElementById('successModal');
-            modal.style.display = 'none'; // Hide the modal
+            const overlay = document.getElementById('overlay');
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+            loadUploadedFiles(); // Refresh the list of uploaded files after a successful upload
         }
 
-        // Call the function when the page loads
-        window.onload = showSuccessModal;
+        // Function to handle form submission via Fetch API
+        async function handleFormSubmit(event) {
+            event.preventDefault(); // Prevent the default form submission
 
-        // Function to handle form submission
-        function handleFormSubmit() {
-            // Perform the form submission via AJAX or fetch
             const form = document.querySelector('form');
             const formData = new FormData(form);
 
-            fetch(form.action, {
-                method: form.method,
-                body: formData
-            })
-            .then(response => {
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                });
+
                 if (response.ok) {
-                    // Redirect to upload.html with success message
-                    window.location.href = 'upload.html?success=true';
+                    // Show the success modal if the upload is successful
+                    showSuccessModal();
                 } else {
                     alert('Upload failed. Please try again.');
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred. Please try again.');
-            });
-
-            return false; // Prevent default form submission
+            }
         }
+
+        // Function to load and display uploaded files
+        async function loadUploadedFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = ''; // Clear current list
+
+            try {
+                const response = await fetch('/api/list-files');
+                const files = await response.json();
+
+                files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file;
+                    fileList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error loading files:', error);
+            }
+        }
+
+        // Load files when the page loads
+        window.onload = loadUploadedFiles;
     </script>
 </head>
 <body>
     <h1>Upload Your JSON File</h1>
-    <form action="/api/upload" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit()">
+    <form action="/api/upload" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
         <label for="file">Choose a JSON file:</label>
         <input type="file" id="file" name="file" accept=".json" required />
         <button type="submit">Upload</button>
@@ -67,5 +87,8 @@
     </div>
 
     <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:999;"></div>
+
+    <h2>Uploaded Files</h2>
+    <ul id="fileList"></ul>
 </body>
 </html>
