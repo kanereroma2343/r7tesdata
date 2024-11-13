@@ -21,11 +21,11 @@ function displayData(data) {
 
     // Filter and iterate over the data to insert rows in the table
     data.slice(4).forEach(row => {
-        if (row['B'] || row['D'] || row['G'] || row['I'] || row['J'] || row['K'] || row['L'] || row['M']) { // Ensure row is not empty
+        if (row['B'] || row['C'] || row['G'] || row['I'] || row['J'] || row['K'] || row['L'] || row['M']) { // Ensure row is not empty
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td data-label="Province">${row['B'] || ''}</td>
-                <td data-label="Assessment Center">${row['D'] || ''}</td>
+                <td data-label="Assessment Center">${row['C'] || ''}</td>
                 <td data-label="Center Manager">${row['G'] || ''}</td>
                 <td data-label="Sector">${row['I'] || ''}</td>
                 <td data-label="Qualification">${row['J'] || ''}</td>
