@@ -122,15 +122,14 @@
 
             return `
                 <tr>
-                    <td>${row.D || ''}</td>
-                    <td>${row.E || ''}</td>
-                    <td>${row.F || ''}</td>
-                    <td>${row.G || ''}</td>
-                    <td>${row.S || ''}</td>
-                    <td>${row.AD || ''}</td>
-                    <td>${row.AG || ''}</td>
-                    <td>${row.AE || ''}</td>
-                    <td style="color: ${validityColor}">${row.V || ''}</td>
+                    <td data-label="Province">${row['B'] || ''}</td>
+                    <td data-label="Assessment Center">${row['D'] || ''}</td>
+                    <td data-label="Center Manager">${row['F'] || ''}</td>
+                    <td data-label="Sector">${row['G'] || ''}</td>
+                    <td data-label="Qualification">${row['S'] || ''}</td>
+                    <td data-label="Accreditation Number">${row['AD'] || ''}</td>
+                    <td data-label="Date of Accreditation">${row['AG'] || ''}</td>
+                    <td data-label="Validity">${row['AE'] || ''}</td>
                 </tr>
             `;
         }).join("");
