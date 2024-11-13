@@ -137,18 +137,26 @@
 
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const allData = XLSX.utils.sheet_to_json(worksheet, { range: 6 });
-                convertedData = allData.map(row => ({
-                    D: row.D,
-                    E: row.E,
-                    F: row.F,
-                    G: row.G,
-                    S: row.S,
-                    V: row.V,
-                    AD: row.AD,
-                    AE: row.AE,
-                    AG: row.AG
-                })).filter(row => Object.keys(row).length > 0);
+
+                const range = XLSX.utils.decode_range(worksheet['!ref']);
+                const desiredColumns = ['D', 'E', 'F', 'G', 'S', 'V', 'AD', 'AE', 'AG'];
+                const filteredData = [];
+
+                for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex++) {
+                    const row = {};
+                    desiredColumns.forEach(col => {
+                        const cellAddress = col + (rowIndex + 1);
+                        const cell = worksheet[cellAddress];
+                        if (cell) {
+                            row[col] = cell.v;
+                        }
+                    });
+                    if (Object.keys(row).length > 0) {
+                        filteredData.push(row);
+                    }
+                }
+
+                convertedData = filteredData;
 
                 statusDiv.textContent = 'Conversion successful! Click Update to save the data.';
                 statusDiv.style.color = 'green';
