@@ -3,7 +3,7 @@
 // Function to fetch data from the JSON URL
 async function fetchData() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/kanereroma2343/nttcmonitor/refs/heads/main/data.json');
+        const response = await fetch('https://raw.githubusercontent.com/kanereroma2343/r7tesdata/refs/heads/main/r7ac/data.json');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -21,18 +21,17 @@ function displayData(data) {
 
     // Filter and iterate over the data to insert rows in the table
     data.slice(4).forEach(row => {
-        if (row['D'] || row['E']) { // Ensure row is not empty
+        if (row['B'] || row['D'] || row['G'] || row['I'] || row['J'] || row['K'] || row['L'] || row['M']) { // Ensure row is not empty
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td data-label="Last Name">${row['D'] || ''}</td>
-                <td data-label="First Name">${row['E'] || ''}</td>
-                <td data-label="Middle Name">${row['F'] || ''}</td>
-                <td data-label="Extension">${row['G'] || ''}</td>
-                <td data-label="Qualification">${row['S'] || ''}</td>
-                <td data-label="Certificate Number">${row['AD'] || ''}</td>
-                <td data-label="Control Number">${row['AG'] || ''}</td>
-                <td data-label="Date of Issuance">${row['AE'] || ''}</td>
-                <td data-label="Validity">${row['V'] || ''}</td>
+                <td data-label="Province">${row['B'] || ''}</td>
+                <td data-label="Assessment Center">${row['D'] || ''}</td>
+                <td data-label="Center Manager">${row['G'] || ''}</td>
+                <td data-label="Sector">${row['I'] || ''}</td>
+                <td data-label="Qualification">${row['J'] || ''}</td>
+                <td data-label="Accreditation Number">${row['K'] || ''}</td>
+                <td data-label="Date of Accreditation">${row['L'] || ''}</td>
+                <td data-label="Validity">${row['M'] || ''}</td>
             `;
             tableBody.appendChild(tr);
         }
