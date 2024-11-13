@@ -23,11 +23,37 @@
 
         // Call the function when the page loads
         window.onload = showSuccessModal;
+
+        // Function to handle form submission
+        function handleFormSubmit() {
+            // Perform the form submission via AJAX or fetch
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to upload.html with success message
+                    window.location.href = 'upload.html?success=true';
+                } else {
+                    alert('Upload failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+
+            return false; // Prevent default form submission
+        }
     </script>
 </head>
 <body>
     <h1>Upload Your JSON File</h1>
-    <form action="/api/upload" method="POST" enctype="multipart/form-data">
+    <form action="/api/upload" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit()">
         <label for="file">Choose a JSON file:</label>
         <input type="file" id="file" name="file" accept=".json" required />
         <button type="submit">Upload</button>
