@@ -17,7 +17,7 @@ export default async (req, res) => {
 
   // Ensure the uploads directory exists
   if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
+    fs.mkdirSync(uploadsDir, { recursive: true });
   }
 
   const form = new formidable.IncomingForm();
