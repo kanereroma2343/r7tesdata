@@ -131,7 +131,7 @@
                     <td>${row.I || ''}</td>
                     <td>${row.J || ''}</td>
                     <td>${row.K || ''}</td>
-                    <td>${row.L || ''}</td>
+                    <td>${formatDate(row.L) || ''}</td>
                     <td style="color: ${validityColor}">${row.M|| ''}</td>
                 </tr>
             `;
@@ -182,6 +182,12 @@
         month: 'long',
         day: 'numeric'
     });
+
+    // Add this function to format the date
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    }
 </script>
 
 <style>
