@@ -142,7 +142,7 @@
                 const desiredColumns = ['D', 'E', 'F', 'G', 'S', 'V', 'AD', 'AE', 'AG'];
                 const filteredData = [];
 
-                for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex++) {
+                for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
                     const row = {};
                     desiredColumns.forEach(col => {
                         const cellAddress = col + (rowIndex + 1);
