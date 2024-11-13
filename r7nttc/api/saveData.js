@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         const newData = req.body.data;
 
         // Define the path to your data.json file
-        const filePath = path.join(process.cwd(), '../data.json');
+        const filePath = path.join(process.cwd(), './data.json');
 
         // Write the new data to the file
         fs.writeFile(filePath, newData, (err) => {
