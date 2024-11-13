@@ -1,33 +1,47 @@
-// Install the xlsx library in your Node.js environment by running:
-// npm install xlsx
-
+const express = require('express');
 const fs = require('fs');
-const XLSX = require('xlsx');
+const fetch = require('node-fetch');
+const app = express();
+app.use(express.json());
 
-function convertExcelToJson(filePath) {
-    const workbook = XLSX.readFile(filePath);
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+const GITHUB_TOKEN = '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'; // Keep this secure
+const repoOwner = 'kanereroma2343'; // Your GitHub username
+const repoName = 'r7tesdata'; // Your repository name
+const filePath = 'data.json'; // Path to the file in the repo
 
-    // Start from row 7 (index 6) and get specified columns
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, { range: 6, header: 1 });
-    const filteredData = jsonData.map(row => ({
-        "D": row[3],   // Column D
-        "E": row[4],   // Column E
-        "F": row[5],   // Column F
-        "G": row[6],   // Column G
-        "S": row[18],  // Column S
-        "V": row[21],  // Column V
-        "AD": row[29], // Column AD
-        "AE": row[30], // Column AE
-        "AG": row[32]  // Column AG
-    })).filter(row => Object.values(row).some(cell => cell !== undefined)); // Remove empty rows
+app.post('/saveData', async (req, res) => {
+    const newData = req.body.data;
 
-    const jsonString = JSON.stringify(filteredData, null, 2);
+    // Get the current file's SHA
+    const getFileResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+        headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`
+        }
+    });
+    const fileData = await getFileResponse.json();
+    const sha = fileData.sha;
 
-    // Write the JSON string to data.json, overwriting if it exists
-    fs.writeFileSync('data.json', jsonString, 'utf8');
-    console.log("JSON data has been saved to data.json");
-}
+    // Save the modified data back to the GitHub repository
+    const updateResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: 'Update data.json',
+            content: Buffer.from(newData).toString('base64'), // Base64 encode the new data
+            sha: sha // Include the SHA of the existing file
+        })
+    });
 
-// Call the function with the path to your Excel file
-convertExcelToJson('your-file.xlsx');
+    if (updateResponse.ok) {
+        res.send('Data modified successfully!');
+    } else {
+        res.status(500).send('Error saving data');
+    }
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
