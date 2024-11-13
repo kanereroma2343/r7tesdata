@@ -93,7 +93,7 @@
             if (!Array.isArray(data)) {
                 throw new Error('Invalid data format');
             }
-            originalData = data.slice(4).filter(row => row && (row.D || row.E));
+            originalData = data.filter(row => row && (row.D || row.E));
             filteredData = originalData;
             renderTable();
         } catch (error) {
