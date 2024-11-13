@@ -3,48 +3,30 @@ import fs from 'fs';
 import path from 'path';
 
 export const config = {
-  api: {
-    bodyParser: false, // Disables default body parsing
-  },
+    api: {
+        bodyParser: false, // Disable body parsing for file uploads
+    },
 };
 
-export default async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export default function handler(req, res) {
+    const form = formidable({ uploadDir: './uploads', keepExtensions: true });
 
-  const uploadsDir = path.join(process.cwd(), 'uploads');
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            return res.status(500).json({ message: 'File upload error' });
+        }
 
-  // Ensure the uploads directory exists
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
+        const uploadedFile = files.file;
 
-  const form = new formidable.IncomingForm();
-  form.uploadDir = uploadsDir;
-  form.keepExtensions = true;
-
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(500).json({ message: 'File upload error' });
-    }
-
-    const uploadedFile = files.file;
-
-    // Check if the file is a JSON file
-    if (uploadedFile.mimetype !== 'application/json') {
-      return res.status(400).json({ message: 'Only JSON files are allowed' });
-    }
-
-    // Move the file to the uploads folder with its original name
-    const newFilePath = path.join(uploadsDir, uploadedFile.originalFilename);
-    try {
-      fs.renameSync(uploadedFile.filepath, newFilePath);
-    } catch (renameError) {
-      return res.status(500).json({ message: 'Error moving the file' });
-    }
-
-    res.status(200).json({ message: 'File uploaded successfully' });
-    // res.redirect('/upload.html'); // This line won't work after sending JSON
-  });
-};
+        // Move the file to the uploads folder
+        const newFilePath = path.join('./uploads', uploadedFile.originalFilename);
+        fs.rename(uploadedFile.filepath, newFilePath, (renameError) => {
+            if (renameError) {
+                return res.status(500).json({ message: 'Error moving the file' });
+            }
+            // Redirect to upload.html with a success query parameter
+            res.writeHead(302, { Location: '/upload.html?success=true' });
+            res.end();
+        });
+    });
+}

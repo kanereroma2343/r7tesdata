@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload JSON File</title>
-  <script>
-    // Check if the URL contains a success message
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const successMessage = urlParams.get('message');
-      if (successMessage) {
-        alert(successMessage); // Show the success message
-      }
-    };
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Page</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <script>
+        // Function to show the success modal
+        function showSuccessModal() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                const modal = document.getElementById('successModal');
+                modal.style.display = 'block'; // Show the modal
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'none'; // Hide the modal
+        }
+
+        // Call the function when the page loads
+        window.onload = showSuccessModal;
+    </script>
 </head>
 <body>
-  <h1>Upload JSON File</h1>
-  <form id="uploadForm" action="/api/upload" method="POST" enctype="multipart/form-data">
-    <label for="file">Choose a JSON file:</label>
-    <input type="file" id="file" name="file" accept=".json" required />
-    <button type="submit">Upload</button>
-  </form>
-  <script>
-    // Redirect to itself with a success message
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      this.action = this.action + '?message=Successfully uploaded data.json';
-      this.submit();
-    });
-  </script>
+    <h1>Upload Your JSON File</h1>
+    <form action="/api/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Choose a JSON file:</label>
+        <input type="file" id="file" name="file" accept=".json" required />
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- Success Modal -->
+    <div id="successModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid black; padding:20px; z-index:1000;">
+        <h2>Success!</h2>
+        <p>Your file has been uploaded successfully.</p>
+        <button onclick="closeModal()">Close</button>
+    </div>
+
+    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:999;"></div>
 </body>
 </html>
