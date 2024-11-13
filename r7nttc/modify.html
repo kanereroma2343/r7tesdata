@@ -14,13 +14,13 @@
         async function modifyData() {
             const newData = document.getElementById('jsonData').value;
 
-            // Save the modified data back to the server
-            await fetch('saveData', {
+            // Send the modified data to the server
+            await fetch('/saveData', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: newData
+                body: JSON.stringify({ data: newData })
             });
 
             alert('Data modified successfully!');
