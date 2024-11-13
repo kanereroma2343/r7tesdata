@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload JSON File</title>
+  <script>
+    // Check if the URL contains a success message
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const successMessage = urlParams.get('message');
+      if (successMessage) {
+        alert(successMessage); // Show the success message
+      }
+    };
+  </script>
 </head>
 <body>
   <h1>Upload JSON File</h1>
@@ -12,5 +22,13 @@
     <input type="file" id="file" name="file" accept=".json" required />
     <button type="submit">Upload</button>
   </form>
+  <script>
+    // Redirect to itself with a success message
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      this.action = this.action + '?message=Successfully uploaded data.json';
+      this.submit();
+    });
+  </script>
 </body>
 </html>
