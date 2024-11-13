@@ -6,6 +6,16 @@ const PORT = 3000;
 
 app.use(express.json());
 
+// Debounce function
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
 app.post('/saveData', (req, res) => {
     const newData = req.body.data;
 
