@@ -41,5 +41,6 @@ export default async (req, res) => {
     fs.renameSync(uploadedFile.filepath, newFilePath);
 
     res.status(200).json({ message: 'File uploaded successfully' });
+    res.redirect('/upload.html');
   });
 };
