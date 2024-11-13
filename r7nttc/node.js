@@ -4,7 +4,8 @@ const fetch = require('node-fetch');
 const app = express();
 app.use(express.json());
 
-const GITHUB_TOKEN = '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'; // Keep this secure
+// Use environment variable for the GitHub token
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Keep this secure
 const repoOwner = 'kanereroma2343'; // Your GitHub username
 const repoName = 'r7tesdata'; // Your repository name
 const filePath = 'data.json'; // Path to the file in the repo
@@ -15,7 +16,7 @@ app.post('/saveData', async (req, res) => {
     // Get the current file's SHA
     const getFileResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
         headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`
+            'Authorization': `token ${GITHUB_TOKEN}` // Token is now securely passed from environment variable
         }
     });
     const fileData = await getFileResponse.json();
@@ -25,7 +26,7 @@ app.post('/saveData', async (req, res) => {
     const updateResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
         method: 'PUT',
         headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `token ${GITHUB_TOKEN}`, // Token is now securely passed from environment variable
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
