@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // Use environment variable for the GitHub token
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Keep this secure
+const GITHUB_TOKEN = key.env.GITHUB_TOKEN; // Keep this secure
 const repoOwner = 'kanereroma2343'; // Your GitHub username
 const repoName = 'r7tesdata'; // Your repository name
 const filePath = 'data.json'; // Path to the file in the repo
