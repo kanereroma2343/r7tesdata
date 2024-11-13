@@ -25,7 +25,7 @@ export default function handler(req, res) {
                 return res.status(500).json({ message: 'Error moving the file' });
             }
             // Redirect to upload.html with a success query parameter
-            res.writeHead(302, { Location: './upload.html?success=true' });
+            res.writeHead(302, { Location: '../upload.html?success=true' });
             res.end();
         });
     });
