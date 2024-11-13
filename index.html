@@ -148,6 +148,25 @@
                 transform: translateY(0);
             }
         }
+
+        .coming-soon {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: opacity 0.3s ease;
+        }
+
+        .box:hover .coming-soon {
+            display: block;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -168,13 +187,16 @@
             Assessment Centers
         </div>
         <div class="box" onclick="location.href='#'" style="--delay: 0.6s">
-             (UTPRAS)
+            (UTPRAS)
+            <div class="coming-soon">Coming Soon</div>
         </div>
         <div class="box" onclick="location.href='#'" style="--delay: 0.8s">
-             (Scholarships)
+            (Scholarships)
+            <div class="coming-soon">Coming Soon</div>
         </div>
         <div class="box" onclick="location.href='#'" style="--delay: 1s">
-             (PNSC / RSC)
+            (PNSC / RSC)
+            <div class="coming-soon">Coming Soon</div>
         </div>
     </div>
 
