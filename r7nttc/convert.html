@@ -103,22 +103,9 @@
         <div id="status"></div>
     </div>
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const fileNameDisplay = document.getElementById('fileName');
+        const statusDiv = document.getElementById('status');
         const convertBtn = document.getElementById('convertBtn');
         const updateBtn = document.getElementById('updateBtn');
-        const statusDiv = document.getElementById('status');
-        const uploadForm = document.getElementById('uploadForm');
-        let convertedData = null;
-
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                fileNameDisplay.textContent = `Selected File: ${file.name}`;
-                fileNameDisplay.style.display = 'block';
-                convertBtn.disabled = false;
-            }
-        });
 
         uploadForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -148,9 +135,9 @@
                         const cellAddress = col + (rowIndex + 1);
                         const cell = worksheet[cellAddress];
                         if (cell) {
-                            if (cell.t === 'd') {
-                                const date = new Date(cell.v);
-                                row[col] = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                            if (cell.t === 'n' && cell.v > 25569) {  // Check if it's an Excel date serial number
+                                const date = new Date((cell.v - 25569) * 86400 * 1000); // Convert Excel date to JS date
+                                row[col] = date.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                             } else {
                                 row[col] = cell.v;
                             }
