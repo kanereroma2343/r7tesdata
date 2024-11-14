@@ -126,9 +126,9 @@
 
             return `
                 <tr>
-                    <td>${row.D || ''}</td>
-                    <td>${row.E || ''}</td>
-                    <td>${row.F || ''}</td>
+                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.D || ''}</a></td>
+                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.E || ''}</a></td>
+                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.F || ''}</a></td>
                     <td>${row.G || ''}</td>
                     <td>${row.S || ''}</td>
                     <td>${row.AD || ''}</td>
@@ -311,6 +311,15 @@
     font-size: 1.2em;
     margin-bottom: 10px;
     color: #333;
+}
+
+.record-link {
+    text-decoration: none;
+    color: inherit; /* Use the current text color */
+}
+
+.record-link:hover {
+    text-decoration: underline;
 }
 </style>
 </body>
