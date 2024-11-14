@@ -143,7 +143,34 @@
                 const filteredData = [];
 
                 for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
-                    const row = {};
+                    const row = {
+                        'Last Name': null,
+                        'First Name': null,
+                        'Middle Initial': null,
+                        'Extension': null,
+                        'Birthday': null,
+                        'Sex': null,
+                        'Address': null,
+                        'Training Institution': null,
+                        'Type of Training Institution': null,
+                        'Email': null,
+                        'Contact Number': null,
+                        'Educational Attainment': null,
+                        'Years of Experience': null,
+                        'NC Certificate Number': null,
+                        'NC Date of Issuance': null,
+                        'NC Validity': null,
+                        'TM Certificate Number': null,
+                        'TM Date of Issuance': null,
+                        'TM Validity': null,
+                        'Assessor 1': null,
+                        'Assessor 2': null,
+                        'Assessor 3': null,
+                        'NTTC Serial Number': null,
+                        'NTTC Certificate Number': null,
+                        'NTTC Date of Issuance': null,
+                        'NTTC Validity': null,
+                    };
                     desiredColumns.forEach(col => {
                         const cellAddress = col + (rowIndex + 1);
                         const cell = worksheet[cellAddress];
@@ -154,8 +181,6 @@
                             } else {
                                 row[col] = cell.v;
                             }
-                        } else {
-                            row[col] = null;
                         }
                     });
                     if (Object.keys(row).length > 0) {
