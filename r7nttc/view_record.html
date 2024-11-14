@@ -151,66 +151,38 @@
 </div>
 
 <script>
-    // JavaScript to populate fields
-    const record = {
-        last_name: "Doe",
-        first_name: "John",
-        middle_initial: "A",
-        extension: "Jr.",
-        birthday: "1990-01-01",
-        sex: "Male",
-        address: "123 Main St",
-        training_institution: "XYZ Training Center",
-        type_training_institution: "Public",
-        email: "john.doe@example.com",
-        contact_number: "123-456-7890",
-        educational_attainment: "Bachelor's Degree",
-        years_of_experience: "5",
-        nc_cert_number: "NC12345",
-        nc_date_issuance: "2020-05-01",
-        nc_validity: "2025-05-01",
-        tm_cert_number: "TM54321",
-        tm_date_issuance: "2021-08-15",
-        tm_validity: "2026-08-15",
-        assessor1: "Jane Smith",
-        assessor2: "Robert Brown",
-        assessor3: "Emily White",
-        nttc_serial_number: "NT123456",
-        nttc_cert_number: "NTC7890",
-        nttc_date_issuance: "2022-09-10",
-        nttc_validity: "2027-09-10"
-    };
-
-    if (record) {
-        document.getElementById("last-name").innerText = record.last_name;
-        document.getElementById("first-name").innerText = record.first_name;
-        document.getElementById("middle-initial").innerText = record.middle_initial;
-        document.getElementById("extension").innerText = record.extension;
-        document.getElementById("birthday").innerText = record.birthday;
-        document.getElementById("sex").innerText = record.sex;
-        document.getElementById("address").innerText = record.address;
-        document.getElementById("training-institution").innerText = record.training_institution;
-        document.getElementById("type-training-institution").innerText = record.type_training_institution;
-        document.getElementById("email").innerText = record.email;
-        document.getElementById("contact-number").innerText = record.contact_number;
-        document.getElementById("educational-attainment").innerText = record.educational_attainment;
-        document.getElementById("years-of-experience").innerText = record.years_of_experience;
-        document.getElementById("nc-cert-number").innerText = record.nc_cert_number;
-        document.getElementById("nc-date-issuance").innerText = record.nc_date_issuance;
-        document.getElementById("nc-validity").innerText = record.nc_validity;
-        document.getElementById("tm-cert-number").innerText = record.tm_cert_number;
-        document.getElementById("tm-date-issuance").innerText = record.tm_date_issuance;
-        document.getElementById("tm-validity").innerText = record.tm_validity;
-        document.getElementById("assessor1").innerText = record.assessor1;
-        document.getElementById("assessor2").innerText = record.assessor2;
-        document.getElementById("assessor3").innerText = record.assessor3;
-        document.getElementById("nttc-serial-number").innerText = record.nttc_serial_number;
-        document.getElementById("nttc-cert-number").innerText = record.nttc_cert_number;
-        document.getElementById("nttc-date-issuance").innerText = record.nttc_date_issuance;
-        document.getElementById("nttc-validity").innerText = record.nttc_validity;
-    } else {
-        console.warn("Record not available.");
-    }
+    // Fetch data from data.json and populate fields
+    fetch('data.json')
+        .then(response => response.json())
+        .then(record => {
+            document.getElementById("last-name").innerText = record.last_name;
+            document.getElementById("first-name").innerText = record.first_name;
+            document.getElementById("middle-initial").innerText = record.middle_initial;
+            document.getElementById("extension").innerText = record.extension;
+            document.getElementById("birthday").innerText = record.birthday;
+            document.getElementById("sex").innerText = record.sex;
+            document.getElementById("address").innerText = record.address;
+            document.getElementById("training-institution").innerText = record.training_institution;
+            document.getElementById("type-training-institution").innerText = record.type_training_institution;
+            document.getElementById("email").innerText = record.email;
+            document.getElementById("contact-number").innerText = record.contact_number;
+            document.getElementById("educational-attainment").innerText = record.educational_attainment;
+            document.getElementById("years-of-experience").innerText = record.years_of_experience;
+            document.getElementById("nc-cert-number").innerText = record.nc_cert_number;
+            document.getElementById("nc-date-issuance").innerText = record.nc_date_issuance;
+            document.getElementById("nc-validity").innerText = record.nc_validity;
+            document.getElementById("tm-cert-number").innerText = record.tm_cert_number;
+            document.getElementById("tm-date-issuance").innerText = record.tm_date_issuance;
+            document.getElementById("tm-validity").innerText = record.tm_validity;
+            document.getElementById("assessor1").innerText = record.assessor1;
+            document.getElementById("assessor2").innerText = record.assessor2;
+            document.getElementById("assessor3").innerText = record.assessor3;
+            document.getElementById("nttc-serial-number").innerText = record.nttc_serial_number;
+            document.getElementById("nttc-cert-number").innerText = record.nttc_cert_number;
+            document.getElementById("nttc-date-issuance").innerText = record.nttc_date_issuance;
+            document.getElementById("nttc-validity").innerText = record.nttc_validity;
+        })
+        .catch(error => console.error('Error fetching data:', error));
 </script>
 
 </body>
