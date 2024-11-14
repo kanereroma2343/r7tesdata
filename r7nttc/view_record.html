@@ -3,62 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Record Display</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            color: #333;
+        }
+
+        .form-group span {
+            display: block;
+            padding: 8px;
+            background-color: #e8f0fe;
+            border-radius: 4px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <!-- Trigger Button in index.html -->
-    <button id="openModal">Open Record Details</button>
 
-    <!-- Modal Structure -->
-    <div id="recordModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>Record Details</h2>
-s
-            <!-- Main Information -->
-            <h3>Main Information</h3>
-            <div class="field"><strong>Last Name:</strong> <span id="last-name"></span></div>
-            <div class="field"><strong>First Name:</strong> <span id="first-name"></span></div>
-            <div class="field"><strong>Middle Initial:</strong> <span id="middle-initial"></span></div>
-            <div class="field"><strong>Extension:</strong> <span id="extension"></span></div>
-
-            <!-- Personal Information -->
-            <h3>Personal Information</h3>
-            <div class="field"><strong>Birthday:</strong> <span id="birthday"></span></div>
-            <div class="field"><strong>Sex:</strong> <span id="sex"></span></div>
-            <div class="field"><strong>Address:</strong> <span id="address"></span></div>
-            <div class="field"><strong>Training Institution:</strong> <span id="training-institution"></span></div>
-            <div class="field"><strong>Type of Training Institution:</strong> <span id="type-training-institution"></span></div>
-            <div class="field"><strong>Email:</strong> <span id="email"></span></div>
-            <div class="field"><strong>Contact Number:</strong> <span id="contact-number"></span></div>
-            <div class="field"><strong>Educational Attainment:</strong> <span id="educational-attainment"></span></div>
-            <div class="field"><strong>Years of Experience:</strong> <span id="years-of-experience"></span></div>
-
-            <!-- NC Information -->
-            <h3>NC Information</h3>
-            <div class="field"><strong>NC Certificate Number:</strong> <span id="nc-cert-number"></span></div>
-            <div class="field"><strong>NC Date of Issuance:</strong> <span id="nc-date-issuance"></span></div>
-            <div class="field"><strong>NC Validity:</strong> <span id="nc-validity"></span></div>
-
-            <!-- TM Information -->
-            <h3>TM Information</h3>
-            <div class="field"><strong>TM Certificate Number:</strong> <span id="tm-cert-number"></span></div>
-            <div class="field"><strong>TM Date of Issuance:</strong> <span id="tm-date-issuance"></span></div>
-            <div class="field"><strong>TM Validity:</strong> <span id="tm-validity"></span></div>
-            <div class="field"><strong>Assessor 1:</strong> <span id="assessor1"></span></div>
-            <div class="field"><strong>Assessor 2:</strong> <span id="assessor2"></span></div>
-            <div class="field"><strong>Assessor 3:</strong> <span id="assessor3"></span></div>
-
-            <!-- NTTC Information -->
-            <h3>NTTC Information</h3>
-            <div class="field"><strong>NTTC Serial Number:</strong> <span id="nttc-serial-number"></span></div>
-            <div class="field"><strong>NTTC Certificate Number:</strong> <span id="nttc-cert-number"></span></div>
-            <div class="field"><strong>NTTC Date of Issuance:</strong> <span id="nttc-date-issuance"></span></div>
-            <div class="field"><strong>NTTC Validity:</strong> <span id="nttc-validity"></span></div>
-        </div>
+<div class="form-container">
+    <div class="form-group">
+        <label for="last-name">Last Name</label>
+        <span id="last-name"></span>
     </div>
+    <div class="form-group">
+        <label for="first-name">First Name</label>
+        <span id="first-name"></span>
+    </div>
+    <div class="form-group">
+        <label for="middle-initial">Middle Initial</label>
+        <span id="middle-initial"></span>
+    </div>
+    <div class="form-group">
+        <label for="extension">Extension</label>
+        <span id="extension"></span>
+    </div>
+    <div class="form-group">
+        <label for="birthday">Birthday</label>
+        <span id="birthday"></span>
+    </div>
+    <div class="form-group">
+        <label for="sex">Sex</label>
+        <span id="sex"></span>
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <span id="address"></span>
+    </div>
+    <div class="form-group">
+        <label for="training-institution">Training Institution</label>
+        <span id="training-institution"></span>
+    </div>
+    <div class="form-group">
+        <label for="type-training-institution">Type of Training Institution</label>
+        <span id="type-training-institution"></span>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <span id="email"></span>
+    </div>
+    <div class="form-group">
+        <label for="contact-number">Contact Number</label>
+        <span id="contact-number"></span>
+    </div>
+    <div class="form-group">
+        <label for="educational-attainment">Educational Attainment</label>
+        <span id="educational-attainment"></span>
+    </div>
+    <div class="form-group">
+        <label for="years-of-experience">Years of Experience</label>
+        <span id="years-of-experience"></span>
+    </div>
+    <div class="form-group">
+        <label for="nc-cert-number">NC Certificate Number</label>
+        <span id="nc-cert-number"></span>
+    </div>
+    <div class="form-group">
+        <label for="nc-date-issuance">NC Date of Issuance</label>
+        <span id="nc-date-issuance"></span>
+    </div>
+    <div class="form-group">
+        <label for="nc-validity">NC Validity</label>
+        <span id="nc-validity"></span>
+    </div>
+    <div class="form-group">
+        <label for="tm-cert-number">TM Certificate Number</label>
+        <span id="tm-cert-number"></span>
+    </div>
+    <div class="form-group">
+        <label for="tm-date-issuance">TM Date of Issuance</label>
+        <span id="tm-date-issuance"></span>
+    </div>
+    <div class="form-group">
+        <label for="tm-validity">TM Validity</label>
+        <span id="tm-validity"></span>
+    </div>
+    <div class="form-group">
+        <label for="assessor1">Assessor 1</label>
+        <span id="assessor1"></span>
+    </div>
+    <div class="form-group">
+        <label for="assessor2">Assessor 2</label>
+        <span id="assessor2"></span>
+    </div>
+    <div class="form-group">
+        <label for="assessor3">Assessor 3</label>
+        <span id="assessor3"></span>
+    </div>
+    <div class="form-group">
+        <label for="nttc-serial-number">NTTC Serial Number</label>
+        <span id="nttc-serial-number"></span>
+    </div>
+    <div class="form-group">
+        <label for="nttc-cert-number">NTTC Certificate Number</label>
+        <span id="nttc-cert-number"></span>
+    </div>
+    <div class="form-group">
+        <label for="nttc-date-issuance">NTTC Date of Issuance</label>
+        <span id="nttc-date-issuance"></span>
+    </div>
+    <div class="form-group">
+        <label for="nttc-validity">NTTC Validity</label>
+        <span id="nttc-validity"></span>
+    </div>
+</div>
 
-    <script src="script.js"></script>
+<script>
+    // JavaScript to populate fields
+    const record = {
+        last_name: "Doe",
+        first_name: "John",
+        middle_initial: "A",
+        extension: "Jr.",
+        birthday: "1990-01-01",
+        sex: "Male",
+        address: "123 Main St",
+        training_institution: "XYZ Training Center",
+        type_training_institution: "Public",
+        email: "john.doe@example.com",
+        contact_number: "123-456-7890",
+        educational_attainment: "Bachelor's Degree",
+        years_of_experience: "5",
+        nc_cert_number: "NC12345",
+        nc_date_issuance: "2020-05-01",
+        nc_validity: "2025-05-01",
+        tm_cert_number: "TM54321",
+        tm_date_issuance: "2021-08-15",
+        tm_validity: "2026-08-15",
+        assessor1: "Jane Smith",
+        assessor2: "Robert Brown",
+        assessor3: "Emily White",
+        nttc_serial_number: "NT123456",
+        nttc_cert_number: "NTC7890",
+        nttc_date_issuance: "2022-09-10",
+        nttc_validity: "2027-09-10"
+    };
+
+    if (record) {
+        document.getElementById("last-name").innerText = record.last_name;
+        document.getElementById("first-name").innerText = record.first_name;
+        document.getElementById("middle-initial").innerText = record.middle_initial;
+        document.getElementById("extension").innerText = record.extension;
+        document.getElementById("birthday").innerText = record.birthday;
+        document.getElementById("sex").innerText = record.sex;
+        document.getElementById("address").innerText = record.address;
+        document.getElementById("training-institution").innerText = record.training_institution;
+        document.getElementById("type-training-institution").innerText = record.type_training_institution;
+        document.getElementById("email").innerText = record.email;
+        document.getElementById("contact-number").innerText = record.contact_number;
+        document.getElementById("educational-attainment").innerText = record.educational_attainment;
+        document.getElementById("years-of-experience").innerText = record.years_of_experience;
+        document.getElementById("nc-cert-number").innerText = record.nc_cert_number;
+        document.getElementById("nc-date-issuance").innerText = record.nc_date_issuance;
+        document.getElementById("nc-validity").innerText = record.nc_validity;
+        document.getElementById("tm-cert-number").innerText = record.tm_cert_number;
+        document.getElementById("tm-date-issuance").innerText = record.tm_date_issuance;
+        document.getElementById("tm-validity").innerText = record.tm_validity;
+        document.getElementById("assessor1").innerText = record.assessor1;
+        document.getElementById("assessor2").innerText = record.assessor2;
+        document.getElementById("assessor3").innerText = record.assessor3;
+        document.getElementById("nttc-serial-number").innerText = record.nttc_serial_number;
+        document.getElementById("nttc-cert-number").innerText = record.nttc_cert_number;
+        document.getElementById("nttc-date-issuance").innerText = record.nttc_date_issuance;
+        document.getElementById("nttc-validity").innerText = record.nttc_validity;
+    } else {
+        console.warn("Record not available.");
+    }
+</script>
+
 </body>
 </html>
