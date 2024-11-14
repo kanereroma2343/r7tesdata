@@ -148,7 +148,12 @@
                         const cellAddress = col + (rowIndex + 1);
                         const cell = worksheet[cellAddress];
                         if (cell) {
-                            row[col] = cell.v;
+                            if (cell.t === 'd') {
+                                const date = new Date(cell.v);
+                                row[col] = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                            } else {
+                                row[col] = cell.v;
+                            }
                         } else {
                             row[col] = null;
                         }

@@ -119,4 +119,68 @@
             modal.style.display = "none";
         }
     }
+
+    // Function to get URL parameters
+    function getUrlParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const regex = /([^&=]+)=([^&]*)/g;
+        let m;
+        while (m = regex.exec(queryString)) {
+            params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+        }
+        return params;
+    }
+
+    // Fetch data from data.json and display the record
+    async function displayRecord() {
+        const params = getUrlParams();
+        const response = await fetch('data.json');
+        const data = await response.json();
+
+        // Find the record that matches the parameters
+        const record = data.find(item => 
+            item.lastName === params.lastName &&
+            item.firstName === params.firstName &&
+            item.middleInitial === params.middleName &&
+            item.extension === params.extension &&
+            item.qualification === params.qualification &&
+            item.certificateNumber === params.certificateNumber
+        );
+
+        // Display the record in the modal
+        if (record) {
+            document.getElementById("last-name").innerText = record.lastName;
+            document.getElementById("first-name").innerText = record.firstName;
+            document.getElementById("middle-initial").innerText = record.middleInitial;
+            document.getElementById("extension").innerText = record.extension;
+            document.getElementById("birthday").innerText = record.birthday;
+            document.getElementById("sex").innerText = record.sex;
+            document.getElementById("address").innerText = record.address;
+            document.getElementById("training-institution").innerText = record.trainingInstitution;
+            document.getElementById("type-training-institution").innerText = record.typeTrainingInstitution;
+            document.getElementById("email").innerText = record.email;
+            document.getElementById("contact-number").innerText = record.contactNumber;
+            document.getElementById("educational-attainment").innerText = record.educationalAttainment;
+            document.getElementById("years-of-experience").innerText = record.yearsOfExperience;
+            document.getElementById("nc-cert-number").innerText = record.ncCertNumber;
+            document.getElementById("nc-date-issuance").innerText = record.ncDateIssuance;
+            document.getElementById("nc-validity").innerText = record.ncValidity;
+            document.getElementById("tm-cert-number").innerText = record.tmCertNumber;
+            document.getElementById("tm-date-issuance").innerText = record.tmDateIssuance;
+            document.getElementById("tm-validity").innerText = record.tmValidity;
+            document.getElementById("assessor1").innerText = record.assessor1;
+            document.getElementById("assessor2").innerText = record.assessor2;
+            document.getElementById("assessor3").innerText = record.assessor3;
+            document.getElementById("nttc-serial-number").innerText = record.nttcSerialNumber;
+            document.getElementById("nttc-cert-number").innerText = record.nttcCertNumber;
+            document.getElementById("nttc-date-issuance").innerText = record.nttcDateIssuance;
+            document.getElementById("nttc-validity").innerText = record.nttcValidity;
+        } else {
+            console.error("Record not found");
+        }
+    }
+
+    // Call the function to display the record when the page loads
+    window.onload = displayRecord;
 </script>
