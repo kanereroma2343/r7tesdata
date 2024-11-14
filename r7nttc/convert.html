@@ -139,28 +139,31 @@
                 const worksheet = workbook.Sheets[sheetName];
 
                 const range = XLSX.utils.decode_range(worksheet['!ref']);
-                const desiredColumns = ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'D', 'E', 'F', 'G', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF'];
+                const desiredColumns = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE'];
                 const filteredData = [];
 
                 for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
                     const row = {
                         'Last Name': null,
                         'First Name': null,
-                        'Middle Initial': null,
-                        'Extension': null,
+                        'M.I.': null,
+                        'Ext\'n.': null,
                         'Birthday': null,
                         'Sex': null,
-                        'Address': null,
+                        'Complete Address': null,
                         'Training Institution': null,
                         'Type of Training Institution': null,
-                        'Email': null,
-                        'Contact Number': null,
+                        'E-mail Address': null,
+                        'Contact No.': null,
                         'Educational Attainment': null,
-                        'Years of Experience': null,
+                        'Training': null,
+                        'Practicing the Qualification': null,
+                        'SECTOR': null,
+                        'Qualification': null,
                         'NC Certificate Number': null,
                         'NC Date of Issuance': null,
                         'NC Validity': null,
-                        'TM Certificate Number': null,
+                        'TMC Certificate Number': null,
                         'TM Date of Issuance': null,
                         'TM Validity': null,
                         'Assessor 1': null,
