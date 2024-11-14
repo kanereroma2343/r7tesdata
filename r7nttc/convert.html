@@ -143,37 +143,7 @@
                 const filteredData = [];
 
                 for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
-                    const row = {
-                        'Last Name': null,
-                        'First Name': null,
-                        'M.I.': null,
-                        'Ext\'n.': null,
-                        'Birthday': null,
-                        'Sex': null,
-                        'Complete Address': null,
-                        'Training Institution': null,
-                        'Type of Training Institution': null,
-                        'E-mail Address': null,
-                        'Contact No.': null,
-                        'Educational Attainment': null,
-                        'Training': null,
-                        'Practicing the Qualification': null,
-                        'SECTOR': null,
-                        'Qualification': null,
-                        'NC Certificate Number': null,
-                        'NC Date of Issuance': null,
-                        'NC Validity': null,
-                        'TMC Certificate Number': null,
-                        'TM Date of Issuance': null,
-                        'TM Validity': null,
-                        'Assessor 1': null,
-                        'Assessor 2': null,
-                        'Assessor 3': null,
-                        'NTTC Serial Number': null,
-                        'NTTC Certificate Number': null,
-                        'NTTC Date of Issuance': null,
-                        'NTTC Validity': null,
-                    };
+            
                     desiredColumns.forEach(col => {
                         const cellAddress = col + (rowIndex + 1);
                         const cell = worksheet[cellAddress];
