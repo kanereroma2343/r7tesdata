@@ -139,7 +139,7 @@
                 const worksheet = workbook.Sheets[sheetName];
 
                 const range = XLSX.utils.decode_range(worksheet['!ref']);
-                const desiredColumns = ['D', 'E', 'F', 'G', 'S', 'V', 'AD', 'AE', 'AG'];
+                const desiredColumns = ['H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'D', 'E', 'F', 'G', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF'];
                 const filteredData = [];
 
                 for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
@@ -149,6 +149,8 @@
                         const cell = worksheet[cellAddress];
                         if (cell) {
                             row[col] = cell.v;
+                        } else {
+                            row[col] = null;
                         }
                     });
                     if (Object.keys(row).length > 0) {
@@ -158,10 +160,10 @@
 
                 convertedData = filteredData;
 
+                downloadJSON(convertedData, 'data.json');
+
                 statusDiv.textContent = 'Conversion successful! Click Update to save the data.';
                 statusDiv.style.color = 'green';
-
-                downloadJSON(convertedData, 'data.json');
 
                 convertBtn.style.display = 'none';
                 updateBtn.style.display = 'block';
