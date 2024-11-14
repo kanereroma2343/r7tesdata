@@ -150,7 +150,7 @@
                         if (cell) {
                             if (cell.t === 'd') {
                                 const date = new Date(cell.v);
-                                row[col] = date.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).replace(/(\w+)\s+(\d+),\s+(\d+)/, '$1, $2, $3');
+                                row[col] = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                             } else {
                                 row[col] = cell.v;
                             }
