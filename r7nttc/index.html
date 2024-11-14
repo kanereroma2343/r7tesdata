@@ -57,8 +57,8 @@
             </tr>
         </thead>
         <tbody id="data-table-body">
-            <td><a href="view_record.html?id=${row.id}" class="record-link">${row.D || ''}</a></td> <!-- Last Name -->
-        <td><a href="view_record.html?id=${row.id}" class="record-link">${row.E || ''}</a></td> <!-- First Name -->
+            <td><a href="view_record.html?id=${row.id}&lastName=${encodeURIComponent(row.D || '')}&firstName=${encodeURIComponent(row.E || '')}&middleName=${encodeURIComponent(row.F || '')}&extension=${encodeURIComponent(row.G || '')}&qualification=${encodeURIComponent(row.S || '')}&certificateNumber=${encodeURIComponent(row.AD || '')}" class="record-link">${row.D || ''}</a></td> <!-- Last Name -->
+            <td><a href="view_record.html?id=${row.id}&lastName=${encodeURIComponent(row.D || '')}&firstName=${encodeURIComponent(row.E || '')}&middleName=${encodeURIComponent(row.F || '')}&extension=${encodeURIComponent(row.G || '')}&qualification=${encodeURIComponent(row.S || '')}&certificateNumber=${encodeURIComponent(row.AD || '')}" class="record-link">${row.E || ''}</a></td> <!-- First Name -->
             <!-- Data will be dynamically loaded here -->
         </tbody>
     </table>
