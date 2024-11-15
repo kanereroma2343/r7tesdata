@@ -8,102 +8,104 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         .chart-container {
-            width: 80%;
-            margin: auto;
-        }
-        .stat-card {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
-    <h1>Statistics Overview</h1>
-    <div id="statsContainer"></div>
+    <h1>Statistics</h1>
+
     <div class="chart-container">
         <canvas id="provinceChart"></canvas>
-        <canvas id="qualificationChart"></canvas>
+    </div>
+
+    <div class="chart-container">
         <canvas id="sectorChart"></canvas>
     </div>
 
-    <script>
-        async function fetchData() {
-            const response = await fetch('data.json');
-            const data = await response.json();
-            return data;
-        }
+    <div class="chart-container">
+        <canvas id="qualificationChart"></canvas>
+    </div>
 
-        function createChart(ctx, labels, data, title) {
+    <div class="chart-container">
+        <canvas id="institutionTypeChart"></canvas>
+    </div>
+
+    <script>
+        // Fetch and process the data
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const provinces = {};
+                const sectors = {};
+                const qualifications = {};
+                const institutionTypes = {};
+
+                data.forEach(item => {
+                    // Count provinces
+                    const province = item.address.split(', ').slice(-2)[0];
+                    provinces[province] = (provinces[province] || 0) + 1;
+
+                    // Count sectors
+                    sectors[item.sector] = (sectors[item.sector] || 0) + 1;
+
+                    // Count qualifications
+                    qualifications[item.qualification] = (qualifications[item.qualification] || 0) + 1;
+
+                    // Count institution types
+                    institutionTypes[item.type_training_institution] = (institutionTypes[item.type_training_institution] || 0) + 1;
+                });
+
+                // Create charts
+                createChart('provinceChart', 'Provinces', provinces);
+                createChart('sectorChart', 'Sectors', sectors);
+                createChart('qualificationChart', 'Qualifications', qualifications);
+                createChart('institutionTypeChart', 'Training Institution Types', institutionTypes);
+            });
+
+        function createChart(canvasId, title, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: Object.keys(data),
                     datasets: [{
-                        label: title,
-                        data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        label: 'Count',
+                        data: Object.values(data),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    },
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
                         }
                     }
                 }
             });
         }
-
-        async function displayStatistics() {
-            const data = await fetchData();
-            const provinceCounts = {};
-            const qualificationCounts = {};
-            const sectorCounts = {};
-
-            data.entries.forEach(entry => {
-                // Count entries by province
-                provinceCounts[entry.province] = (provinceCounts[entry.province] || 0) + 1;
-
-                // Count unique qualifications
-                qualificationCounts[entry.qualification] = (qualificationCounts[entry.qualification] || 0) + 1;
-
-                // Count entries by sector
-                sectorCounts[entry.sector] = (sectorCounts[entry.sector] || 0) + 1;
-            });
-
-            // Display province counts
-            for (const [province, count] of Object.entries(provinceCounts)) {
-                const statCard = document.createElement('div');
-                statCard.className = 'stat-card';
-                statCard.innerHTML = `<h2>Entries from ${province}</h2><p>${count}</p>`;
-                document.getElementById('statsContainer').appendChild(statCard);
-            }
-
-            // Create charts
-            createChart(document.getElementById('provinceChart').getContext('2d'), 
-                         Object.keys(provinceCounts), 
-                         Object.values(provinceCounts), 
-                         'Entries by Province');
-
-            createChart(document.getElementById('qualificationChart').getContext('2d'), 
-                         Object.keys(qualificationCounts), 
-                         Object.values(qualificationCounts), 
-                         'Entries by Qualification');
-
-            createChart(document.getElementById('sectorChart').getContext('2d'), 
-                         Object.keys(sectorCounts), 
-                         Object.values(sectorCounts), 
-                         'Entries by Sector');
-        }
-
-        displayStatistics();
     </script>
 </body>
 </html>
