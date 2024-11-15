@@ -4,111 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel to JSON Converter</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
-            background: linear-gradient(to right, black, blue);
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 30px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom right, #1a202c, #2d3748);
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
         }
 
-        .form-container {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 30px;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        p {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 2rem;
         }
 
-        input[type="file"], button {
-            margin: 15px 0;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            width: 100%;
+        .dropzone {
+            border: 2px dashed #cbd5e0;
+            border-radius: 4px;
+            padding: 2rem;
+            text-align: center;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease;
         }
 
-        input[type="file"] {
-            background-color: rgba(255, 255, 255, 0.3);
-            color: white;
+        .dropzone:hover {
+            background-color: #f7fafc;
         }
 
-        button {
-            background-color: #1E90FF;
-            color: white;
-            font-weight: bold;
+        .dropzone p {
+            margin: 0;
         }
 
-        button:hover {
-            background-color: #4682B4;
-            transform: scale(1.05);
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            margin-top: 20px;
-            height: 20px;
+        .progress-container {
+            margin-top: 1rem;
             display: none;
         }
 
         .progress-bar {
+            height: 4px;
+            background-color: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress {
             height: 100%;
+            background-color: #4299e1;
             width: 0;
-            background-color: #32CD32;
-            border-radius: 5px;
+            transition: width 0.3s ease;
         }
 
-        pre {
-            background-color: rgba(255, 255, 255, 0.3);
-            padding: 20px;
-            border-radius: 5px;
-            overflow: auto;
-            max-height: 400px;
-            margin-top: 20px;
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #718096;
+        }
+
+        #jsonOutput {
+            margin-top: 1rem;
+            background-color: #f7fafc;
+            border-radius: 4px;
+            padding: 1rem;
             white-space: pre-wrap;
-            word-wrap: break-word;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.875rem;
+            display: none;
         }
 
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: #2d3748;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
     </style>
 </head>
 <body>
-
-    <h1>Excel to JSON Converter</h1>
-    <div class="form-container">
-        <input type="file" id="upload" accept=".xlsx, .xls" />
-        <button id="convert">Convert to JSON</button>
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
+    <div class="card">
+        <h1>Excel to JSON Converter</h1>
+        <p>Upload your Excel file to convert it to JSON format</p>
+        <div class="dropzone" id="dropzone">
+            <p>Click to upload or drag and drop</p>
+            <p>XLSX or XLS (MAX. 10MB)</p>
         </div>
-        <pre id="output"></pre>
+        <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <p class="progress-text" id="progressText">Converting... 0%</p>
+        </div>
+        <pre id="jsonOutput"></pre>
     </div>
+    <div class="toast" id="toast"></div>
 
     <script>
         function formatDate(excelDate) {
-            // Excel dates start from January 1, 1900
             const date = new Date((excelDate - (excelDate >= 61 ? 1 : 0)) * 86400000 + Date.UTC(1899, 11, 30));
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
         }
 
-        document.getElementById('convert').addEventListener('click', function() {
-            const fileInput = document.getElementById('upload');
-            const file = fileInput.files[0];
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function handleFile(file) {
             if (!file) {
-                alert('Please upload an Excel file.');
+                showToast('Please upload an Excel file.');
                 return;
             }
 
@@ -119,74 +156,96 @@
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
 
-                // Convert the sheet to JSON
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 });
-                const filteredData = jsonData.map(row => {
-                    return {
-                        last_name: row[3] || null,
-                        first_name: row[4] || null,
-                        middle_initial: row[5] || null,
-                        extension: row[6] || null,
-                        birthday: typeof row[7] === 'number' ? formatDate(row[7]) : row[7] || null,
-                        sex: row[8] || null,
-                        address: row[9] || null,
-                        training_institution: row[10] || null,
-                        type_training_institution: row[11] || null,
-                        email: row[12] || null,
-                        contact_number: row[13] || null,
-                        educational_attainment: row[14] || null,
-                        training_hours: row[15] || null,
-                        years_of_experience: row[16] || null,
-                        sector: row[17] || null,
-                        qualification: row[18] || null,
-                        nc_cert_number: row[19] || null,
-                        nc_date_issuance: typeof row[20] === 'number' ? formatDate(row[20]) : row[20] || null,
-                        nc_validity: typeof row[21] === 'number' ? formatDate(row[21]) : row[21] || null,
-                        tm_cert_number: row[22] || null,
-                        tm_date_issuance: typeof row[23] === 'number' ? formatDate(row[23]) : row[23] || null,
-                        tm_validity: typeof row[24] === 'number' ? formatDate(row[24]) : row[24] || null,
-                        assessor1: row[25] || null,
-                        assessor2: row[27] || null,
-                        assessor3: row[28] || null,
-                        nttc_serial_number: row[28] || null,
-                        nttc_cert_number: row[29] || null,
-                        nttc_date_issuance: typeof row[30] === 'number' ? formatDate(row[30]) : row[30] || null,
-                        nttc_validity: typeof row[31] === 'number' ? formatDate(row[31]) : row[31] || null
-                    };
-                });
+                const filteredData = jsonData.map(row => ({
+                    last_name: row[3] || null,
+                    first_name: row[4] || null,
+                    middle_initial: row[5] || null,
+                    extension: row[6] || null,
+                    birthday: typeof row[7] === 'number' ? formatDate(row[7]) : row[7] || null,
+                    sex: row[8] || null,
+                    address: row[9] || null,
+                    training_institution: row[10] || null,
+                    type_training_institution: row[11] || null,
+                    email: row[12] || null,
+                    contact_number: row[13] || null,
+                    educational_attainment: row[14] || null,
+                    training_hours: row[15] || null,
+                    years_of_experience: row[16] || null,
+                    sector: row[17] || null,
+                    qualification: row[18] || null,
+                    nc_cert_number: row[19] || null,
+                    nc_date_issuance: typeof row[20] === 'number' ? formatDate(row[20]) : row[20] || null,
+                    nc_validity: typeof row[21] === 'number' ? formatDate(row[21]) : row[21] || null,
+                    tm_cert_number: row[22] || null,
+                    tm_date_issuance: typeof row[23] === 'number' ? formatDate(row[23]) : row[23] || null,
+                    tm_validity: typeof row[24] === 'number' ? formatDate(row[24]) : row[24] || null,
+                    assessor1: row[25] || null,
+                    assessor2: row[27] || null,
+                    assessor3: row[28] || null,
+                    nttc_serial_number: row[28] || null,
+                    nttc_cert_number: row[29] || null,
+                    nttc_date_issuance: typeof row[30] === 'number' ? formatDate(row[30]) : row[30] || null,
+                    nttc_validity: typeof row[31] === 'number' ? formatDate(row[31]) : row[31] || null
+                }));
 
-                // Output the JSON data
                 const jsonOutput = JSON.stringify(filteredData, null, 2);
-                document.getElementById('output').textContent = jsonOutput;
+                document.getElementById('jsonOutput').textContent = jsonOutput;
+                document.getElementById('jsonOutput').style.display = 'block';
 
-                // Create a download link for the JSON data
-                const blob = new Blob([jsonOutput], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'data.json';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();  // Trigger the download
-                document.body.removeChild(a); // Clean up the link element
-                URL.revokeObjectURL(url); // Free the object URL
+                // Simulate progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    document.getElementById('progress').style.width = `${progress}%`;
+                    document.getElementById('progressText').textContent = `Converting... ${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        downloadJson(jsonOutput);
+                    }
+                }, 50);
             };
 
-            // Show progress bar
-            const progressBarContainer = document.querySelector('.progress-bar-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block';
-            let progress = 0;
-
-            const interval = setInterval(function() {
-                progress += 5;
-                progressBar.style.width = progress + '%';
-                if (progress >= 100) {
-                    clearInterval(interval);
-                }
-            }, 100);
-
+            document.getElementById('progressContainer').style.display = 'block';
             reader.readAsArrayBuffer(file);
+        }
+
+        function downloadJson(jsonData) {
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Your JSON file has been downloaded.');
+        }
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.backgroundColor = '#f7fafc';
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.backgroundColor = '';
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.backgroundColor = '';
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
         });
     </script>
 </body>
