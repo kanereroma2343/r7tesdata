@@ -1,231 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel to JSON Converter</title>
-    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.5/dist/xlsx.full.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #000428, #004e92);
-            color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 600px;
-            background: linear-gradient(135deg, #333, #004e92);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #ffffff;
-        }
-
-        .upload-area {
-            border: 2px dashed #3498db;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .upload-area:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-            border-color: #004e92;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #004e92, #3498db);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin: 5px 0;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #00366f, #2980b9);
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin: 10px 0;
-            display: none;
-        }
-
-        .progress {
-            height: 20px;
-            width: 0;
-            background-color: #3498db;
-            border-radius: 5px;
-        }
-
-        #status {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Excel to JSON Converter</h2>
-        <form id="uploadForm">
-            <div class="upload-area" id="dropZone">
-                <p>Drag & Drop your Excel file here or</p>
-                <input type="file" id="fileInput" name="excelFile" accept=".xlsx,.xls" required hidden>
-                <button type="button" class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
-                <div class="file-name" id="fileName"></div>
-            </div>
-            <div class="progress-bar" id="progressBar">
-                <div class="progress" id="progress"></div>
-            </div>
-            <button type="submit" class="btn" id="convertBtn" disabled>Convert to JSON</button>
-            <button type="button" class="btn" id="updateBtn" style="display: none;">Update data.json</button>
-        </form>
-        <div id="status"></div>
-    </div>
+    <h1>Excel to JSON Converter</h1>
+    <input type="file" id="upload" accept=".xlsx, .xls" />
+    <button id="convert">Convert to JSON</button>
+    <pre id="output"></pre>
+
     <script>
-        const statusDiv = document.getElementById('status');
-        const convertBtn = document.getElementById('convertBtn');
-        const updateBtn = document.getElementById('updateBtn');
-        const fileNameDisplay = document.getElementById('fileName');
-
-        const uploadForm = document.getElementById('uploadForm');
-
-        let convertedData;
-
-        uploadForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-
+        document.getElementById('convert').addEventListener('click', function() {
+            const fileInput = document.getElementById('upload');
             const file = fileInput.files[0];
             if (!file) {
-                statusDiv.textContent = 'No file selected';
-                statusDiv.style.color = 'red';
+                alert('Please upload an Excel file.');
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const data = e.target.result;
-                const workbook = XLSX.read(data, { type: 'binary' });
-
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
 
-                const range = XLSX.utils.decode_range(worksheet['!ref']);
-                const desiredColumns = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE'];
-                const filteredData = [];
-
-                for (let rowIndex = 6; rowIndex <= range.e.r; rowIndex++) {
-                    const row = {};
-                    desiredColumns.forEach(col => {
-                        const cellAddress = col + (rowIndex + 1);
-                        const cell = worksheet[cellAddress];
-                        if (cell) {
-                            if (cell.t === 'n' && cell.v > 25569) {  // Check if it's an Excel date serial number
-                                const date = new Date((cell.v - 25569) * 86400 * 1000); // Convert Excel date to JS date
-                                row[col] = date.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                            } else {
-                                row[col] = cell.v;
-                            }
-                        }
-                    });
-                    if (Object.keys(row).length > 0) {
-                        filteredData.push(row);
-                    }
-                }
-
-                convertedData = filteredData;
-
-                downloadJSON(convertedData, 'data.json');
-
-                statusDiv.textContent = 'Conversion successful! Click Update to save the data.';
-                statusDiv.style.color = 'green';
-
-                convertBtn.style.display = 'none';
-                updateBtn.style.display = 'block';
-            };
-
-            reader.onerror = function(error) {
-                statusDiv.textContent = 'Error reading the file';
-                statusDiv.style.color = 'red';
-            };
-
-            reader.readAsBinaryString(file);
-        });
-
-        updateBtn.addEventListener('click', async function() {
-            if (!convertedData) {
-                statusDiv.textContent = 'No data to update';
-                statusDiv.style.color = 'red';
-                return;
-            }
-
-            try {
-                statusDiv.textContent = 'Updating data...';
-                statusDiv.style.color = '#3498db';
-                updateBtn.disabled = true;
-
-                const response = await fetch('/api/save-json', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ data: convertedData })
+                // Convert the sheet to JSON
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 }); // Start from row 7 (index 6)
+                const filteredData = jsonData.map(row => {
+                    return {
+                        D: row[3],
+                        E: row[4],
+                        F: row[5],
+                        G: row[6],
+                        H: row[7],
+                        I: row[8],
+                        J: row[9],
+                        K: row[10],
+                        L: row[11],
+                        M: row[12],
+                        N: row[13],
+                        O: row[14],
+                        P: row[15],
+                        Q: row[16],
+                        R: row[17],
+                        S: row[18],
+                        T: row[19],
+                        U: row[20],
+                        V: row[21],
+                        W: row[22],
+                        X: row[23],
+                        Y: row[24],
+                        Z: row[25],
+                        AA: row[26],
+                        AB: row[27],
+                        AC: row[28],
+                        AD: row[29],
+                        AE: row[30]
+                    };
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Server returned ' + response.status);
-                }
+                // Output the JSON data
+                document.getElementById('output').textContent = JSON.stringify(filteredData, null, 2);
+            };
 
-                const result = await response.json();
-                statusDiv.textContent = 'Data successfully updated!';
-                statusDiv.style.color = 'green';
-                
-                uploadForm.reset();
-                fileNameDisplay.style.display = 'none';
-                convertBtn.style.display = 'block';
-                convertBtn.disabled = true;
-                updateBtn.style.display = 'none';
-                convertedData = null;
-            } catch (error) {
-                statusDiv.textContent = 'Error updating data: ' + error.message;
-                statusDiv.style.color = 'red';
-            } finally {
-                updateBtn.disabled = false;
-            }
+            reader.readAsArrayBuffer(file);
         });
-
-        function downloadJSON(data, filename) {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
     </script>
 </body>
 </html>
