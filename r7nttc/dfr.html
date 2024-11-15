@@ -164,15 +164,22 @@
 
     function searchTable() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            row.last_name.toLowerCase().includes(searchTerm) ||
-            row.first_name.toLowerCase().includes(searchTerm) ||
-            row.middle_initial.toLowerCase().includes(searchTerm) ||
-            row.province.toLowerCase().includes(searchTerm) ||
-            row.qualification.toLowerCase().includes(searchTerm) ||
-            row.nttc_cert_number.toLowerCase().includes(searchTerm) ||
-            row.nttc_serial_number.toLowerCase().includes(searchTerm)
-        );
+        
+        // Check if the search term is empty
+        if (searchTerm.trim() === "") {
+            filteredData = originalData; // Reset to original data if search term is empty
+        } else {
+            filteredData = originalData.filter(row =>
+                row.last_name.toLowerCase().includes(searchTerm) ||
+                row.first_name.toLowerCase().includes(searchTerm) ||
+                row.middle_initial.toLowerCase().includes(searchTerm) ||
+                row.province.toLowerCase().includes(searchTerm) ||
+                row.qualification.toLowerCase().includes(searchTerm) ||
+                row.nttc_cert_number.toLowerCase().includes(searchTerm) ||
+                row.nttc_serial_number.toLowerCase().includes(searchTerm)
+            );
+        }
+        
         currentPage = 1; 
         renderTable();
     }
