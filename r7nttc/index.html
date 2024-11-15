@@ -50,10 +50,10 @@
                 <th>Middle Name</th>
                 <th>Extension</th>
                 <th>Qualification</th>
-                <th>Certificate Number</th>
-                <th>Control Number</th>
-                <th>Date of Issuance</th>
-                <th>Validity</th>
+                <th>nttc_cert_number</th>
+                <th>nttc_serial_number</th>
+                <th>nttc_date_issuance</th>
+                <th>nttc_validity</th>
             </tr>
         </thead>
         <tbody id="data-table-body">
@@ -134,15 +134,15 @@
 
             return `
                 <tr>
-                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.last_name || ''}</a></td>
+                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.D || ''}</a></td>
                     <td><a href="view_record.html?${urlParams}" class="record-link">${row.E || ''}</a></td>
                     <td><a href="view_record.html?${urlParams}" class="record-link">${row.F || ''}</a></td>
                     <td><a href="view_record.html?${urlParams}" class="record-link">${row.G || ''}</a></td>
                     <td>${row.S || ''}</td>
-                    <td>${row.AD || ''}</td>
-                    <td>${row.AC || ''}</td>
-                    <td>${formatDate(row.AE || '')}</td>
-                    <td style="color: ${validityColor}">${row.V || ''}</td>
+                    <td>${row.nttc_cert_number || ''}</td>
+                    <td>${row.nttc_serial_number || ''}</td>
+                    <td>${formatDate(row.nttc_date_issuance || '')}</td>
+                    <td style="color: ${validityColor}">${row.nttc_validity || ''}</td>
                 </tr>
             `;
         }).join("");
