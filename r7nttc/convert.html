@@ -80,8 +80,11 @@
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'data.json';
-                a.textContent = 'Download JSON';
-                document.body.appendChild(a); // Append the link to the body
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();  // Trigger the download
+                document.body.removeChild(a); // Clean up the link element
+                URL.revokeObjectURL(url); // Free the object URL
             };
 
             reader.readAsArrayBuffer(file);
