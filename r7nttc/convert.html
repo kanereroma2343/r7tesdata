@@ -118,7 +118,7 @@
                         nttc_validity: typeof row[32] === 'number' ? formatDate(row[32]) : row[32] || null
                     };
                 });
-
+s
                 // Output the JSON data
                 const jsonOutput = JSON.stringify(filteredData, null, 2);
                 document.getElementById('output').textContent = jsonOutput;
