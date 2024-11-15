@@ -71,7 +71,17 @@
                 });
 
                 // Output the JSON data
-                document.getElementById('output').textContent = JSON.stringify(filteredData, null, 2);
+                const jsonOutput = JSON.stringify(filteredData, null, 2);
+                document.getElementById('output').textContent = jsonOutput;
+
+                // Create a download link for the JSON data
+                const blob = new Blob([jsonOutput], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.json';
+                a.textContent = 'Download JSON';
+                document.body.appendChild(a); // Append the link to the body
             };
 
             reader.readAsArrayBuffer(file);
