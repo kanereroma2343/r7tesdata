@@ -3,175 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics Page</title>
+    <title>Statistics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background-color: #f1f8ff;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .stat-card h2 {
-            margin-top: 0;
-            color: #3498db;
+            margin: 20px;
         }
         .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
+            width: 80%;
+            margin: auto;
+        }
+        .stat-card {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Statistics Dashboard</h1>
-    
-    <div class="stats-container" id="statsContainer"></div>
-    
+    <h1>Statistics Overview</h1>
+    <div id="statsContainer"></div>
     <div class="chart-container">
-        <canvas id="salesChart"></canvas>
-    </div>
-    
-    <div class="chart-container">
-        <canvas id="categoryChart"></canvas>
+        <canvas id="provinceChart"></canvas>
+        <canvas id="qualificationChart"></canvas>
+        <canvas id="sectorChart"></canvas>
     </div>
 
     <script>
-        // Fetch the JSON data
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Display essential statistics
-                const statsContainer = document.getElementById('statsContainer');
-                const essentialStats = [
-                    { label: 'Total Sales', value: data.totalSales },
-                    { label: 'Average Order Value', value: data.averageOrderValue.toFixed(2) },
-                    { label: 'Total Customers', value: data.totalCustomers },
-                    { label: 'Top Selling Product', value: data.topSellingProduct }
-                ];
+        async function fetchData() {
+            const response = await fetch('data.json');
+            const data = await response.json();
+            return data;
+        }
 
-                // New statistics for entries by province, qualifications, and sector
-                const provinceCounts = {};
-                const qualificationCounts = {};
-                const sectorCounts = {};
-
-                data.entries.forEach(entry => {
-                    // Count entries by province
-                    provinceCounts[entry.province] = (provinceCounts[entry.province] || 0) + 1;
-
-                    // Count unique qualifications
-                    qualificationCounts[entry.qualification] = (qualificationCounts[entry.qualification] || 0) + 1;
-
-                    // Count entries by sector
-                    sectorCounts[entry.sector] = (sectorCounts[entry.sector] || 0) + 1;
-                });
-
-                // Display province counts
-                for (const [province, count] of Object.entries(provinceCounts)) {
-                    const statCard = document.createElement('div');
-                    statCard.className = 'stat-card';
-                    statCard.innerHTML = `
-                        <h2>Entries from ${province}</h2>
-                        <p>${count}</p>
-                    `;
-                    statsContainer.appendChild(statCard);
-                }
-
-                // Display qualification counts
-                for (const [qualification, count] of Object.entries(qualificationCounts)) {
-                    const statCard = document.createElement('div');
-                    statCard.className = 'stat-card';
-                    statCard.innerHTML = `
-                        <h2>${qualification} Entries</h2>
-                        <p>${count}</p>
-                    `;
-                    statsContainer.appendChild(statCard);
-                }
-
-                // Display sector counts
-                for (const [sector, count] of Object.entries(sectorCounts)) {
-                    const statCard = document.createElement('div');
-                    statCard.className = 'stat-card';
-                    statCard.innerHTML = `
-                        <h2>${sector} Entries</h2>
-                        <p>${count}</p>
-                    `;
-                    statsContainer.appendChild(statCard);
-                }
-
-                // Create sales chart
-                const salesCtx = document.getElementById('salesChart').getContext('2d');
-                new Chart(salesCtx, {
-                    type: 'line',
-                    data: {
-                        labels: data.monthlySales.map(item => item.month),
-                        datasets: [{
-                            label: 'Monthly Sales',
-                            data: data.monthlySales.map(item => item.amount),
-                            borderColor: 'rgb(75, 192, 192)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Monthly Sales'
-                            }
+        function createChart(ctx, labels, data, title) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
+                }
+            });
+        }
 
-                // Create category chart
-                const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-                new Chart(categoryCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: data.salesByCategory.map(item => item.category),
-                        datasets: [{
-                            data: data.salesByCategory.map(item => item.sales),
-                            backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)',
-                                'rgb(75, 192, 192)',
-                                'rgb(153, 102, 255)'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Sales by Category'
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        async function displayStatistics() {
+            const data = await fetchData();
+            const provinceCounts = {};
+            const qualificationCounts = {};
+            const sectorCounts = {};
+
+            data.entries.forEach(entry => {
+                // Count entries by province
+                provinceCounts[entry.province] = (provinceCounts[entry.province] || 0) + 1;
+
+                // Count unique qualifications
+                qualificationCounts[entry.qualification] = (qualificationCounts[entry.qualification] || 0) + 1;
+
+                // Count entries by sector
+                sectorCounts[entry.sector] = (sectorCounts[entry.sector] || 0) + 1;
+            });
+
+            // Display province counts
+            for (const [province, count] of Object.entries(provinceCounts)) {
+                const statCard = document.createElement('div');
+                statCard.className = 'stat-card';
+                statCard.innerHTML = `<h2>Entries from ${province}</h2><p>${count}</p>`;
+                document.getElementById('statsContainer').appendChild(statCard);
+            }
+
+            // Create charts
+            createChart(document.getElementById('provinceChart').getContext('2d'), 
+                         Object.keys(provinceCounts), 
+                         Object.values(provinceCounts), 
+                         'Entries by Province');
+
+            createChart(document.getElementById('qualificationChart').getContext('2d'), 
+                         Object.keys(qualificationCounts), 
+                         Object.values(qualificationCounts), 
+                         'Entries by Qualification');
+
+            createChart(document.getElementById('sectorChart').getContext('2d'), 
+                         Object.keys(sectorCounts), 
+                         Object.values(sectorCounts), 
+                         'Entries by Sector');
+        }
+
+        displayStatistics();
     </script>
 </body>
 </html>
