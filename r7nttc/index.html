@@ -57,8 +57,6 @@
             </tr>
         </thead>
         <tbody id="data-table-body">
-            <td><a href="view_record.html?id=${row.id}&lastName=${encodeURIComponent(row.D || '')}&firstName=${encodeURIComponent(row.E || '')}&middleName=${encodeURIComponent(row.F || '')}&extension=${encodeURIComponent(row.G || '')}&qualification=${encodeURIComponent(row.S || '')}&certificateNumber=${encodeURIComponent(row.AD || '')}" class="record-link">${row.D || ''}</a></td> <!-- Last Name -->
-            <td><a href="view_record.html?id=${row.id}&lastName=${encodeURIComponent(row.D || '')}&firstName=${encodeURIComponent(row.E || '')}&middleName=${encodeURIComponent(row.F || '')}&extension=${encodeURIComponent(row.G || '')}&qualification=${encodeURIComponent(row.S || '')}&certificateNumber=${encodeURIComponent(row.AD || '')}" class="record-link">${row.E || ''}</a></td> <!-- First Name -->
             <!-- Data will be dynamically loaded here -->
         </tbody>
     </table>
@@ -112,13 +110,11 @@
         const tableBody = document.getElementById("data-table-body");
         
         tableBody.innerHTML = paginatedData.map(row => {
-            // Parse the validity date
             const validityDate = new Date(row.V);
             const today = new Date();
             const threeMonthsFromNow = new Date();
             threeMonthsFromNow.setMonth(today.getMonth() + 3);
             
-            // Determine the validity status and color
             let validityColor = 'green'; // Active dates are green
             if (validityDate < today) {
                 validityColor = 'red'; // Expired
@@ -126,12 +122,22 @@
                 validityColor = 'orange'; // Expiring soon (within 3 months)
             }
 
+            const urlParams = new URLSearchParams({
+                id: row.id,
+                lastName: row.D || '',
+                firstName: row.E || '',
+                middleName: row.F || '',
+                extension: row.G || '',
+                qualification: row.S || '',
+                certificateNumber: row.AD || ''
+            }).toString();
+
             return `
                 <tr>
-                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.D || ''}</a></td>
-                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.E || ''}</a></td>
-                    <td><a href="view_record.html?id=${row.id}" class="record-link">${row.F || ''}</a></td>
-                    <td>${row.G || ''}</td>
+                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.D || ''}</a></td>
+                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.E || ''}</a></td>
+                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.F || ''}</a></td>
+                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.G || ''}</a></td>
                     <td>${row.S || ''}</td>
                     <td>${row.AD || ''}</td>
                     <td>${row.AC || ''}</td>
@@ -141,7 +147,6 @@
             `;
         }).join("");
         renderPagination();
-        // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
@@ -180,14 +185,12 @@
 
     loadData();
 
-    // Add this after loadData();
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
 
-    // Add this function to format the date
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
@@ -232,102 +235,39 @@
     width: 100%;
 }
 
-.search-wrapper:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
-}
-
-#searchInput {
-    width: calc(100% - 55px);
-    padding: 15px 55px 15px 25px;
+.search-wrapper input {
     border: none;
-    background: transparent;
-    font-size: 16px;
-    color: #495057;
+    background: none;
     outline: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    width: 100%;
+    color: #495057;
+    font-weight: 500;
+    border-radius: 50px;
 }
 
-#searchInput::placeholder {
-    color: #adb5bd;
-}
-
-#searchButton {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0;
-    padding: 0;
+.search-wrapper button {
     border: none;
-    border-radius: 50%;
-    background: #1a5f7a;
+    background: #007bff;
     color: white;
+    padding: 0 15px;
+    height: 36px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px;
-    height: 45px;
-}
-
-#searchButton:hover {
-    background: #2c88aa;
-    transform: scale(1.05);
-}
-
-#searchButton i {
-    font-size: 18px;
-}
-
-@media (max-width: 600px) {
-    .search-wrapper {
-        flex-direction: column;
-        background: transparent;
-        box-shadow: none;
-        gap: 10px;
-    }
-
-    #searchInput {
-        width: 100%;
-        background: #f8f9fa;
-        border-radius: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    }
-
-    #searchButton {
-        width: 45px;
-        padding: 12px;
-        margin: 0;
-        position: absolute;
-        right: 5px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-}
-
-.date-subheader {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    color: #1a5f7a;
-    font-weight: 500;
-}
-
-.entry-count {
-    text-align: center;
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    color: #333;
+    font-size: 14px;
 }
 
 .record-link {
-    text-decoration: none;
-    color: inherit; /* Use the current text color */
+    color: #007bff;
+    text-decoration: underline;
 }
 
 .record-link:hover {
-    text-decoration: underline;
+    color: #0056b3;
 }
 </style>
 </body>
