@@ -19,8 +19,8 @@
         <button onclick="window.location.href='index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='upload.html'" class="action-button">Upload Data</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-        <button onclick="window.location.href='dfr.html'"class="action-button">Due For Renewal</button>
-        <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
+        <button onclick="window.location.href='dfr.html'" class="action-button">Due For Renewal</button>
+        <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
     <div id="entryCount" class="entry-count"></div>
     <!-- Date Subheader -->
     <div class="date-subheader">
-        NTTC Holders that is Due for Renewal As of: <span id="currentDate"></span>
+        NTTC Holders that are Due for Renewal As of: <span id="currentDate"></span>
     </div>
 
     <!-- Search Input Field -->
@@ -86,7 +86,7 @@
 
     async function loadData() {
         try {
-            const response = await fetch('data.json');
+            const response = await fetch('data.json'); // Make sure you have a proper data.json file
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -113,7 +113,7 @@
         const startIndex = (currentPage - 1) * entriesPerPage;
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
-        
+
         tableBody.innerHTML = paginatedData.map(row => {
             const validityDate = new Date(row.nttc_validity);
             let validityColor = 'orange'; // Default to orange for entries about to expire
@@ -133,7 +133,7 @@
                 </tr>
             `;
         }).join("");
-        
+
         renderPagination();
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
@@ -164,7 +164,7 @@
 
     function searchTable() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        
+
         // Check if the search term is empty
         if (searchTerm.trim() === "") {
             filteredData = originalData; // Reset to original data if search term is empty
@@ -179,7 +179,7 @@
                 row.nttc_serial_number.toLowerCase().includes(searchTerm)
             );
         }
-        
+
         currentPage = 1; 
         renderTable();
     }
@@ -199,86 +199,61 @@
 </script>
 
 <style>
-.pagination {
-    margin: 20px 0;
-    text-align: center;
-}
+    .pagination {
+        margin: 20px 0;
+        text-align: center;
+    }
 
-.page-link {
-    padding: 8px 12px;
-    margin: 0 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #333;
-}
+    .page-link {
+        padding: 8px 12px;
+        margin: 0 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+    }
 
-.page-link.active {
-    background-color: #007bff;
-    color: #fff;
-}
+    .page-link.active {
+        background-color: #007bff;
+        color: #fff;
+    }
 
-.page-link.disabled {
-    pointer-events: none;
-    color: #ccc;
-}
+    .page-link.disabled {
+        pointer-events: none;
+        color: #ccc;
+    }
 
-.search-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: #f8f9fa;
-    border-radius: 50px;
-    padding: 5px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    width: 100%;
-}
+    .search-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: #f8f9fa;
+        border-radius: 50px;
+        padding: 5px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
 
-.search-wrapper input {
-    border: none;
-    background: none;
-    outline: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    width: 100%;
-    color: #495057;
-    font-weight: 500;
-    border-radius: 50px;
-}
+    .search-wrapper input {
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 50px;
+        flex: 1;
+        outline: none;
+        color: #333;
+        background: #fff;
+    }
 
-.search-wrapper button {
-    border: none;
-    background: #007bff;
-    color: white;
-    padding: 0 15px;
-    height: 36px;
-    cursor: pointer;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.record-link {
-    color: black;
-    text-decoration: none;
-}
-
-.record-link:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-
-/* Centering and styling for the entry count and date subheader */
-.entry-count, .date-subheader {
-    text-align: center; /* Center the text */
-    font-size: 18px; /* Increase font size */
-    margin: 10px 0; /* Add some margin */
-    color: #333; /* Darker color for better visibility */
-}
+    .search-wrapper button {
+        background-color: transparent;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
 </style>
+
 </body>
 </html>
