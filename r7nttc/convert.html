@@ -13,7 +13,9 @@
     <pre id="output"></pre>
 
     <script>
-        function formatDate(date) {
+        function formatDate(excelDate) {
+            // Excel dates start from January 1, 1900
+            const date = new Date((excelDate - (excelDate >= 61 ? 1 : 0)) * 86400000 + Date.UTC(1899, 11, 30));
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
         }
@@ -34,14 +36,14 @@
                 const worksheet = workbook.Sheets[sheetName];
 
                 // Convert the sheet to JSON
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 }); // Start from row 7 (index 6)
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 });
                 const filteredData = jsonData.map(row => {
                     return {
                         D: row[3],
                         E: row[4],
                         F: row[5],
                         G: row[6],
-                        H: row[7] instanceof Date ? formatDate(row[7]) : row[7],
+                        H: typeof row[7] === 'number' ? formatDate(row[7]) : row[7],
                         I: row[8],
                         J: row[9],
                         K: row[10],
@@ -54,17 +56,17 @@
                         R: row[17],
                         S: row[18],
                         T: row[19],
-                        U: row[20] instanceof Date ? formatDate(row[20]) : row[20],
-                        V: row[21] instanceof Date ? formatDate(row[21]) : row[21],
+                        U: typeof row[20] === 'number' ? formatDate(row[20]) : row[20],
+                        V: typeof row[21] === 'number' ? formatDate(row[21]) : row[21],
                         W: row[22],
-                        X: row[23] instanceof Date ? formatDate(row[23]) : row[23],
-                        Y: row[24] instanceof Date ? formatDate(row[24]) : row[24],
+                        X: typeof row[23] === 'number' ? formatDate(row[23]) : row[23],
+                        Y: typeof row[24] === 'number' ? formatDate(row[24]) : row[24],
                         Z: row[25],
                         AA: row[26],
                         AB: row[27],
                         AC: row[28],
                         AD: row[29],
-                        AE: row[30] instanceof Date ? formatDate(row[30]) : row[30]
+                        AE: typeof row[30] === 'number' ? formatDate(row[30]) : row[30]
                     };
                 });
 
