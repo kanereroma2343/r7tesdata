@@ -70,15 +70,54 @@
                     { label: 'Top Selling Product', value: data.topSellingProduct }
                 ];
 
-                essentialStats.forEach(stat => {
+                // New statistics for entries by province, qualifications, and sector
+                const provinceCounts = {};
+                const qualificationCounts = {};
+                const sectorCounts = {};
+
+                data.entries.forEach(entry => {
+                    // Count entries by province
+                    provinceCounts[entry.province] = (provinceCounts[entry.province] || 0) + 1;
+
+                    // Count unique qualifications
+                    qualificationCounts[entry.qualification] = (qualificationCounts[entry.qualification] || 0) + 1;
+
+                    // Count entries by sector
+                    sectorCounts[entry.sector] = (sectorCounts[entry.sector] || 0) + 1;
+                });
+
+                // Display province counts
+                for (const [province, count] of Object.entries(provinceCounts)) {
                     const statCard = document.createElement('div');
                     statCard.className = 'stat-card';
                     statCard.innerHTML = `
-                        <h2>${stat.label}</h2>
-                        <p>${stat.value}</p>
+                        <h2>Entries from ${province}</h2>
+                        <p>${count}</p>
                     `;
                     statsContainer.appendChild(statCard);
-                });
+                }
+
+                // Display qualification counts
+                for (const [qualification, count] of Object.entries(qualificationCounts)) {
+                    const statCard = document.createElement('div');
+                    statCard.className = 'stat-card';
+                    statCard.innerHTML = `
+                        <h2>${qualification} Entries</h2>
+                        <p>${count}</p>
+                    `;
+                    statsContainer.appendChild(statCard);
+                }
+
+                // Display sector counts
+                for (const [sector, count] of Object.entries(sectorCounts)) {
+                    const statCard = document.createElement('div');
+                    statCard.className = 'stat-card';
+                    statCard.innerHTML = `
+                        <h2>${sector} Entries</h2>
+                        <p>${count}</p>
+                    `;
+                    statsContainer.appendChild(statCard);
+                }
 
                 // Create sales chart
                 const salesCtx = document.getElementById('salesChart').getContext('2d');
