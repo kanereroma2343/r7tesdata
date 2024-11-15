@@ -77,15 +77,6 @@
     </div>
 </footer>
 
-<!-- Add Modal Structure -->
-<div id="detailsModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
 <script>
     const entriesPerPage = 200;
     let currentPage = 1;
@@ -127,7 +118,7 @@
 
             return `
                 <tr>
-                    <td onclick="openModal(${JSON.stringify(row)})" style="cursor: pointer; color: blue; text-decoration: underline;">${row.last_name || ''}</td>
+                    <td>${row.last_name || ''}</td>
                     <td>${row.first_name || ''}</td>
                     <td>${row.middle_initial || ''}</td>
                     <td>${row.extension || ''}</td>
@@ -188,29 +179,6 @@
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
-    }
-
-    // Function to open the modal with entry details
-    function openModal(entry) {
-        const modalTitle = document.getElementById("modalTitle");
-        const modalBody = document.getElementById("modalBody");
-        
-        modalTitle.textContent = `${entry.first_name} ${entry.last_name}`;
-        modalBody.innerHTML = `
-            <p><strong>Middle Name:</strong> ${entry.middle_initial || ''}</p>
-            <p><strong>Extension:</strong> ${entry.extension || ''}</p>
-            <p><strong>Qualification:</strong> ${entry.qualification || ''}</p>
-            <p><strong>Certificate Number:</strong> ${entry.nttc_cert_number || ''}</p>
-            <p><strong>Control Number:</strong> ${entry.nttc_serial_number || ''}</p>
-            <p><strong>Date Issuance:</strong> ${formatDate(entry.nttc_date_issuance)}</p>
-            <p><strong>Validity:</strong> ${formatDate(entry.nttc_validity)}</p>
-        `;
-        document.getElementById("detailsModal").style.display = "block";
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById("detailsModal").style.display = "none";
     }
 </script>
 
@@ -294,42 +262,6 @@
     font-size: 18px; /* Increase font size */
     margin: 10px 0; /* Add some margin */
     color: #333; /* Darker color for better visibility */
-}
-
-/* Modal styles */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); 
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; 
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; 
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
 }
 </style>
 </body>
