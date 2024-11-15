@@ -127,9 +127,10 @@
 
             return `
                 <tr>
-                    <td class="clickable-name" onclick="openModal(${JSON.stringify(row)})">
-                        ${row.last_name || ''} ${row.first_name || ''} ${row.middle_initial || ''} ${row.extension || ''}
-                    </td>
+                    <td onclick="openModal(${JSON.stringify(row)})" style="cursor: pointer; color: blue; text-decoration: underline;">${row.last_name || ''}</td>
+                    <td>${row.first_name || ''}</td>
+                    <td>${row.middle_initial || ''}</td>
+                    <td>${row.extension || ''}</td>
                     <td>${row.qualification || ''}</td>
                     <td>${row.nttc_cert_number || ''}</td>
                     <td>${row.nttc_serial_number || ''}</td>
@@ -329,16 +330,6 @@
     color: black;
     text-decoration: none;
     cursor: pointer;
-}
-
-.clickable-name {
-    cursor: pointer;
-    color: blue;
-    text-decoration: none; /* No underline by default */
-}
-
-.clickable-name:hover {
-    text-decoration: underline; /* Underline on hover */
 }
 </style>
 </body>
