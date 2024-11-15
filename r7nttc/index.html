@@ -50,10 +50,10 @@
                 <th>Middle Name</th>
                 <th>Extension</th>
                 <th>Qualification</th>
-                <th>nttc_cert_number</th>
-                <th>nttc_serial_number</th>
-                <th>nttc_date_issuance</th>
-                <th>nttc_validity</th>
+                <th>NTTC Cert Number</th>
+                <th>NTTC Serial Number</th>
+                <th>NTTC Date Issuance</th>
+                <th>NTTC Validity</th>
             </tr>
         </thead>
         <tbody id="data-table-body">
@@ -90,17 +90,11 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            if (!Array.isArray(data)) {
-                throw new Error('Invalid data format');
-            }
-            originalData = data.filter(row => row && (row.D || row.E));
+            originalData = data;
             filteredData = originalData;
             renderTable();
         } catch (error) {
             console.error("Error loading data:", error);
-            originalData = [];
-            filteredData = [];
-            renderTable();
         }
     }
 
@@ -110,42 +104,33 @@
         const tableBody = document.getElementById("data-table-body");
         
         tableBody.innerHTML = paginatedData.map(row => {
-            const validityDate = new Date(row.V);
+            const validityDate = new Date(row.nttc_validity);
             const today = new Date();
             const threeMonthsFromNow = new Date();
             threeMonthsFromNow.setMonth(today.getMonth() + 3);
             
-            let validityColor = 'green'; // Active dates are green
+            let validityColor = 'green';
             if (validityDate < today) {
-                validityColor = 'red'; // Expired
+                validityColor = 'red';
             } else if (validityDate <= threeMonthsFromNow) {
-                validityColor = 'orange'; // Expiring soon (within 3 months)
+                validityColor = 'orange';
             }
-
-            const urlParams = new URLSearchParams({
-                id: row.id,
-                lastName: row.D || '',
-                firstName: row.E || '',
-                middleName: row.F || '',
-                extension: row.G || '',
-                qualification: row.S || '',
-                certificateNumber: row.AD || ''
-            }).toString();
 
             return `
                 <tr>
-                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.D || ''}</a></td>
-                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.E || ''}</a></td>
-                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.F || ''}</a></td>
-                    <td><a href="view_record.html?${urlParams}" class="record-link">${row.G || ''}</a></td>
-                    <td>${row.S || ''}</td>
+                    <td>${row.last_name || ''}</td>
+                    <td>${row.first_name || ''}</td>
+                    <td>${row.middle_initial || ''}</td>
+                    <td>${row.extension || ''}</td>
+                    <td>${row.qualification || ''}</td>
                     <td>${row.nttc_cert_number || ''}</td>
                     <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance || '')}</td>
-                    <td style="color: ${validityColor}">${row.nttc_validity || ''}</td>
+                    <td>${formatDate(row.nttc_date_issuance)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
                 </tr>
             `;
         }).join("");
+        
         renderPagination();
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
@@ -156,7 +141,7 @@
         let paginationHTML = '';
 
         paginationHTML += `<a href="#" class="page-link ${currentPage === 1 ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</a>`;
+            onclick="setPage(${currentPage - 1})">Previous</a>`;
 
         for (let i = 1; i <= totalPages; i++) {
             paginationHTML += `<a href="#" class="page-link ${i === currentPage ? 'active' : ''}" 
@@ -164,7 +149,7 @@
         }
 
         paginationHTML += `<a href="#" class="page-link ${currentPage === totalPages ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</a>`;
+            onclick="setPage(${currentPage + 1})">Next</a>`;
 
         pagination.innerHTML = paginationHTML;
     }
