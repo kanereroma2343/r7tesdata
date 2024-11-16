@@ -18,6 +18,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            filter: blur(5px);
         }
 
         body::before {
@@ -150,8 +151,15 @@
             flex-direction: column;
             gap: 1rem;
             margin-top: 1rem;
-            transition: all 0.5s ease-in-out; /* Updated for smoother animation */
-            overflow: hidden; /* Updated for smoother animation */
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .sub-boxes.active {
+            max-height: 100px;
+            opacity: 1;
         }
 
         .sub-box {
@@ -279,15 +287,7 @@
                     const boxName = this.getAttribute('data-box');
                     const subBoxes = document.getElementById(boxName + '-sub');
                     if (subBoxes) {
-                        subBoxes.style.display = subBoxes.style.display === 'flex' ? 'none' : 'flex';
-                        subBoxes.style.maxHeight = subBoxes.style.display === 'flex' ? subBoxes.scrollHeight + 'px' : '0';
-
-                        const subBoxElements = subBoxes.querySelectorAll('.sub-box');
-                        subBoxElements.forEach((subBox, index) => {
-                            setTimeout(() => {
-                                subBox.classList.toggle('visible');
-                            }, index * 100);
-                        });
+                        subBoxes.classList.toggle('active');
                     }
                 });
             });
