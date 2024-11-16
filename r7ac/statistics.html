@@ -77,9 +77,10 @@
 </footer>
 
 <script>
-    const entriesPerPage = 200;
+    const entriesPerPage = 18;
     let filteredData = [];
     let originalData = [];
+    let currentPage = 1;
 
     async function loadData() {
         try {
@@ -118,11 +119,22 @@
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+
+        // Pagination logic
+        const totalQualifications = Object.entries(qualificationCounts).length;
+        const totalPages = Math.ceil(totalQualifications / entriesPerPage);
+        const start = (currentPage - 1) * entriesPerPage;
+        const end = start + entriesPerPage;
+        const qualificationsToDisplay = Object.entries(qualificationCounts).slice(start, end);
+
+        qualificationsToDisplay.forEach(([qualification, count]) => {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
             qualificationsTallyElement.appendChild(row);
-        }
+        });
+
+        // Update pagination
+        updatePagination(totalPages);
 
         // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
@@ -135,6 +147,25 @@
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+    }
+
+    // New function to update pagination
+    function updatePagination(totalPages) {
+        const paginationElement = document.getElementById('pagination');
+        paginationElement.innerHTML = ''; // Clear previous pagination
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.textContent = i;
+            pageLink.className = 'page-link' + (i === currentPage ? ' active' : '');
+            pageLink.href = '#';
+            pageLink.onclick = (e) => {
+                e.preventDefault();
+                currentPage = i;
+                renderCharts(); // Re-render charts with new page
+            };
+            paginationElement.appendChild(pageLink);
+        }
     }
 
     loadData();
@@ -279,26 +310,15 @@
     }
 }
 
-/* Tally Container Styles */
-.tally-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 20px; /* Space between the tables */
-    margin-top: 20px;
-}
-
-.qualificationsTallyContainer, .sectorTallyContainer {
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    padding: 15px;
-}
-
 /* Tally Table Styles */
 .tally-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .tally-table th, .tally-table td {
