@@ -115,15 +115,6 @@
             sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
 
-        // Update sector tally display
-        const sectorTallyElement = document.getElementById('sectorTally');
-        sectorTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [sector, count] of Object.entries(sectorCounts)) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${sector}: ${count}`;
-            sectorTallyElement.appendChild(listItem);
-        }
-
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
