@@ -193,17 +193,26 @@
         const sectorsTab = document.getElementById('sectorsTab');
         const tabButtons = document.querySelectorAll('.tab-button');
 
+        // Hide all tabs and remove active class
+        qualificationsTab.classList.remove('active');
+        sectorsTab.classList.remove('active');
+        tabButtons.forEach(button => button.classList.remove('active'));
+
         if (tabName === 'qualifications') {
-            qualificationsTab.style.display = 'block';
-            sectorsTab.style.display = 'none';
+            qualificationsTab.classList.add('active');
+            qualificationsTab.style.display = 'block'; // Show qualifications tab
+            sectorsTab.style.display = 'none'; // Hide sectors tab
             tabButtons[0].classList.add('active');
-            tabButtons[1].classList.remove('active');
         } else {
-            qualificationsTab.style.display = 'none';
-            sectorsTab.style.display = 'block';
-            tabButtons[0].classList.remove('active');
+            sectorsTab.classList.add('active');
+            sectorsTab.style.display = 'block'; // Show sectors tab
+            qualificationsTab.style.display = 'none'; // Hide qualifications tab
             tabButtons[1].classList.add('active');
         }
+
+        // Trigger reflow to enable transition
+        qualificationsTab.offsetHeight; // This line forces a reflow
+        sectorsTab.offsetHeight; // This line forces a reflow
     }
 
     // Call showTab to set the initial tab
@@ -285,12 +294,19 @@
 
 .tab-button {
     padding: 12px 20px;
-    border: 1px solid #007bff;
-    background-color: #fff;
+    border: 2px solid #007bff;
+    background-color: transparent;
     color: #007bff;
     cursor: pointer;
     margin: 0 5px;
     font-size: 1em;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-button:hover {
+    background-color: #007bff;
+    color: #fff;
 }
 
 .tab-button.active {
@@ -301,6 +317,13 @@
 /* Tab Content Styles */
 .tab-content {
     display: none; /* Hide all tab content by default */
+    opacity: 0; /* Start with opacity 0 for transition effect */
+    transition: opacity 0.5s ease; /* Smooth transition for opacity */
+}
+
+.tab-content.active {
+    display: block; /* Show the active tab */
+    opacity: 1; /* Fade in effect */
 }
 
 /* Fade-in Effect */
