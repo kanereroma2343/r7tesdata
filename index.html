@@ -150,29 +150,26 @@
             }
         }
 
-        .coming-soon {
+        .sub-boxes {
             display: none;
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 1rem;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 0.5rem;
-            border-radius: 5px;
-            transition: opacity 0.3s ease;
-        }
-
-        .box:hover .coming-soon {
-            display: block;
-            opacity: 1;
-        }
-
-        header > div {
-            display: flex;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            gap: 1rem;
             justify-content: center;
-            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .sub-boxes.visible {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .smaller-box {
+            width: 150px;
+            height: 100px;
+            font-size: 1rem;
         }
 
         @media (max-width: 768px) {
@@ -200,25 +197,12 @@
                 padding: 1rem;
             }
         }
-
-        .sub-boxes {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .smaller-box {
-            width: 150px;
-            height: 100px;
-            font-size: 1rem;
-        }
     </style>
 </head>
 <body>
     <header>
         <div style="display: flex; align-items: center;">
-            <img src="./icons/tlogo.png" alt="Right Logo" class="logo" style="width: 50px; height: auto; margin-right: 10px;">
+            <img src="./icons/tlogo.png" alt="Left Logo" class="logo" style="width: 50px; height: auto; margin-right: 10px;">
             <h1>TESDA Region VII Monitoring Information System</h1>
             <img src="./icons/blogo.png" alt="Right Logo" class="logo" style="width: 50px; height: auto; margin-left: 10px;">
         </div>
@@ -231,13 +215,12 @@
 
     <div class="container">
         <div class="box" onclick="toggleSubBoxes(this)">UTPRAS</div>
-        <div class="box">PTCACS</div>
-        <div class="box">SCHOLARSHIPS</div>
-        <div class="sub-boxes" style="display: none;">
+        <div class="sub-boxes">
             <div class="box smaller-box">PROGRAM REGISTRATION</div>
             <div class="box smaller-box">NTTC</div>
         </div>
-        <!-- ... existing code ... -->
+        <div class="box">PTCACS</div>
+        <div class="box">SCHOLARSHIPS</div>
     </div>
 
     <footer>
@@ -247,11 +230,7 @@
     <script>
         function toggleSubBoxes(box) {
             const subBoxes = box.nextElementSibling;
-            if (subBoxes.style.display === "none" || subBoxes.style.display === "") {
-                subBoxes.style.display = "flex";
-            } else {
-                subBoxes.style.display = "none";
-            }
+            subBoxes.classList.toggle('visible');
         }
     </script>
 </body>
