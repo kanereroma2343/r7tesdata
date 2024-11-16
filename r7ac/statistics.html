@@ -37,7 +37,6 @@
     <div class="tally-container">
         <div class="qualificationsTallyContainer">
             <h2>Qualifications Tally</h2>
-            <p id="totalQualificationsCount"></p>
             <table class="tally-table">
                 <thead>
                     <tr>
@@ -51,7 +50,6 @@
 
         <div class="sectorTallyContainer">
             <h2>Sectors Tally</h2>
-            <p id="sectorsCount"></p>
             <table class="tally-table">
                 <thead>
                     <tr>
@@ -105,24 +103,35 @@
     }
 
     function renderCharts() {
-        const qualificationCounts = new Set();
+        const qualificationCounts = {};
         const sectorCounts = {};
 
-        // Count unique qualifications and occurrences for sectors
+        // Count occurrences for qualifications and sectors
         filteredData.forEach(row => {
             const qualification = row.J || 'Unknown';
             const sector = row.I || 'Unknown';
 
-            qualificationCounts.add(qualification);
+            qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
             sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
+
+        // Update sector tally display
+        const sectorTallyElement = document.getElementById('sectorTally');
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [sector, count] of Object.entries(sectorCounts)) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${sector}: ${count}`;
+            sectorTallyElement.appendChild(listItem);
+        }
 
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
-        const totalQualifications = qualificationCounts.size;
-        qualificationsTallyElement.innerHTML = `<tr><td>Unique Qualifications</td><td>${totalQualifications}</td></tr>`; // Display unique count
-        document.getElementById('totalQualificationsCount').textContent = `Total Unique Qualifications: ${totalQualifications}`; // Display total count
+        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
+        }
 
         // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
@@ -132,9 +141,6 @@
             row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
             sectorTallyElement.appendChild(row);
         }
-
-        // Update sectors count display
-        document.getElementById("sectorsCount").textContent = `Total Sectors: ${Object.keys(sectorCounts).length}`;
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
