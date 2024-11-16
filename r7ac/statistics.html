@@ -33,24 +33,33 @@
         Current Accredited Assessment Centers As of: <span id="currentDate"></span>
     </div>
 
-    <!-- Canvas for Pie Charts -->
-    <div id="tallyContainer">
-        <h2>Sectors Tally</h2>
-        <ul id="sectorTally"></ul>
-    </div>
-    
-    <!-- New Qualifications Tally Display -->
-    <div id="qualificationsTallyContainer">
-        <h2>Qualifications Tally</h2>
-        <table class="tally-table">
-            <thead>
-                <tr>
-                    <th>Qualification</th>
-                    <th>Count</th>
-                </tr>
-            </thead>
-            <tbody id="qualificationsTally"></tbody>
-        </table>
+    <!-- Tally Display for Qualifications and Sectors -->
+    <div class="tally-container">
+        <div class="qualificationsTallyContainer">
+            <h2>Qualifications Tally</h2>
+            <table class="tally-table">
+                <thead>
+                    <tr>
+                        <th>Qualification</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="qualificationsTally"></tbody>
+            </table>
+        </div>
+
+        <div class="sectorTallyContainer">
+            <h2>Sectors Tally</h2>
+            <table class="tally-table">
+                <thead>
+                    <tr>
+                        <th>Sector</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="sectorTally"></tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Example of a table with improved styling -->
@@ -134,15 +143,6 @@
             sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
 
-        // Update sector tally display
-        const sectorTallyElement = document.getElementById('sectorTally');
-        sectorTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [sector, count] of Object.entries(sectorCounts)) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${sector}: ${count}`;
-            sectorTallyElement.appendChild(listItem);
-        }
-
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
@@ -150,6 +150,15 @@
             const row = document.createElement('tr');
             row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
             qualificationsTallyElement.appendChild(row);
+        }
+
+        // Update sector tally display
+        const sectorTallyElement = document.getElementById('sectorTally');
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [sector, count] of Object.entries(sectorCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
+            sectorTallyElement.appendChild(row);
         }
 
         // Update entry count display
@@ -298,15 +307,26 @@
     }
 }
 
-/* Tally Table Styles */
-.tally-table {
-    width: 100%;
-    border-collapse: collapse;
+/* Tally Container Styles */
+.tally-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 20px; /* Space between the tables */
     margin-top: 20px;
+}
+
+.qualificationsTallyContainer, .sectorTallyContainer {
     background-color: #fff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
+    padding: 15px;
+}
+
+/* Tally Table Styles */
+.tally-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .tally-table th, .tally-table td {
