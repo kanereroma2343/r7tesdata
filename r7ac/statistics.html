@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NTTCMIS</title>
+    <link rel="icon" type="image/png" href="../icons/tlogo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="fade-in">
+<div class="header-container">
+    <div class="header-top">
+        <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
+        <h1 class="header-title">ACCREDITED ASSESSMENT CENTERS RECORDS</h1>
+        <img src="../icons/blogo.png" alt="Right Logo" class="logo">
+    </div>
+    <div class="button-container">
+        <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
+        <button onclick="window.location.href='upload.html'" class="action-button">Upload Data</button>
+        <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
+        <button class="action-button">Export Data</button>
+        <button class="action-button">Settings</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- New Entry Count Display -->
+    <div id="entryCount" class="entry-count"></div>
+    <!-- Date Subheader -->
+    <div class="date-subheader">
+        Current Accredited Assessment Centers As of: <span id="currentDate"></span>
+    </div>
+
+    <!-- Canvas for Pie Charts -->
+    <div>
+        <canvas id="qualificationChart"></canvas>
+        <canvas id="sectorChart"></canvas>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2024 Certificate Records Management System</p>
+        <div class="footer-links">
+            <a href="./index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="#"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const entriesPerPage = 200;
+    let filteredData = [];
+    let originalData = [];
+
+    async function loadData() {
+        try {
+            const response = await fetch('data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            originalData = data.filter(row => row && (row.D || row.E));
+            filteredData = originalData;
+            renderCharts();
+        } catch (error) {
+            console.error("Error loading data:", error);
+            originalData = [];
+            filteredData = [];
+            renderCharts();
+        }
+    }
+
+    function renderCharts() {
+        const qualificationCounts = {};
+        const sectorCounts = {};
+
+        // Count occurrences for qualifications and sectors
+        filteredData.forEach(row => {
+            const qualification = row.J || 'Unknown';
+            const sector = row.I || 'Unknown';
+
+            qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
+            sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+        });
+
+        // Render Qualification Chart
+        const qualificationCtx = document.getElementById('qualificationChart').getContext('2d');
+        new Chart(qualificationCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(qualificationCounts),
+                datasets: [{
+                    label: 'Qualifications',
+                    data: Object.values(qualificationCounts),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Statistics per Qualification'
+                    }
+                }
+            }
+        });
+
+        // Render Sector Chart
+        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+        new Chart(sectorCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(sectorCounts),
+                datasets: [{
+                    label: 'Sectors',
+                    data: Object.values(sectorCounts),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Statistics per Sector'
+                    }
+                }
+            }
+        });
+
+        // Update entry count display
+        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+    }
+
+    loadData();
+
+    // Add this after loadData();
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    // Trigger fade-in effect after the page loads
+    window.onload = function() {
+        document.body.classList.add('visible');
+    };
+</script>
+
+<style>
+.pagination {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.page-link {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-link.disabled {
+    pointer-events: none;
+    color: #ccc;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.search-wrapper:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+#searchInput {
+    width: calc(100% - 55px);
+    padding: 15px 55px 15px 25px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #495057;
+    outline: none;
+}
+
+#searchInput::placeholder {
+    color: #adb5bd;
+}
+
+#searchButton {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #1a5f7a;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+}
+
+#searchButton:hover {
+    background: #2c88aa;
+    transform: scale(1.05);
+}
+
+#searchButton i {
+    font-size: 18px;
+}
+
+@media (max-width: 600px) {
+    .search-wrapper {
+        flex-direction: column;
+        background: transparent;
+        box-shadow: none;
+        gap: 10px;
+    }
+
+    #searchInput {
+        width: 100%;
+        background: #f8f9fa;
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    #searchButton {
+        width: 45px;
+        padding: 12px;
+        margin: 0;
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.date-subheader {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #1a5f7a;
+    font-weight: 500;
+}
+
+.entry-count {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Add this CSS for fade-in effect */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.fade-in.visible {
+    opacity: 1;
+}
+
+/* Add styles for the charts if necessary */
+canvas {
+    max-width: 600px;
+    margin: 20px auto;
+}
+</style>
+</body>
+</html>
