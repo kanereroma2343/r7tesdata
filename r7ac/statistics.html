@@ -33,38 +33,24 @@
         Current Accredited Assessment Centers As of: <span id="currentDate"></span>
     </div>
 
-    <!-- Tally Display for Qualifications and Sectors -->
-    <div class="tally-container">
-        <div class="qualificationsTallyContainer">
-            <h2>Qualifications Tally</h2>
-            <div class="search-wrapper">
-                <input type="text" id="searchQualifications" placeholder="Search Qualifications..." />
-                <i class="fas fa-search"></i>
-            </div>
-            <table class="tally-table">
-                <thead>
-                    <tr>
-                        <th>Qualification</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody id="qualificationsTally"></tbody>
-            </table>
-            <div class="pagination" id="qualificationsPagination"></div>
-        </div>
-
-        <div class="sectorTallyContainer">
-            <h2>Sectors Tally</h2>
-            <table class="tally-table">
-                <thead>
-                    <tr>
-                        <th>Sector</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody id="sectorTally"></tbody>
-            </table>
-        </div>
+    <!-- Canvas for Pie Charts -->
+    <div id="tallyContainer">
+        <h2>Sectors Tally</h2>
+        <ul id="sectorTally"></ul>
+    </div>
+    
+    <!-- New Qualifications Tally Display -->
+    <div id="qualificationsTallyContainer">
+        <h2>Qualifications Tally</h2>
+        <table class="tally-table">
+            <thead>
+                <tr>
+                    <th>Qualification</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody id="qualificationsTally"></tbody>
+        </table>
     </div>
 
     <!-- Example of a table with improved styling -->
@@ -111,12 +97,8 @@
 
 <script>
     const entriesPerPage = 200;
-    const qualificationsPerPage = 18;
-    let currentQualificationsPage = 1;
-
     let filteredData = [];
     let originalData = [];
-    let searchQuery = '';
 
     async function loadData() {
         try {
@@ -139,59 +121,11 @@
         }
     }
 
-    function filterQualifications() {
-        const searchInput = document.getElementById('searchQualifications');
-        searchQuery = searchInput.value.toLowerCase();
-        renderQualificationsTally();
-    }
-
-    document.getElementById('searchQualifications').addEventListener('input', filterQualifications);
-
-    function renderQualificationsTally() {
-        const qualificationsTallyElement = document.getElementById('qualificationsTally');
-        qualificationsTallyElement.innerHTML = '';
-
-        const filteredQualifications = Object.entries(qualificationCounts).filter(([qualification]) =>
-            qualification.toLowerCase().includes(searchQuery)
-        );
-
-        const start = (currentQualificationsPage - 1) * qualificationsPerPage;
-        const end = start + qualificationsPerPage;
-        const qualificationsEntries = filteredQualifications.slice(start, end);
-
-        qualificationsEntries.forEach(([qualification, count]) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
-            qualificationsTallyElement.appendChild(row);
-        });
-
-        renderQualificationsPagination(filteredQualifications.length);
-    }
-
-    function renderQualificationsPagination(totalQualifications) {
-        const paginationElement = document.getElementById('qualificationsPagination');
-        paginationElement.innerHTML = '';
-
-        const totalPages = Math.ceil(totalQualifications / qualificationsPerPage);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageLink = document.createElement('a');
-            pageLink.textContent = i;
-            pageLink.className = 'page-link' + (i === currentQualificationsPage ? ' active' : '');
-            pageLink.href = '#';
-            pageLink.onclick = (e) => {
-                e.preventDefault();
-                currentQualificationsPage = i;
-                renderQualificationsTally();
-            };
-            paginationElement.appendChild(pageLink);
-        }
-    }
-
     function renderCharts() {
         const qualificationCounts = {};
         const sectorCounts = {};
 
+        // Count occurrences for qualifications and sectors
         filteredData.forEach(row => {
             const qualification = row.J || 'Unknown';
             const sector = row.I || 'Unknown';
@@ -200,27 +134,38 @@
             sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
 
-        renderQualificationsTally();
-
+        // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
-        sectorTallyElement.innerHTML = '';
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
         for (const [sector, count] of Object.entries(sectorCounts)) {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
-            sectorTallyElement.appendChild(row);
+            const listItem = document.createElement('li');
+            listItem.textContent = `${sector}: ${count}`;
+            sectorTallyElement.appendChild(listItem);
         }
 
+        // Update qualifications tally display
+        const qualificationsTallyElement = document.getElementById('qualificationsTally');
+        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
+        }
+
+        // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
     loadData();
 
+    // Add this after loadData();
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
 
+    // Trigger fade-in effect after the page loads
     window.onload = function() {
         document.body.classList.add('visible');
     };
@@ -353,26 +298,15 @@
     }
 }
 
-/* Tally Container Styles */
-.tally-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 20px; /* Space between the tables */
-    margin-top: 20px;
-}
-
-.qualificationsTallyContainer, .sectorTallyContainer {
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    padding: 15px;
-}
-
 /* Tally Table Styles */
 .tally-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .tally-table th, .tally-table td {
