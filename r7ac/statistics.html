@@ -280,10 +280,10 @@
 /* Updated Tally Table Styles */
 .tally-table {
     width: 90%;
-    margin: 0 auto;
+    max-width: 600px;
+    margin: 20px auto;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 20px;
     background-color: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -369,6 +369,14 @@ footer {
 
 .footer-links a:hover {
     color: #0056b3;
+}
+
+/* Center the tally container */
+.tally-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Stack the containers vertically */
 }
 </style>
 </body>
