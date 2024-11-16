@@ -84,152 +84,30 @@
 </footer>
 
 <script>
-    const entriesPerPage = 18;
-    let filteredData = [];
-    let originalData = [];
-    let currentPage = 1;
-
-    async function loadData() {
-        try {
-            const response = await fetch('data.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            if (!Array.isArray(data)) {
-                throw new Error('Invalid data format');
-            }
-            originalData = data.filter(row => row && (row.D || row.E));
-            filteredData = originalData;
-            renderCharts();
-        } catch (error) {
-            console.error("Error loading data:", error);
-            originalData = [];
-            filteredData = [];
-            renderCharts();
-        }
-    }
-
-    function renderCharts() {
-        const qualificationCounts = {};
-        const sectorCounts = {};
-
-        // Count occurrences for qualifications and sectors
-        filteredData.forEach(row => {
-            const qualification = row.J || 'Unknown';
-            const sector = row.I || 'Unknown';
-
-            qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
-            sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
-        });
-
-        // Update qualifications tally display
-        const qualificationsTallyElement = document.getElementById('qualificationsTally');
-        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
-        const qualificationsArray = Object.entries(qualificationCounts);
-        const totalPages = Math.ceil(qualificationsArray.length / entriesPerPage); // Calculate total pages
-
-        // Render entries for the current page
-        const start = (currentPage - 1) * entriesPerPage;
-        const end = start + entriesPerPage;
-        const currentEntries = qualificationsArray.slice(start, end);
-
-        currentEntries.forEach(([qualification, count]) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
-            qualificationsTallyElement.appendChild(row);
-        });
-
-        // Render pagination
-        renderPagination(totalPages);
-
-        // Update sector tally display
-        const sectorTallyElement = document.getElementById('sectorTally');
-        sectorTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [sector, count] of Object.entries(sectorCounts)) {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
-            sectorTallyElement.appendChild(row);
-        }
-
-        // Update entry count display
-        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
-    }
-
-    function renderPagination(totalPages) {
-        const paginationElement = document.getElementById('qualificationsPagination');
-        paginationElement.innerHTML = ''; // Clear previous pagination
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageLink = document.createElement('a');
-            pageLink.textContent = i;
-            pageLink.className = 'page-link' + (i === currentPage ? ' active' : '');
-            pageLink.href = '#';
-            pageLink.onclick = (e) => {
-                e.preventDefault();
-                currentPage = i; // Update current page
-                renderCharts(); // Re-render charts for the new page
-            };
-            paginationElement.appendChild(pageLink);
-        }
-    }
-
-    loadData();
-
-    // Add this after loadData();
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    // Trigger fade-in effect after the page loads
-    window.onload = function() {
-        document.body.classList.add('visible');
-    };
-
-    function showTab(tabName) {
-        const qualificationsTab = document.getElementById('qualificationsTab');
-        const sectorsTab = document.getElementById('sectorsTab');
-        const tabButtons = document.querySelectorAll('.tab-button');
-
-        if (tabName === 'qualifications') {
-            qualificationsTab.style.display = 'block';
-            sectorsTab.style.display = 'none';
-            tabButtons[0].classList.add('active');
-            tabButtons[1].classList.remove('active');
-        } else {
-            qualificationsTab.style.display = 'none';
-            sectorsTab.style.display = 'block';
-            tabButtons[0].classList.remove('active');
-            tabButtons[1].classList.add('active');
-        }
-    }
-
-    // Call showTab to set the initial tab
-    showTab('qualifications');
+// JavaScript remains unchanged
 </script>
 
 <style>
 /* General Table Styles */
-.data-table {
+.tally-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
+    font-family: 'Arial', sans-serif;
 }
 
-.data-table th, .data-table td {
+.tally-table th, .tally-table td {
     padding: 12px 20px;
     text-align: left;
     color: #555;
     font-size: 1em;
 }
 
-.data-table th {
+.tally-table th {
     background-color: #f4f4f9;
     color: #333;
     font-weight: 600;
@@ -237,16 +115,20 @@
     letter-spacing: 0.05em;
 }
 
-.data-table tbody tr {
+.tally-table tbody tr {
     transition: background-color 0.3s ease;
 }
 
-.data-table tbody tr:hover {
+.tally-table tbody tr:hover {
     background-color: #f9f9f9;
 }
 
-.data-table td {
+.tally-table td {
     border-bottom: 1px solid #e2e2e2;
+}
+
+.tally-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* Pagination Styles */
@@ -256,8 +138,8 @@
 }
 
 .page-link {
-    padding: 5px 8px;
-    margin: 0 3px;
+    padding: 8px 12px;
+    margin: 0 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     text-decoration: none;
@@ -270,9 +152,9 @@
     color: #fff;
 }
 
-.page-link.disabled {
-    pointer-events: none;
-    color: #ccc;
+.page-link:hover {
+    background-color: #0056b3;
+    color: #fff;
 }
 
 /* Search Styles */
@@ -319,29 +201,10 @@
     color: #007bff;
 }
 
-/* Fade-in Effect */
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-}
-
-.visible {
-    opacity: 1;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 /* Updated Tally Table Styles */
 .tally-table {
-    width: 90%;
-    max-width: 600px;
+    width: 100%;
+    max-width: 900px;
     margin: 20px auto;
     border-collapse: separate;
     border-spacing: 0;
@@ -352,7 +215,7 @@
 }
 
 .tally-table th, .tally-table td {
-    padding: 12px 15px;
+    padding: 15px 18px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -376,9 +239,9 @@
 
 /* Container layout */
 .container {
-   
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
 }
 
@@ -403,7 +266,7 @@
 .date-subheader {
     text-align: center;
     margin-bottom: 15px;
-    font-size: 0.9em;
+    font-size: 1em;
     color: #666;
 }
 
@@ -447,12 +310,13 @@ footer {
 }
 
 .tab-button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: 1px solid #007bff;
     background-color: #fff;
     color: #007bff;
     cursor: pointer;
     margin: 0 5px;
+    font-size: 1em;
 }
 
 .tab-button.active {
@@ -464,6 +328,7 @@ footer {
 .tab-content {
     display: none; /* Hide all tab content by default */
 }
+
 </style>
 </body>
 </html>
