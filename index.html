@@ -200,6 +200,13 @@
                 padding: 1rem;
             }
         }
+
+        .sub-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -217,14 +224,29 @@
     </header>
 
     <div class="container">
-        <div class="box">UTPRAS</div>
+        <div class="box" onclick="toggleSubBoxes(this)">UTPRAS</div>
         <div class="box">PTCACS</div>
         <div class="box">SCHOLARSHIPS</div>
+        <div class="sub-boxes" style="display: none;">
+            <div class="box">PROGRAM REGISTRATION</div>
+            <div class="box">NTTC</div>
+        </div>
         <!-- ... existing code ... -->
     </div>
 
     <footer>
         <p style="margin: 0;">&copy; 2024 TESDA Region VII. All rights reserved.</p>
     </footer>
+
+    <script>
+        function toggleSubBoxes(box) {
+            const subBoxes = box.nextElementSibling;
+            if (subBoxes.style.display === "none" || subBoxes.style.display === "") {
+                subBoxes.style.display = "flex";
+            } else {
+                subBoxes.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
