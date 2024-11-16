@@ -46,7 +46,6 @@
                 </thead>
                 <tbody id="qualificationsTally"></tbody>
             </table>
-            <div class="pagination" id="qualificationsPagination"></div>
         </div>
 
         <div class="sectorTallyContainer">
@@ -60,7 +59,6 @@
                 </thead>
                 <tbody id="sectorTally"></tbody>
             </table>
-            <div class="pagination" id="sectorPagination"></div>
         </div>
     </div>
 </div>
@@ -80,8 +78,6 @@
     const entriesPerPage = 200;
     let filteredData = [];
     let originalData = [];
-    let currentQualificationsPage = 1;
-    let currentSectorsPage = 1;
 
     async function loadData() {
         try {
@@ -104,37 +100,6 @@
         }
     }
 
-    function renderTally(tallyData, tallyElement, paginationElement, currentPage) {
-        const startIndex = (currentPage - 1) * entriesPerPage;
-        const endIndex = startIndex + entriesPerPage;
-        const paginatedData = Object.entries(tallyData).slice(startIndex, endIndex);
-
-        tallyElement.innerHTML = ''; // Clear previous tally
-        paginatedData.forEach(([name, count]) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${name}</td><td>${count}</td>`;
-            tallyElement.appendChild(row);
-        });
-
-        renderPagination(paginationElement, Object.entries(tallyData).length, currentPage);
-    }
-
-    function renderPagination(paginationElement, totalEntries, currentPage) {
-        const totalPages = Math.ceil(totalEntries / entriesPerPage);
-        paginationElement.innerHTML = '';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageLink = document.createElement('a');
-            pageLink.textContent = i;
-            pageLink.className = `page-link ${i === currentPage ? 'active' : ''}`;
-            pageLink.onclick = () => {
-                currentQualificationsPage = i; // Update current page for qualifications
-                renderTally(qualificationCounts, qualificationsTallyElement, qualificationsPaginationElement, currentQualificationsPage);
-            };
-            paginationElement.appendChild(pageLink);
-        }
-    }
-
     function renderCharts() {
         const qualificationCounts = {};
         const sectorCounts = {};
@@ -149,10 +114,22 @@
         });
 
         // Update qualifications tally display
-        renderTally(qualificationCounts, qualificationsTallyElement, qualificationsPaginationElement, currentQualificationsPage);
-        
+        const qualificationsTallyElement = document.getElementById('qualificationsTally');
+        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
+        }
+
         // Update sector tally display
-        renderTally(sectorCounts, sectorTallyElement, sectorPaginationElement, currentSectorsPage);
+        const sectorTallyElement = document.getElementById('sectorTally');
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [sector, count] of Object.entries(sectorCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
+            sectorTallyElement.appendChild(row);
+        }
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
