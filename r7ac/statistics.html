@@ -5,321 +5,275 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NTTCMIS</title>
     <link rel="icon" type="image/png" href="../icons/tlogo.png">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f7f9;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header styles */
-        .header-container {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 10px 0;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        .logo {
-            height: 50px;
-        }
-        .header-title {
-            font-size: 1.2rem;
-            text-align: center;
-            color: #1a5f7a;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .action-button {
-            padding: 8px 12px;
-            background-color: #1a5f7a;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s;
-        }
-        .action-button:hover {
-            background-color: #134b61;
-        }
-
-        /* Entry count and date styles */
-        .entry-count {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin: 20px 0 10px;
-            color: #1a5f7a;
-        }
-        .date-subheader {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        /* Chart styles */
-        canvas {
-            max-width: 100%;
-            margin-bottom: 20px;
-        }
-
-        /* Table styles */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            font-size: 0.9rem;
-        }
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-        .data-table th {
-            background-color: #f5f5f5;
-            font-weight: 600;
-            color: #333;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-        }
-        .data-table tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-        .data-table tr:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Footer styles */
-        footer {
-            background-color: #1a5f7a;
-            color: white;
-            padding: 20px 0;
-            margin-top: 40px;
-        }
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header-top {
-                flex-direction: column;
-            }
-            .button-container {
-                flex-wrap: wrap;
-            }
-            .data-table {
-                font-size: 0.8rem;
-            }
-            .data-table th, .data-table td {
-                padding: 8px 10px;
-            }
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            .footer-links {
-                margin-top: 10px;
-            }
-            .footer-links a {
-                margin: 0 10px;
-            }
-        }
-
-        /* Animation */
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-    </style>
 </head>
 <body class="fade-in">
-    <div class="header-container">
-        <div class="header-top">
-            <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
-            <h1 class="header-title">ACCREDITED ASSESSMENT CENTERS RECORDS</h1>
-            <img src="../icons/blogo.png" alt="Right Logo" class="logo">
-        </div>
-        <div class="button-container">
-            <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
-            <button onclick="window.location.href='upload.html'" class="action-button">Upload Data</button>
-            <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-            <button class="action-button">Export Data</button>
-            <button class="action-button">Settings</button>
-        </div>
+<div class="header-container">
+    <div class="header-top">
+        <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
+        <h1 class="header-title">ACCREDITED ASSESSMENT CENTERS RECORDS</h1>
+        <img src="../icons/blogo.png" alt="Right Logo" class="logo">
+    </div>
+    <div class="button-container">
+        <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
+        <button onclick="window.location.href='upload.html'" class="action-button">Upload Data</button>
+        <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
+        <button class="action-button">Export Data</button>
+        <button class="action-button">Settings</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- New Entry Count Display -->
+    <div id="entryCount" class="entry-count"></div>
+    <!-- Date Subheader -->
+    <div class="date-subheader">
+        Current Accredited Assessment Centers As of: <span id="currentDate"></span>
     </div>
 
-    <div class="container">
-        <div id="entryCount" class="entry-count"></div>
-        <div class="date-subheader">
-            Current Accredited Assessment Centers As of: <span id="currentDate"></span>
-        </div>
-
-        <div>
-            <canvas id="qualificationChart"></canvas>
-            <canvas id="sectorChart"></canvas>
-        </div>
-        
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Trainer Name</th>
-                    <th>Qualification</th>
-                    <th>Sector</th>
-                    <th>Certificate Number</th>
-                    <th>Date of Issuance</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>John Doe</td>
-                    <td>TESDA NCIII</td>
-                    <td>IT</td>
-                    <td>12345</td>
-                    <td>2024-07-15</td>
-                </tr>
-                <tr>
-                    <td>Jane Smith</td>
-                    <td>TESDA NCII</td>
-                    <td>Engineering</td>
-                    <td>67890</td>
-                    <td>2024-06-25</td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Canvas for Pie Charts -->
+    <div id="tallyContainer">
+        <h2>Sectors Tally</h2>
+        <ul id="sectorTally"></ul>
     </div>
+    
+    <!-- Example of a table with improved styling -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Trainer Name</th>
+                <th>Qualification</th>
+                <th>Sector</th>
+                <th>Certificate Number</th>
+                <th>Date of Issuance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows would be populated dynamically -->
+            <tr>
+                <td>John Doe</td>
+                <td>TESDA NCIII</td>
+                <td>IT</td>
+                <td>12345</td>
+                <td>2024-07-15</td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>TESDA NCII</td>
+                <td>Engineering</td>
+                <td>67890</td>
+                <td>2024-06-25</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 Certificate Records Management System</p>
-            <div class="footer-links">
-                <a href="./index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="#"><i class="fas fa-info-circle"></i> About</a>
-                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
-            </div>
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2024 Certificate Records Management System</p>
+        <div class="footer-links">
+            <a href="./index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="#"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contact</a>
         </div>
-    </footer>
+    </div>
+</footer>
 
-    <script>
-        const entriesPerPage = 200;
-        let filteredData = [];
-        let originalData = [];
+<script>
+    const entriesPerPage = 200;
+    let filteredData = [];
+    let originalData = [];
 
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                if (!Array.isArray(data)) {
-                    throw new Error('Invalid data format');
-                }
-                originalData = data.filter(row => row && (row.D || row.E));
-                filteredData = originalData;
-                renderCharts();
-            } catch (error) {
-                console.error("Error loading data:", error);
-                originalData = [];
-                filteredData = [];
-                renderCharts();
+    async function loadData() {
+        try {
+            const response = await fetch('data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            originalData = data.filter(row => row && (row.D || row.E));
+            filteredData = originalData;
+            renderCharts();
+        } catch (error) {
+            console.error("Error loading data:", error);
+            originalData = [];
+            filteredData = [];
+            renderCharts();
         }
+    }
 
-        function renderCharts() {
-            const qualificationCounts = {};
-            const sectorCounts = {};
+    function renderCharts() {
+        const qualificationCounts = {};
+        const sectorCounts = {};
 
-            filteredData.forEach(row => {
-                const qualification = row.J || 'Unknown';
-                const sector = row.I || 'Unknown';
+        // Count occurrences for qualifications and sectors
+        filteredData.forEach(row => {
+            const qualification = row.J || 'Unknown';
+            const sector = row.I || 'Unknown';
 
-                qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
-                sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
-            });
-
-            renderPieChart('qualificationChart', 'Statistics per Qualification', qualificationCounts);
-            renderPieChart('sectorChart', 'Statistics per Sector', sectorCounts);
-
-            document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
-        }
-
-        function renderPieChart(canvasId, title, data) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(data),
-                    datasets: [{
-                        data: Object.values(data),
-                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: title
-                        }
-                    }
-                }
-            });
-        }
-
-        loadData();
-
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+            qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
+            sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
 
-        window.onload = function() {
-            document.body.classList.add('visible');
-        };
-    </script>
+        // Update sector tally display
+        const sectorTallyElement = document.getElementById('sectorTally');
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [sector, count] of Object.entries(sectorCounts)) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${sector}: ${count}`;
+            sectorTallyElement.appendChild(listItem);
+        }
+
+        // Update entry count display
+        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+    }
+
+    loadData();
+
+    // Add this after loadData();
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    // Trigger fade-in effect after the page loads
+    window.onload = function() {
+        document.body.classList.add('visible');
+    };
+</script>
+
+<style>
+/* General Table Styles */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    color: #333;
+    font-size: 1em;
+}
+
+.data-table th {
+    background-color: #f8f9fa;
+    color: #1a5f7a;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.data-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.data-table td {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Pagination */
+.pagination {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.page-link {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-link.disabled {
+    pointer-events: none;
+    color: #ccc;
+}
+
+/* Search Styles */
+.search-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.search-wrapper:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+#searchInput {
+    width: calc(100% - 55px);
+    padding: 15px 55px 15px 25px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #495057;
+    outline: none;
+}
+
+#searchInput::placeholder {
+    color: #888;
+}
+
+.search-wrapper i {
+    position: absolute;
+    right: 10px;
+    font-size: 18px;
+    color: #888;
+}
+
+.search-wrapper i:hover {
+    color: #007bff;
+}
+
+/* Fade-in Effect */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.visible {
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
 </body>
 </html>
