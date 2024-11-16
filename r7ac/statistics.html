@@ -29,7 +29,7 @@
     <!-- New Entry Count Display -->
     <div id="entryCount" class="entry-count"></div>
     <!-- Date Subheader -->
-    <div class="date-subheader">
+    <div class="date-subheader" style="text-align: center;">
         Current Accredited Assessment Centers As of: <span id="currentDate"></span>
     </div>
 
@@ -47,7 +47,7 @@
             <table class="tally-table">
                 <thead>
                     <tr>
-                        <th>Qualification</th>
+                        <th>Qualification (Total: <span id="qualificationCount"></span>)</th>
                         <th>Count</th>
                     </tr>
                 </thead>
@@ -62,7 +62,7 @@
             <table class="tally-table">
                 <thead>
                     <tr>
-                        <th>Sector</th>
+                        <th>Sector (Total: <span id="sectorCount"></span>)</th>
                         <th>Count</th>
                     </tr>
                 </thead>
@@ -127,6 +127,7 @@
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
         const qualificationsArray = Object.entries(qualificationCounts);
+        document.getElementById('qualificationCount').textContent = qualificationsArray.length; // Set the total count
         const totalPages = Math.ceil(qualificationsArray.length / entriesPerPage); // Calculate total pages
 
         // Render entries for the current page
@@ -154,6 +155,7 @@
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+        document.getElementById('sectorCount').textContent = Object.keys(sectorCounts).length; // Set the total count for sectors
     }
 
     function renderPagination(totalPages) {
