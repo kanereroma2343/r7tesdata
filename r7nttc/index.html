@@ -7,8 +7,19 @@
     <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Fade-in animation */
+        body {
+            opacity: 0; /* Start invisible */
+            transition: opacity 1s ease-in; /* Transition effect */
+        }
+
+        body.fade-in {
+            opacity: 1; /* Fully visible */
+        }
+    </style>
 </head>
-<body>
+<body class="fade-in">
 <div class="header-container">
     <div class="header-top">
         <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
@@ -180,6 +191,11 @@
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
+
+    // Add this line to trigger the fade-in effect after the content is loaded
+    window.onload = () => {
+        document.body.classList.add('fade-in');
+    };
 </script>
 
 <style>

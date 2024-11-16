@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="fade-in">
 <div class="header-container">
     <div class="header-top">
         <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
@@ -183,6 +183,11 @@
         day: 'numeric'
     });
 
+    // Trigger fade-in effect after the page loads
+    window.onload = function() {
+        document.body.classList.add('visible');
+    };
+
     // Add this function to format the date
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -315,6 +320,16 @@
     font-size: 1.2em;
     margin-bottom: 10px;
     color: #333;
+}
+
+/* Add this CSS for fade-in effect */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.fade-in.visible {
+    opacity: 1;
 }
 </style>
 </body>
