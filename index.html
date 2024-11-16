@@ -151,17 +151,19 @@
         }
 
         .sub-boxes {
-            display: none;
+            display: block;
+            max-height: 0;
+            overflow: hidden;
             opacity: 0;
             transform: scale(0.95);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: max-height 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
             gap: 1rem;
             justify-content: center;
             margin-top: 1rem;
         }
 
         .sub-boxes.visible {
-            display: flex;
+            max-height: 200px;
             opacity: 1;
             transform: scale(1);
         }
