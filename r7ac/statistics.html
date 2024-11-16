@@ -84,7 +84,130 @@
 </footer>
 
 <script>
-// JavaScript remains unchanged
+    const entriesPerPage = 18;
+    let filteredData = [];
+    let originalData = [];
+    let currentPage = 1;
+
+    async function loadData() {
+        try {
+            const response = await fetch('data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            originalData = data.filter(row => row && (row.D || row.E));
+            filteredData = originalData;
+            renderCharts();
+        } catch (error) {
+            console.error("Error loading data:", error);
+            originalData = [];
+            filteredData = [];
+            renderCharts();
+        }
+    }
+
+    function renderCharts() {
+        const qualificationCounts = {};
+        const sectorCounts = {};
+
+        // Count occurrences for qualifications and sectors
+        filteredData.forEach(row => {
+            const qualification = row.J || 'Unknown';
+            const sector = row.I || 'Unknown';
+
+            qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
+            sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+        });
+
+        // Update qualifications tally display
+        const qualificationsTallyElement = document.getElementById('qualificationsTally');
+        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
+        const qualificationsArray = Object.entries(qualificationCounts);
+        const totalPages = Math.ceil(qualificationsArray.length / entriesPerPage); // Calculate total pages
+
+        // Render entries for the current page
+        const start = (currentPage - 1) * entriesPerPage;
+        const end = start + entriesPerPage;
+        const currentEntries = qualificationsArray.slice(start, end);
+
+        currentEntries.forEach(([qualification, count]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
+        });
+
+        // Render pagination
+        renderPagination(totalPages);
+
+        // Update sector tally display
+        const sectorTallyElement = document.getElementById('sectorTally');
+        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [sector, count] of Object.entries(sectorCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
+            sectorTallyElement.appendChild(row);
+        }
+
+        // Update entry count display
+        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+    }
+
+    function renderPagination(totalPages) {
+        const paginationElement = document.getElementById('qualificationsPagination');
+        paginationElement.innerHTML = ''; // Clear previous pagination
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.textContent = i;
+            pageLink.className = 'page-link' + (i === currentPage ? ' active' : '');
+            pageLink.href = '#';
+            pageLink.onclick = (e) => {
+                e.preventDefault();
+                currentPage = i; // Update current page
+                renderCharts(); // Re-render charts for the new page
+            };
+            paginationElement.appendChild(pageLink);
+        }
+    }
+
+    loadData();
+
+    // Add this after loadData();
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    // Trigger fade-in effect after the page loads
+    window.onload = function() {
+        document.body.classList.add('visible');
+    };
+
+    function showTab(tabName) {
+        const qualificationsTab = document.getElementById('qualificationsTab');
+        const sectorsTab = document.getElementById('sectorsTab');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        if (tabName === 'qualifications') {
+            qualificationsTab.style.display = 'block';
+            sectorsTab.style.display = 'none';
+            tabButtons[0].classList.add('active');
+            tabButtons[1].classList.remove('active');
+        } else {
+            qualificationsTab.style.display = 'none';
+            sectorsTab.style.display = 'block';
+            tabButtons[0].classList.remove('active');
+            tabButtons[1].classList.add('active');
+        }
+    }
+
+    // Call showTab to set the initial tab
+    showTab('qualifications');
 </script>
 
 <style>
@@ -127,10 +250,6 @@
     border-bottom: 1px solid #e2e2e2;
 }
 
-.tally-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
 /* Pagination Styles */
 .pagination {
     margin: 20px 0;
@@ -138,8 +257,8 @@
 }
 
 .page-link {
-    padding: 8px 12px;
-    margin: 0 5px;
+    padding: 5px 8px;
+    margin: 0 3px;
     border: 1px solid #ccc;
     border-radius: 5px;
     text-decoration: none;
@@ -152,154 +271,9 @@
     color: #fff;
 }
 
-.page-link:hover {
-    background-color: #0056b3;
-    color: #fff;
-}
-
-/* Search Styles */
-.search-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: #f8f9fa;
-    border-radius: 50px;
-    padding: 5px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.search-wrapper:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
-}
-
-#searchInput {
-    width: calc(100% - 55px);
-    padding: 15px 55px 15px 25px;
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    color: #495057;
-    outline: none;
-}
-
-#searchInput::placeholder {
-    color: #888;
-}
-
-.search-wrapper i {
-    position: absolute;
-    right: 10px;
-    font-size: 18px;
-    color: #888;
-}
-
-.search-wrapper i:hover {
-    color: #007bff;
-}
-
-/* Updated Tally Table Styles */
-.tally-table {
-    width: 100%;
-    max-width: 900px;
-    margin: 20px auto;
-    border-collapse: separate;
-    border-spacing: 0;
-    background-color: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.tally-table th, .tally-table td {
-    padding: 15px 18px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.tally-table th {
-    background-color: #f5f5f5;
-    font-weight: 600;
-    color: #333;
-    text-transform: uppercase;
-    font-size: 0.85em;
-    letter-spacing: 0.05em;
-}
-
-.tally-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.tally-table tbody tr:hover {
-    background-color: #f9f9f9;
-}
-
-/* Container layout */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-.qualificationsTallyContainer,
-.sectorTallyContainer {
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-}
-
-.qualificationsTallyContainer h2,
-.sectorTallyContainer h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2em;
-    color: #333;
-}
-
-/* Entry count and date styles */
-.entry-count,
-.date-subheader {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 1em;
-    color: #666;
-}
-
-/* Footer styles */
-footer {
-    background-color: #f8f9fa;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.footer-content p {
-    font-size: 0.9em;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.footer-links a {
-    text-decoration: none;
-    color: #007bff;
-    margin: 0 10px;
-    font-size: 1em;
-}
-
-.footer-links a:hover {
-    color: #0056b3;
-}
-
-/* Updated Tally Container Styles */
-.tally-container {
-    display: flex; /* Use flexbox for side-by-side layout */
-    justify-content: center; /* Center the two containers */
-    align-items: flex-start; /* Align items at the start */
+.page-link.disabled {
+    pointer-events: none;
+    color: #ccc;
 }
 
 /* Tab Button Styles */
@@ -329,6 +303,50 @@ footer {
     display: none; /* Hide all tab content by default */
 }
 
+/* Fade-in Effect */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.visible {
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content p {
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #007bff;
+    margin: 0 10px;
+    font-size: 1em;
+}
+
+.footer-links a:hover {
+    color: #0056b3;
+}
 </style>
+
 </body>
 </html>
