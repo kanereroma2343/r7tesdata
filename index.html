@@ -6,10 +6,23 @@
     <title>TESDA Region VII MIS</title>
     <link rel="icon" href="icons/t7logo.png" type="image/png">
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #00296b;
+            --secondary-color: #09101b;
+            --text-color: #ffffff;
+            --transition-speed: 0.3s;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
             background-image: url('icons/office.jpg');
             background-size: cover;
             background-position: center;
@@ -18,6 +31,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: var(--text-color);
         }
 
         body::before {
@@ -33,16 +47,14 @@
         }
 
         header {
-    background: linear-gradient(90deg, #09101b, #00296b);
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem 0; /* Increased padding for a bigger header */
-    font-size: 1.25rem; /* Slightly larger text */
-}
-
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            transition: all var(--transition-speed) ease;
+        }
 
         .container {
             max-width: 1200px;
@@ -64,12 +76,13 @@
         }
 
         .logo-title img {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
+            transition: transform var(--transition-speed) ease;
         }
 
         .logo-title h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             margin: 0;
             font-weight: 700;
         }
@@ -84,18 +97,18 @@
         }
 
         nav a {
-            color: white;
+            color: var(--text-color);
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
             border-radius: 9999px;
             background: rgba(255, 255, 255, 0.1);
-            transition: background-color 0.3s, transform 0.3s;
+            transition: all var(--transition-speed) ease;
         }
 
         nav a:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+            transform: translateY(-2px);
         }
 
         main {
@@ -105,8 +118,8 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
         .box {
@@ -115,34 +128,29 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            height: 12rem;
+            height: 10rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-size: 1.25rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .sub-boxes {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.3s ease-out;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .sub-boxes.active {
-            grid-template-rows: 1fr;
-        }
-
-        .sub-boxes-inner {
-            overflow: hidden;
+            max-height: 500px;
         }
 
         .sub-box {
@@ -151,50 +159,67 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            height: 6rem;
+            height: 4rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            transition: all var(--transition-speed) ease;
+            margin-top: 0.75rem;
         }
 
         .sub-box:hover {
             background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
         }
 
         footer {
             background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            color: white;
             text-align: center;
             padding: 1rem 0;
             margin-top: 2rem;
         }
 
         @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
             .header-content {
                 flex-direction: column;
-                align-items: center;
+            }
+
+            .logo-title {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .logo-title img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo-title h1 {
+                font-size: 1.2rem;
             }
 
             nav ul {
-                flex-direction: column;
-                align-items: center;
+                flex-wrap: wrap;
             }
 
             nav a {
-                display: block;
-                padding: 0.75rem 1rem;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .box {
+                height: 8rem;
+                font-size: 1rem;
+            }
+
+            .sub-box {
+                height: 3rem;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -225,28 +250,22 @@
                 <div>
                     <div class="box" data-box="UTPRAS">UTPRAS</div>
                     <div class="sub-boxes" id="UTPRAS-sub">
-                        <div class="sub-boxes-inner">
-                            <a href="r7ac/" class="sub-box">PROGRAM REGISTRATION</a>
-                            <a href="r7nttc/" class="sub-box">NTTC</a>
-                        </div>
+                        <a href="r7ac/" class="sub-box">PROGRAM REGISTRATION</a>
+                        <a href="r7nttc/" class="sub-box">NTTC</a>
                     </div>
                 </div>
                 <div>
                     <div class="box" data-box="PTCACS">PTCACS</div>
                     <div class="sub-boxes" id="PTCACS-sub">
-                        <div class="sub-boxes-inner">
-                            <a href="r7ac/" class="sub-box">Assessment Centers</a>
-                            <div class="sub-box">Assessors</div>
-                        </div>
+                        <a href="r7ac/" class="sub-box">Assessment Centers</a>
+                        <div class="sub-box">Assessors</div>
                     </div>
                 </div>
                 <div>
                     <div class="box" data-box="SCHOLARSHIPS">SCHOLARSHIPS</div>
                     <div class="sub-boxes" id="SCHOLARSHIPS-sub">
-                        <div class="sub-boxes-inner">
-                            <div class="sub-box">Sub-box 1</div>
-                            <div class="sub-box">Sub-box 2</div>
-                        </div>
+                        <div class="sub-box">Sub-box 1</div>
+                        <div class="sub-box">Sub-box 2</div>
                     </div>
                 </div>
             </div>
@@ -269,6 +288,14 @@
                     const subBoxes = document.getElementById(boxName + '-sub');
                     if (subBoxes) {
                         subBoxes.classList.toggle('active');
+                        boxes.forEach(otherBox => {
+                            if (otherBox !== box) {
+                                const otherSubBoxes = document.getElementById(otherBox.getAttribute('data-box') + '-sub');
+                                if (otherSubBoxes) {
+                                    otherSubBoxes.classList.remove('active');
+                                }
+                            }
+                        });
                     }
                 });
             });
