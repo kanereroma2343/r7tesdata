@@ -35,7 +35,14 @@
 
     <!-- Tally Display for Qualifications and Sectors -->
     <div class="tally-container">
-        <div class="qualificationsTallyContainer">
+        <!-- Tab Buttons -->
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('qualifications')">Qualifications Tally</button>
+            <button class="tab-button" onclick="showTab('sectors')">Sectors Tally</button>
+        </div>
+
+        <!-- Qualifications Tally Section -->
+        <div id="qualificationsTab" class="tab-content">
             <h2>Qualifications Tally</h2>
             <table class="tally-table">
                 <thead>
@@ -49,7 +56,8 @@
             <div class="pagination" id="qualificationsPagination"></div>
         </div>
 
-        <div class="sectorTallyContainer">
+        <!-- Sectors Tally Section -->
+        <div id="sectorsTab" class="tab-content" style="display: none;">
             <h2>Sectors Tally</h2>
             <table class="tally-table">
                 <thead>
@@ -179,6 +187,27 @@
     window.onload = function() {
         document.body.classList.add('visible');
     };
+
+    function showTab(tabName) {
+        const qualificationsTab = document.getElementById('qualificationsTab');
+        const sectorsTab = document.getElementById('sectorsTab');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        if (tabName === 'qualifications') {
+            qualificationsTab.style.display = 'block';
+            sectorsTab.style.display = 'none';
+            tabButtons[0].classList.add('active');
+            tabButtons[1].classList.remove('active');
+        } else {
+            qualificationsTab.style.display = 'none';
+            sectorsTab.style.display = 'block';
+            tabButtons[0].classList.remove('active');
+            tabButtons[1].classList.add('active');
+        }
+    }
+
+    // Call showTab to set the initial tab
+    showTab('qualifications');
 </script>
 
 <style>
@@ -408,6 +437,32 @@ footer {
     display: flex; /* Use flexbox for side-by-side layout */
     justify-content: center; /* Center the two containers */
     align-items: flex-start; /* Align items at the start */
+}
+
+/* Tab Button Styles */
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: 1px solid #007bff;
+    background-color: #fff;
+    color: #007bff;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Tab Content Styles */
+.tab-content {
+    display: none; /* Hide all tab content by default */
 }
 </style>
 </body>
