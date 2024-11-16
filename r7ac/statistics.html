@@ -37,6 +37,10 @@
     <div class="tally-container">
         <div class="qualificationsTallyContainer">
             <h2>Qualifications Tally</h2>
+            <div class="search-wrapper">
+                <input type="text" id="searchQualifications" placeholder="Search Qualifications..." />
+                <i class="fas fa-search"></i>
+            </div>
             <table class="tally-table">
                 <thead>
                     <tr>
@@ -46,6 +50,7 @@
                 </thead>
                 <tbody id="qualificationsTally"></tbody>
             </table>
+            <div class="pagination" id="qualificationsPagination"></div>
         </div>
 
         <div class="sectorTallyContainer">
@@ -106,8 +111,12 @@
 
 <script>
     const entriesPerPage = 200;
+    const qualificationsPerPage = 18;
+    let currentQualificationsPage = 1;
+
     let filteredData = [];
     let originalData = [];
+    let searchQuery = '';
 
     async function loadData() {
         try {
@@ -130,11 +139,59 @@
         }
     }
 
+    function filterQualifications() {
+        const searchInput = document.getElementById('searchQualifications');
+        searchQuery = searchInput.value.toLowerCase();
+        renderQualificationsTally();
+    }
+
+    document.getElementById('searchQualifications').addEventListener('input', filterQualifications);
+
+    function renderQualificationsTally() {
+        const qualificationsTallyElement = document.getElementById('qualificationsTally');
+        qualificationsTallyElement.innerHTML = '';
+
+        const filteredQualifications = Object.entries(qualificationCounts).filter(([qualification]) =>
+            qualification.toLowerCase().includes(searchQuery)
+        );
+
+        const start = (currentQualificationsPage - 1) * qualificationsPerPage;
+        const end = start + qualificationsPerPage;
+        const qualificationsEntries = filteredQualifications.slice(start, end);
+
+        qualificationsEntries.forEach(([qualification, count]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
+        });
+
+        renderQualificationsPagination(filteredQualifications.length);
+    }
+
+    function renderQualificationsPagination(totalQualifications) {
+        const paginationElement = document.getElementById('qualificationsPagination');
+        paginationElement.innerHTML = '';
+
+        const totalPages = Math.ceil(totalQualifications / qualificationsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.textContent = i;
+            pageLink.className = 'page-link' + (i === currentQualificationsPage ? ' active' : '');
+            pageLink.href = '#';
+            pageLink.onclick = (e) => {
+                e.preventDefault();
+                currentQualificationsPage = i;
+                renderQualificationsTally();
+            };
+            paginationElement.appendChild(pageLink);
+        }
+    }
+
     function renderCharts() {
         const qualificationCounts = {};
         const sectorCounts = {};
 
-        // Count occurrences for qualifications and sectors
         filteredData.forEach(row => {
             const qualification = row.J || 'Unknown';
             const sector = row.I || 'Unknown';
@@ -143,38 +200,27 @@
             sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
         });
 
-        // Update qualifications tally display
-        const qualificationsTallyElement = document.getElementById('qualificationsTally');
-        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [qualification, count] of Object.entries(qualificationCounts)) {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
-            qualificationsTallyElement.appendChild(row);
-        }
+        renderQualificationsTally();
 
-        // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
-        sectorTallyElement.innerHTML = ''; // Clear previous tally
+        sectorTallyElement.innerHTML = '';
         for (const [sector, count] of Object.entries(sectorCounts)) {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
             sectorTallyElement.appendChild(row);
         }
 
-        // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
     loadData();
 
-    // Add this after loadData();
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
 
-    // Trigger fade-in effect after the page loads
     window.onload = function() {
         document.body.classList.add('visible');
     };
