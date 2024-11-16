@@ -39,6 +39,20 @@
         <ul id="sectorTally"></ul>
     </div>
     
+    <!-- New Qualifications Tally Display -->
+    <div id="qualificationsTallyContainer">
+        <h2>Qualifications Tally</h2>
+        <table class="tally-table">
+            <thead>
+                <tr>
+                    <th>Qualification</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody id="qualificationsTally"></tbody>
+        </table>
+    </div>
+
     <!-- Example of a table with improved styling -->
     <table class="data-table">
         <thead>
@@ -127,6 +141,15 @@
             const listItem = document.createElement('li');
             listItem.textContent = `${sector}: ${count}`;
             sectorTallyElement.appendChild(listItem);
+        }
+
+        // Update qualifications tally display
+        const qualificationsTallyElement = document.getElementById('qualificationsTally');
+        qualificationsTallyElement.innerHTML = ''; // Clear previous tally
+        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
+            qualificationsTallyElement.appendChild(row);
         }
 
         // Update entry count display
@@ -273,6 +296,44 @@
     to {
         opacity: 1;
     }
+}
+
+/* Tally Table Styles */
+.tally-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tally-table th, .tally-table td {
+    padding: 12px 15px;
+    text-align: left;
+    color: #333;
+    font-size: 1em;
+}
+
+.tally-table th {
+    background-color: #f8f9fa;
+    color: #1a5f7a;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tally-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.tally-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.tally-table td {
+    border-bottom: 1px solid #e2e2e2;
 }
 </style>
 </body>
