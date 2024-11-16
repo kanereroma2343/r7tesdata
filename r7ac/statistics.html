@@ -316,6 +316,26 @@
 .tally-table td {
     border-bottom: 1px solid #e2e2e2;
 }
+
+/* Update the container to use grid layout */
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    gap: 20px; /* Space between grid items */
+}
+
+/* Update the tally containers to span full width */
+.qualificationsTallyContainer,
+.sectorTallyContainer {
+    grid-column: span 1; /* Each takes one column */
+}
+
+/* Adjust the footer to use grid layout if needed */
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for footer */
+    text-align: center;
+}
 </style>
 </body>
 </html>
