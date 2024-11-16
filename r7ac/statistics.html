@@ -34,8 +34,8 @@
     </div>
 
     <!-- Tally Display for Qualifications and Sectors -->
-    <div class="tally-container" style="display: flex; justify-content: space-between;">
-        <div class="qualificationsTallyContainer" style="flex: 1; margin-right: 10px;">
+    <div class="tally-container">
+        <div class="qualificationsTallyContainer">
             <h2>Qualifications Tally</h2>
             <table class="tally-table">
                 <thead>
@@ -48,7 +48,7 @@
             </table>
         </div>
 
-        <div class="sectorTallyContainer" style="flex: 1; margin-left: 10px;">
+        <div class="sectorTallyContainer">
             <h2>Sectors Tally</h2>
             <table class="tally-table">
                 <thead>
@@ -157,21 +157,21 @@
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
 
 .data-table th, .data-table td {
-    padding: 12px 15px;
+    padding: 12px 20px;
     text-align: left;
-    color: #333;
+    color: #555;
     font-size: 1em;
 }
 
 .data-table th {
-    background-color: #f8f9fa;
-    color: #1a5f7a;
+    background-color: #f4f4f9;
+    color: #333;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -182,14 +182,14 @@
 }
 
 .data-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
 }
 
 .data-table td {
     border-bottom: 1px solid #e2e2e2;
 }
 
-/* Pagination */
+/* Pagination Styles */
 .pagination {
     margin: 20px 0;
     text-align: center;
@@ -346,7 +346,30 @@
     color: #666;
 }
 
-/* Existing styles for header and footer remain unchanged */
+/* Footer styles */
+footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content p {
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #007bff;
+    margin: 0 10px;
+    font-size: 1em;
+}
+
+.footer-links a:hover {
+    color: #0056b3;
+}
 </style>
 </body>
 </html>
