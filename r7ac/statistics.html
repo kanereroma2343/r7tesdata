@@ -50,6 +50,7 @@
 
         <div class="sectorTallyContainer">
             <h2>Sectors Tally</h2>
+            <p id="sectorsCount"></p>
             <table class="tally-table">
                 <thead>
                     <tr>
@@ -132,6 +133,9 @@
             row.innerHTML = `<td>${sector}</td><td>${count}</td>`;
             sectorTallyElement.appendChild(row);
         }
+
+        // Update sectors count display
+        document.getElementById("sectorsCount").textContent = `Total Sectors: ${Object.keys(sectorCounts).length}`;
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
