@@ -37,6 +37,7 @@
     <div class="tally-container">
         <div class="qualificationsTallyContainer">
             <h2>Qualifications Tally</h2>
+            <p id="totalQualificationsCount"></p>
             <table class="tally-table">
                 <thead>
                     <tr>
@@ -119,11 +120,14 @@
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
+        let totalQualifications = 0; // Initialize total qualifications count
         for (const [qualification, count] of Object.entries(qualificationCounts)) {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
             qualificationsTallyElement.appendChild(row);
+            totalQualifications += count; // Add to total qualifications count
         }
+        document.getElementById('totalQualificationsCount').textContent = `Total Qualifications: ${totalQualifications}`; // Display total count
 
         // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
