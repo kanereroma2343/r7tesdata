@@ -46,6 +46,7 @@
                 </thead>
                 <tbody id="qualificationsTally"></tbody>
             </table>
+            <div class="pagination" id="qualificationsPagination"></div>
         </div>
 
         <div class="sectorTallyContainer">
@@ -65,7 +66,7 @@
 
 <footer>
     <div class="footer-content">
-        <p>&copy; 2024 Certificate Records Management System</p>
+        <p>&copy; 2024 r7tesdata</p>
         <div class="footer-links">
             <a href="./index.html"><i class="fas fa-home"></i> Home</a>
             <a href="#"><i class="fas fa-info-circle"></i> About</a>
@@ -75,9 +76,10 @@
 </footer>
 
 <script>
-    const entriesPerPage = 200;
+    const entriesPerPage = 18;
     let filteredData = [];
     let originalData = [];
+    let currentPage = 1;
 
     async function loadData() {
         try {
@@ -116,11 +118,22 @@
         // Update qualifications tally display
         const qualificationsTallyElement = document.getElementById('qualificationsTally');
         qualificationsTallyElement.innerHTML = ''; // Clear previous tally
-        for (const [qualification, count] of Object.entries(qualificationCounts)) {
+        const qualificationsArray = Object.entries(qualificationCounts);
+        const totalPages = Math.ceil(qualificationsArray.length / entriesPerPage); // Calculate total pages
+
+        // Render entries for the current page
+        const start = (currentPage - 1) * entriesPerPage;
+        const end = start + entriesPerPage;
+        const currentEntries = qualificationsArray.slice(start, end);
+
+        currentEntries.forEach(([qualification, count]) => {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${qualification}</td><td>${count}</td>`;
             qualificationsTallyElement.appendChild(row);
-        }
+        });
+
+        // Render pagination
+        renderPagination(totalPages);
 
         // Update sector tally display
         const sectorTallyElement = document.getElementById('sectorTally');
@@ -133,6 +146,24 @@
 
         // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
+    }
+
+    function renderPagination(totalPages) {
+        const paginationElement = document.getElementById('qualificationsPagination');
+        paginationElement.innerHTML = ''; // Clear previous pagination
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = document.createElement('a');
+            pageLink.textContent = i;
+            pageLink.className = 'page-link' + (i === currentPage ? ' active' : '');
+            pageLink.href = '#';
+            pageLink.onclick = (e) => {
+                e.preventDefault();
+                currentPage = i; // Update current page
+                renderCharts(); // Re-render charts for the new page
+            };
+            paginationElement.appendChild(pageLink);
+        }
     }
 
     loadData();
