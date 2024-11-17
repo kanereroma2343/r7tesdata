@@ -56,6 +56,17 @@
                 margin: 5px 0; /* Add margin between links */
             }
         }
+
+        .tab-content {
+            display: none;
+            opacity: 0; /* Start invisible */
+            transition: opacity 0.5s ease; /* Transition effect for fade */
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1; /* Fully visible */
+        }
     </style>
 </head>
 <body class="fade-in">
@@ -176,7 +187,8 @@ function showTab(tabName) {
         button.classList.remove('active');
     });
 
-    document.getElementById(tabName + 'Tally').classList.add('active');
+    const activeTab = document.getElementById(tabName + 'Tally');
+    activeTab.classList.add('active');
     document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
 }
 
@@ -303,10 +315,13 @@ function showTab(tabName) {
 
 .tab-content {
     display: none;
+    opacity: 0; /* Start invisible */
+    transition: opacity 0.5s ease; /* Transition effect for fade */
 }
 
 .tab-content.active {
     display: block;
+    opacity: 1; /* Fully visible */
 }
 </style>
 </body>
