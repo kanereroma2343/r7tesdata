@@ -38,35 +38,36 @@
 <div class="container">
     <!-- Placeholder for future content -->
     <div id="bodyContent" class="body-content">
-        <!-- Future content will be added here -->
-        <div id="sectorTally" class="tally-table">
-            <h2>Sector Tally</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sector</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody id="sectorTallyBody">
-                    <!-- Sector tally data will be populated here -->
-                </tbody>
-            </table>
-        </div>
+        <div class="tally-grid">
+            <div id="sectorTally" class="tally-table">
+                <h2>Sector Tally</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sector</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sectorTallyBody">
+                        <!-- Sector tally data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
 
-        <div id="qualificationTally" class="tally-table">
-            <h2>Qualifications Tally</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Qualification</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody id="qualificationTallyBody">
-                    <!-- Qualifications tally data will be populated here -->
-                </tbody>
-            </table>
+            <div id="qualificationTally" class="tally-table">
+                <h2>Qualifications Tally</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Qualification</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="qualificationTallyBody">
+                        <!-- Qualifications tally data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -205,6 +206,16 @@
     font-size: 18px; /* Increase font size */
     margin: 10px 0; /* Add some margin */
     color: #333; /* Darker color for better visibility */
+}
+
+.tally-grid {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between the tables */
+}
+
+.tally-table {
+    flex: 1; /* Allow tables to grow equally */
+    margin: 10px; /* Add some margin around the tables */
 }
 </style>
 </body>
