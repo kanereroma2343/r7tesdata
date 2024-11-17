@@ -56,17 +56,6 @@
                 margin: 5px 0; /* Add margin between links */
             }
         }
-
-        .tab-content {
-            display: none; /* Hide all tab content by default */
-            opacity: 0; /* Start with opacity 0 for transition effect */
-            transition: opacity 0.5s ease; /* Smooth transition for opacity */
-        }
-
-        .tab-content.active {
-            display: block; /* Show the active tab */
-            opacity: 1; /* Fade in effect */
-        }
     </style>
 </head>
 <body class="fade-in">
@@ -176,30 +165,19 @@
 }
 
 function showTab(tabName) {
-    const qualificationsTab = document.getElementById('qualificationsTab');
-    const sectorsTab = document.getElementById('sectorsTab');
-    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabs = document.querySelectorAll('.tab-content');
+    const buttons = document.querySelectorAll('.tab-button');
 
-    // Hide all tabs and remove active class
-    qualificationsTab.classList.remove('active');
-    sectorsTab.classList.remove('active');
-    tabButtons.forEach(button => button.classList.remove('active'));
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+    });
 
-    if (tabName === 'qualifications') {
-        qualificationsTab.classList.add('active');
-        qualificationsTab.style.display = 'block'; // Show qualifications tab
-        sectorsTab.style.display = 'none'; // Hide sectors tab
-        tabButtons[0].classList.add('active');
-    } else {
-        sectorsTab.classList.add('active');
-        sectorsTab.style.display = 'block'; // Show sectors tab
-        qualificationsTab.style.display = 'none'; // Hide qualifications tab
-        tabButtons[1].classList.add('active');
-    }
+    buttons.forEach(button => {
+        button.classList.remove('active');
+    });
 
-    // Trigger reflow to enable transition
-    qualificationsTab.offsetHeight; // This line forces a reflow
-    sectorsTab.offsetHeight; // This line forces a reflow
+    document.getElementById(tabName + 'Tally').classList.add('active');
+    document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
 }
 
     // Call the function to load tally data
@@ -325,13 +303,10 @@ function showTab(tabName) {
 
 .tab-content {
     display: none;
-    opacity: 0; /* Start invisible */
-    transition: opacity 0.5s ease; /* Transition effect for fade */
 }
 
 .tab-content.active {
     display: block;
-    opacity: 1; /* Fully visible */
 }
 </style>
 </body>
