@@ -83,24 +83,10 @@
 </footer>
 
 <script>
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    function formatDate(dateString) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-    }
-
-    // Add this line to trigger the fade-in effect after the content is loaded
-    window.onload = () => {
-        document.body.classList.add('fade-in');
-    };
-
-    async function loadTallyData() {
+   async function loadTallyData() {
+    try {
         const response = await fetch('data.json');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
 
         const sectorCount = {};
@@ -108,12 +94,9 @@
 
         // Count sectors and qualifications
         data.forEach(entry => {
-            // Count sectors
             if (entry.sector) {
                 sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
             }
-
-            // Count qualifications
             if (entry.qualification) {
                 qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
             }
@@ -121,18 +104,22 @@
 
         // Populate sector tally table
         const sectorTallyBody = document.getElementById('sectorTallyBody');
+        sectorTallyBody.innerHTML = ""; // Clear previous content
         for (const [sector, count] of Object.entries(sectorCount)) {
-            const row = `<tr><td>${sector}</td><td>${count}</td></tr>`;
-            sectorTallyBody.innerHTML += row;
+            sectorTallyBody.innerHTML += `<tr><td>${sector}</td><td>${count}</td></tr>`;
         }
 
         // Populate qualifications tally table
         const qualificationTallyBody = document.getElementById('qualificationTallyBody');
+        qualificationTallyBody.innerHTML = ""; // Clear previous content
         for (const [qualification, count] of Object.entries(qualificationCount)) {
-            const row = `<tr><td>${qualification}</td><td>${count}</td></tr>`;
-            qualificationTallyBody.innerHTML += row;
+            qualificationTallyBody.innerHTML += `<tr><td>${qualification}</td><td>${count}</td></tr>`;
         }
+    } catch (error) {
+        console.error('Failed to load tally data:', error);
     }
+}
+
 
     // Call the function to load tally data
     loadTallyData();
