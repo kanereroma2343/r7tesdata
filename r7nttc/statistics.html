@@ -23,7 +23,47 @@
     </div>
 </div>
 
+<div class="container">
+    <!-- New Entry Count Display -->
+    <div id="entryCount" class="entry-count"></div>
     <!-- Date Subheader -->
+    <div class="date-subheader">
+        Current NTTC Holders that are Due for Renewal As of: <span id="currentDate"></span>
+    </div>
+
+    <!-- Search Input Field -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
+            <button id="searchButton" onclick="searchTable()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Province</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Extension</th>
+                <th>Qualification</th>
+                <th>Certificate Number</th>
+                <th>Control Number</th>
+                <th>Date Issuance</th>
+                <th>Validity</th>
+            </tr>
+        </thead>
+        <tbody id="data-table-body">
+            <!-- Data will be dynamically loaded here -->
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span id="pagination"></span>
+    </div>
 
     <div class="sector-qualifications-container">
         <h2>Sector and Qualifications Tally</h2>
