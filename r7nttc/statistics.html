@@ -7,8 +7,19 @@
     <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Fade-in animation */
+        body {
+            opacity: 0; /* Start invisible */
+            transition: opacity 3s ease-in; /* Transition effect */
+        }
+
+        body.fade-in {
+            opacity: 1; /* Fully visible */
+        }
+    </style>
 </head>
-<body>
+<body class="fade-in">
 <div class="header-container">
     <div class="header-top">
         <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
@@ -19,62 +30,15 @@
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button">Recently Expired</button> 
+        <button onclick="window.location.href='dfr.html'"class="action-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
     </div>
 </div>
 
 <div class="container">
-    <!-- New Entry Count Display -->
-    <div id="entryCount" class="entry-count"></div>
-
-    <!-- Search Input Field -->
-    <div class="search-container">
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-            <button id="searchButton" onclick="searchTable()">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Province</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Extension</th>
-                <th>Qualification</th>
-                <th>Certificate Number</th>
-                <th>Control Number</th>
-                <th>Date Issuance</th>
-                <th>Validity</th>
-            </tr>
-        </thead>
-        <tbody id="data-table-body">
-            <!-- Data will be dynamically loaded here -->
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <span id="pagination"></span>
-    </div>
-
-    <div class="sector-qualifications-container">
-        <h2>Sector and Qualifications Tally</h2>
-        <table id="sector-qualifications-table">
-            <thead>
-                <tr>
-                    <th>Sector</th>
-                    <th>Qualification</th>
-                    <th>Tally Count</th>
-                </tr>
-            </thead>
-            <tbody id="sector-qualifications-body">
-                <!-- Data will be dynamically loaded here -->
-            </tbody>
-        </table>
+    <!-- Placeholder for future content -->
+    <div id="bodyContent" class="body-content">
+        <!-- Future content will be added here -->
     </div>
 </div>
 
@@ -90,127 +54,53 @@
 </footer>
 
 <script>
-    const entriesPerPage = 200;
-    let currentPage = 1;
-    let filteredData = [];
-    let originalData = [];
+    // Remove the entire table rendering logic
+    // const entriesPerPage = 200;
+    // let currentPage = 1;
+    // let filteredData = [];
+    // let originalData = [];
 
-    async function loadData() {
-        try {
-            const response = await fetch('data.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            originalData = data;
-            filteredData = originalData;
-            renderTable();
-            renderSectorQualifications();
-        } catch (error) {
-            console.error("Error loading data:", error);
-        }
-    }
+    // async function loadData() {
+    //     ...
+    // }
 
-    function renderTable() {
-        const startIndex = (currentPage - 1) * entriesPerPage;
-        const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
-        const tableBody = document.getElementById("data-table-body");
-        
-        tableBody.innerHTML = paginatedData.map(row => {
-            return `
-                <tr>
-                    <td>${row.province || ''}</td>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
-                    <td>${row.middle_initial || ''}</td>
-                    <td>${row.extension || ''}</td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td>${formatDate(row.nttc_validity)}</td>
-                </tr>
-            `;
-        }).join("");
-        
-        renderPagination();
-        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
-    }
+    // function renderTable() {
+    //     ...
+    // }
 
-    function renderPagination() {
-        const totalPages = Math.ceil(filteredData.length / entriesPerPage);
-        const pagination = document.getElementById("pagination");
-        let paginationHTML = '';
+    // function renderPagination() {
+    //     ...
+    // }
 
-        paginationHTML += `<a href="#" class="page-link ${currentPage === 1 ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage - 1})">Previous</a>`;
+    // function setPage(page) {
+    //     ...
+    // }
 
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<a href="#" class="page-link ${i === currentPage ? 'active' : ''}" 
-                onclick="setPage(${i})">${i}</a>`;
-        }
+    // function searchTable() {
+    //     ...
+    // }
 
-        paginationHTML += `<a href="#" class="page-link ${currentPage === totalPages ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage + 1})">Next</a>`;
+    // loadData();
+    // ...
 
-        pagination.innerHTML = paginationHTML;
-    }
-
-    function setPage(page) {
-        currentPage = page;
-        renderTable();
-    }
-
-    function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
-        );
-        currentPage = 1; 
-        renderTable();
-    }
-
-    function renderSectorQualifications() {
-        const sectorQualifications = {};
-
-        originalData.forEach(row => {
-            const sector = row.sector || 'Unknown';
-            const qualification = row.qualification || 'Unknown';
-
-            if (!sectorQualifications[sector]) {
-                sectorQualifications[sector] = {};
-            }
-            if (!sectorQualifications[sector][qualification]) {
-                sectorQualifications[sector][qualification] = 0;
-            }
-            sectorQualifications[sector][qualification]++;
-        });
-
-        const sectorQualificationsBody = document.getElementById("sector-qualifications-body");
-        sectorQualificationsBody.innerHTML = Object.keys(sectorQualifications).map(sector => {
-            return Object.keys(sectorQualifications[sector]).map(qualification => {
-                return `
-                    <tr>
-                        <td>${sector}</td>
-                        <td>${qualification}</td>
-                        <td>${sectorQualifications[sector][qualification]}</td>
-                    </tr>
-                `;
-            }).join("");
-        }).join("");
-
-    }
-
-    loadData();
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
+
+    // Add this line to trigger the fade-in effect after the content is loaded
+    window.onload = () => {
+        document.body.classList.add('fade-in');
+    };
 </script>
 
 <style>
-/* Styles remain unchanged */
 .pagination {
     margin: 20px 0;
     text-align: center;
@@ -266,16 +156,31 @@
     color: white;
     padding: 0 15px;
     height: 36px;
-    font-size: 14px;
-    border-radius: 50px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
 }
 
-.search-wrapper:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+.record-link {
+    color: black;
+    text-decoration: none;
 }
 
+.record-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Centering and styling for the entry count and date subheader */
+.entry-count, .date-subheader {
+    text-align: center; /* Center the text */
+    font-size: 18px; /* Increase font size */
+    margin: 10px 0; /* Add some margin */
+    color: #333; /* Darker color for better visibility */
+}
 </style>
 </body>
 </html>
