@@ -17,6 +17,49 @@
         body.fade-in {
             opacity: 1; /* Fully visible */
         }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column; /* Stack header elements vertically */
+                align-items: center; /* Center align items */
+            }
+
+            .header-title {
+                font-size: 1.5em; /* Adjust font size for mobile */
+                text-align: center; /* Center the title */
+            }
+
+            .button-container {
+                flex-direction: column; /* Stack buttons vertically */
+                align-items: center; /* Center align buttons */
+            }
+
+            .action-button {
+                width: 100%; /* Make buttons full width */
+                margin: 5px 0; /* Add margin between buttons */
+            }
+
+            .tally-grid {
+                flex-direction: column; /* Stack tables vertically */
+            }
+
+            .tally-table {
+                margin: 10px 0; /* Add margin for spacing */
+            }
+
+            .footer-content {
+                text-align: center; /* Center footer content */
+            }
+
+            .footer-links {
+                flex-direction: column; /* Stack footer links vertically */
+            }
+
+            .footer-links a {
+                margin: 5px 0; /* Add margin between links */
+            }
+        }
     </style>
 </head>
 <body class="fade-in">
