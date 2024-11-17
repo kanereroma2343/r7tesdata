@@ -19,53 +19,11 @@
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button">Recently Expired</button> 
-        <button onclick="window.location.href='dfr.html'"class="action-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
     </div>
 </div>
 
-<div class="container">
-    <!-- New Entry Count Display -->
-    <div id="entryCount" class="entry-count"></div>
     <!-- Date Subheader -->
-    <div class="date-subheader">
-        Current NTTC Holders that are Due for Renewal As of: <span id="currentDate"></span>
-    </div>
-
-    <!-- Search Input Field -->
-    <div class="search-container">
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-            <button id="searchButton" onclick="searchTable()">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Province</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Extension</th>
-                <th>Qualification</th>
-                <th>Certificate Number</th>
-                <th>Control Number</th>
-                <th>Date Issuance</th>
-                <th>Validity</th>
-            </tr>
-        </thead>
-        <tbody id="data-table-body">
-            <!-- Data will be dynamically loaded here -->
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <span id="pagination"></span>
-    </div>
-
     <div class="sector-qualifications-container">
         <h2>Sector and Qualifications Tally</h2>
         <table id="sector-qualifications-table">
@@ -114,53 +72,6 @@
         } catch (error) {
             console.error("Error loading data:", error);
         }
-    }
-
-    function renderTable() {
-        const today = new Date();
-        const threeMonthsFromNow = new Date();
-        threeMonthsFromNow.setMonth(today.getMonth() + 3);
-
-        filteredData = originalData.filter(row => {
-            const validityDate = new Date(row.nttc_validity);
-            return validityDate > today && validityDate <= threeMonthsFromNow;
-        });
-
-        const startIndex = (currentPage - 1) * entriesPerPage;
-        const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
-        const tableBody = document.getElementById("data-table-body");
-        
-        tableBody.innerHTML = paginatedData.map(row => {
-            const validityDate = new Date(row.nttc_validity);
-            const today = new Date();
-            const threeMonthsFromNow = new Date();
-            threeMonthsFromNow.setMonth(today.getMonth() + 3);
-            
-            let validityColor = 'green';
-            if (validityDate < today) {
-                validityColor = 'red';
-            } else if (validityDate <= threeMonthsFromNow) {
-                validityColor = 'orange';
-            }
-
-            return `
-                <tr>
-                    <td>${row.province || ''}</td>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
-                    <td>${row.middle_initial || ''}</td>
-                    <td>${row.extension || ''}</td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                </tr>
-            `;
-        }).join("");
-        
-        renderPagination();
-        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
     function renderPagination() {
