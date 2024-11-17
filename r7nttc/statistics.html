@@ -39,6 +39,35 @@
     <!-- Placeholder for future content -->
     <div id="bodyContent" class="body-content">
         <!-- Future content will be added here -->
+        <div id="sectorTally" class="tally-table">
+            <h2>Sector Tally</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sector</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="sectorTallyBody">
+                    <!-- Sector tally data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="qualificationTally" class="tally-table">
+            <h2>Qualifications Tally</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Qualification</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="qualificationTallyBody">
+                    <!-- Qualifications tally data will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -98,6 +127,40 @@
     window.onload = () => {
         document.body.classList.add('fade-in');
     };
+
+    async function loadTallyData() {
+        const response = await fetch('data.json');
+        const data = await response.json();
+
+        const sectorCount = {};
+        const qualificationCount = {};
+
+        // Count sectors and qualifications
+        data.forEach(entry => {
+            // Count sectors
+            sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
+
+            // Count qualifications
+            qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
+        });
+
+        // Populate sector tally table
+        const sectorTallyBody = document.getElementById('sectorTallyBody');
+        for (const [sector, count] of Object.entries(sectorCount)) {
+            const row = `<tr><td>${sector}</td><td>${count}</td></tr>`;
+            sectorTallyBody.innerHTML += row;
+        }
+
+        // Populate qualifications tally table
+        const qualificationTallyBody = document.getElementById('qualificationTallyBody');
+        for (const [qualification, count] of Object.entries(qualificationCount)) {
+            const row = `<tr><td>${qualification}</td><td>${count}</td></tr>`;
+            qualificationTallyBody.innerHTML += row;
+        }
+    }
+
+    // Call the function to load tally data
+    loadTallyData();
 </script>
 
 <style>
