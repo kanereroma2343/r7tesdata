@@ -83,35 +83,6 @@
 </footer>
 
 <script>
-    // Remove the entire table rendering logic
-    // const entriesPerPage = 200;
-    // let currentPage = 1;
-    // let filteredData = [];
-    // let originalData = [];
-
-    // async function loadData() {
-    //     ...
-    // }
-
-    // function renderTable() {
-    //     ...
-    // }
-
-    // function renderPagination() {
-    //     ...
-    // }
-
-    // function setPage(page) {
-    //     ...
-    // }
-
-    // function searchTable() {
-    //     ...
-    // }
-
-    // loadData();
-    // ...
-
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -138,10 +109,14 @@
         // Count sectors and qualifications
         data.forEach(entry => {
             // Count sectors
-            sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
+            if (entry.sector) {
+                sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
+            }
 
             // Count qualifications
-            qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
+            if (entry.qualification) {
+                qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
+            }
         });
 
         // Populate sector tally table
