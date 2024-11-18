@@ -60,7 +60,7 @@
             align-items: center;
             background: #f8f9fa;
             border-radius: 50px;
-            padding: 5px;
+            padding: 3px;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             width: 100%;
@@ -70,8 +70,8 @@
             border: none;
             background: none;
             outline: none;
-            padding: 10px 15px;
-            font-size: 14px;
+            padding: 8px 10px;
+            font-size: 12px;
             width: 100%;
             color: #495057;
             font-weight: 500;
@@ -82,14 +82,14 @@
             border: none;
             background: #007bff;
             color: white;
-            padding: 0 15px;
-            height: 36px;
+            padding: 0 10px;
+            height: 30px;
             cursor: pointer;
             border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         /* Entry count and date subheader styles */
@@ -188,8 +188,9 @@
         .header-title {
             font-size: 2em; /* Increase font size for the title */
             color: #2c3e50; /* Set title color */
-            margin: 20px 0; /* Add margin for spacing */
+            margin: 0; /* Remove margin to center title */
             text-align: center; /* Center the title */
+            flex-grow: 1; /* Allow title to grow and take available space */
         }
 
         /* Button Container */
@@ -236,12 +237,13 @@
             As of: <span id="currentDate"></span>
         </div>
         <div class="search-container">
-            <div class="search-wrapper">
+            <!-- Removed search functionality -->
+            <!-- <div class="search-wrapper">
                 <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
                 <button id="searchButton" onclick="searchTable()">
                     <i class="fas fa-search"></i>
                 </button>
-            </div>
+            </div> -->
         </div>
         <div class="table-container">
             <table id="data-table">
@@ -319,87 +321,33 @@
         };
 
         // Search functionality
-        const entriesPerPage = 200;
-        let currentPage = 1;
-        let filteredData = [];
-        let originalData = [];
+        // Removed the following variables and functions:
+        // const entriesPerPage = 200;
+        // let currentPage = 1;
+        // let filteredData = [];
+        // let originalData = [];
 
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                originalData = data;
-                filteredData = originalData;
-                renderTable();
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        }
+        // async function loadData() {
+        //     ...
+        // }
 
-        function renderTable() {
-            const startIndex = (currentPage - 1) * entriesPerPage;
-            const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
-            const tableBody = document.getElementById("data-body");
-            
-            tableBody.innerHTML = paginatedData.map(row => `
-                <tr>
-                    <td>${row.Province || ''}</td>
-                    <td>${row.WTR || ''}</td>
-                    <td>${row.NTR || ''}</td>
-                    <td>${row.MTP || ''}</td>
-                    <td>${row.CoC || ''}</td>
-                    <td>${row.Total || ''}</td>
-                    <td>${row.Private_TVIs || ''}</td>
-                    <td>${row.Private_Farm_School || ''}</td>
-                    <td>${row.Private_HEIs || ''}</td>
-                    <td>${row.Public_LGU || ''}</td>
-                    <td>${row.Public_LUC || ''}</td>
-                    <td>${row.Public_SUC || ''}</td>
-                    <td>${row.Public_TTI || ''}</td>
-                    <td>${row.Public_Total || ''}</td>
-                </tr>
-            `).join("");
-            
-            renderPagination();
-        }
+        // function renderTable() {
+        //     ...
+        // }
 
-        function renderPagination() {
-            const totalPages = Math.ceil(filteredData.length / entriesPerPage);
-            const pagination = document.getElementById("pagination");
-            let paginationHTML = '';
+        // function renderPagination() {
+        //     ...
+        // }
 
-            paginationHTML += `<a href="#" class="page-link ${currentPage === 1 ? 'disabled' : ''}" 
-                onclick="setPage(${currentPage - 1})">Previous</a>`;
+        // function setPage(page) {
+        //     ...
+        // }
 
-            for (let i = 1; i <= totalPages; i++) {
-                paginationHTML += `<a href="#" class="page-link ${i === currentPage ? 'active' : ''}" 
-                    onclick="setPage(${i})">${i}</a>`;
-            }
+        // function searchTable() {
+        //     ...
+        // }
 
-            paginationHTML += `<a href="#" class="page-link ${currentPage === totalPages ? 'disabled' : ''}" 
-                onclick="setPage(${currentPage + 1})">Next</a>`;
-
-            pagination.innerHTML = paginationHTML;
-        }
-
-        function setPage(page) {
-            currentPage = page;
-            renderTable();
-        }
-
-        function searchTable() {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            filteredData = originalData.filter(row =>
-                Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
-            );
-            currentPage = 1; 
-            renderTable();
-        }
-
-        loadData();
+        loadData(); // Keep this line to load data without search
     </script>
 </body>
 </html>
