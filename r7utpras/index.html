@@ -135,11 +135,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>
-            <img src="/icons/tlogo.png" alt="Left Logo" style="height: 50px; vertical-align: middle; margin-right: 10px;">
-            Number of Registered Programs and TVET Providers Offering Registered Programs by Province
-            <img src="/icons/blogo.png" alt="Right Logo" style="height: 50px; vertical-align: middle; margin-left: 10px;">
-        </h1>
+        <div class="header-container">
+            <div class="header-top">
+                <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
+                <h1 class="header-title">NATIONAL TVET TRAINER'S CERTIFICATE RECORDS</h1>
+                <img src="./icons/blogo.png" alt="Right Logo" class="logo">
+            </div>
+            <div class="button-container">
+                <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
+                <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
+                <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
+                <button onclick="window.location.href='dfr.html'"class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
+                <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
+            </div>
+        </div>
         <div class="date-subheader">
             As of: <span id="currentDate"></span>
         </div>
