@@ -3,85 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Data Display</title>
+    <title>NTTC Data Summary</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
             padding: 20px;
-            background-color: #f4f4f4;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
+
         h1 {
-            color: #333;
             text-align: center;
-            margin-bottom: 20px;
+            color: #333;
         }
+
         table {
             width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
+            border-collapse: collapse;
+            text-align: center;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+
         th, td {
             padding: 10px;
-            text-align: center;
+            border: 1px solid #ddd;
         }
-        .approved-message {
-            color: green;
-            text-align: center;
-            font-size: 18px;
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #eaeaea;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    <h1>Excel Data Summary</h1>
-    
-    <div id="approvedMessage" class="approved-message"></div>
-    
-    <div id="summary"></div>
+    <div class="container">
+        <h1>NTTC Data Summary</h1>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Province</th>
+                    <th>WTR</th>
+                    <th>NTR</th>
+                    <th>MTP</th>
+                    <th>CoC</th>
+                    <th>Total</th>
+                    <th>Private TVIs</th>
+                    <th>Private Farm School</th>
+                    <th>Private HEIs</th>
+                    <th>Public LGU</th>
+                    <th>Public LUC</th>
+                    <th>Public SUC</th>
+                    <th>Public TTI</th>
+                    <th>Public Total</th>
+                </tr>
+            </thead>
+            <tbody id="data-body">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        // Check if data exists in localStorage
-        const excelData = localStorage.getItem('excelData');
-        if (excelData) {
-            const workbook = JSON.parse(excelData);
-            const summarySheetName = 'Summary';
-            const summarySheet = workbook.Sheets[summarySheetName];
+        // Function to fetch and display data from data.json
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('data-body');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
 
-            if (summarySheet) {
-                const summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
-                displaySummary(summaryData);
-            } else {
-                document.getElementById('summary').innerText = 'The summary sheet is missing in the uploaded file.';
-            }
-
-            // Show "Approved" message
-            document.getElementById('approvedMessage').innerText = 'File has been approved and processed!';
-        } else {
-            document.getElementById('summary').innerText = 'No data found. Please upload a file first.';
-        }
-
-        function displaySummary(data) {
-            const summaryDiv = document.getElementById('summary');
-            let html = '<h2>Summary Data</h2><table>';
-
-            // Extracting only the data from B4 to O10
-            const filteredData = data.slice(3, 10).map(row => row.slice(1, 15)); // B4 is index 1, O10 is index 14
-
-            for (let row of filteredData) {
-                html += '<tr>';
-                for (let cell of row) {
-                    html += `<td>${cell}</td>`;
-                }
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            summaryDiv.innerHTML = html;
-        }
+                    row.innerHTML = `
+                        <td>${item.Province}</td>
+                        <td>${item.WTR}</td>
+                        <td>${item.NTR}</td>
+                        <td>${item.MTP}</td>
+                        <td>${item.CoC}</td>
+                        <td>${item.Total}</td>
+                        <td>${item.Private_TVIs}</td>
+                        <td>${item.Private_Farm_School}</td>
+                        <td>${item.Private_HEIs}</td>
+                        <td>${item.Public_LGU}</td>
+                        <td>${item.Public_LUC}</td>
+                        <td>${item.Public_SUC}</td>
+                        <td>${item.Public_TTI}</td>
+                        <td>${item.Public_Total}</td>
+                    `;
+                    
+                    // Add the row to the table body
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading the data:', error);
+            });
     </script>
 </body>
 </html>
