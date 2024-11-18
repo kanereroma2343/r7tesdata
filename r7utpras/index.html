@@ -131,6 +131,27 @@
             overflow-x: auto;
             margin-top: 20px;
         }
+
+        /* Header Container */
+        .header-container {
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Space logos and title evenly */
+            align-items: center; /* Center items vertically */
+        }
+
+        /* Logo Styles */
+        .logo {
+            max-width: 100px; /* Set a max width for logos */
+            height: auto; /* Maintain aspect ratio */
+            margin: 0 10px; /* Add margin for spacing */
+        }
+
+        /* Header Title */
+        .header-title {
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center; /* Center the title */
+            margin: 0; /* Remove default margin */
+        }
     </style>
 </head>
 <body>
@@ -194,7 +215,7 @@
                         <td>${item.NTR || ''}</td>
                         <td>${item.MTP || ''}</td>
                         <td>${item.CoC || ''}</td>
-                        <td><strong>${item.Total || ''}</strong></td>
+                        <td>${item.Total || ''}</td>
                         <td>${item.Private_TVIs || ''}</td>
                         <td>${item.Private_Farm_School || ''}</td>
                         <td>${item.Private_HEIs || ''}</td>
@@ -202,7 +223,7 @@
                         <td>${item.Public_LUC || ''}</td>
                         <td>${item.Public_SUC || ''}</td>
                         <td>${item.Public_TTI || ''}</td>
-                        <td><strong>${item.Public_Total || ''}</strong></td>
+                        <td>${item.Public_Total || ''}</td>
                     `;
 
                     // Append the row to the table body
