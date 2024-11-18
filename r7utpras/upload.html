@@ -34,8 +34,8 @@
                     return;
                 }
 
-                // Extract data from B4:O10 range
-                const range = "B4:O10";
+                // Extract data from B6:O10 range
+                const range = "B6:O10";
                 const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
                 // Map extracted data to specific field names
