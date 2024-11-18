@@ -2,322 +2,229 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NTTCMIS</title>
-    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
     <style>
-        /* Fade-in animation */
         body {
-            opacity: 0; /* Start invisible */
-            transition: opacity 3s ease-in; /* Transition effect */
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
         }
 
-        body.fade-in {
-            opacity: 1; /* Fully visible */
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
 
-        .glowing-button {
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.7em;
+            font-weight: 700;
             position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #3498db;
+        }
+
+        .date-subheader {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            max-width: 100%;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             overflow: hidden;
-            border: 2px solid orange; /* Orange border */
-            transition: box-shadow 0.3s ease;
         }
 
-        .glowing-button:hover {
-            box-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 30px orange; /* Glowing effect */
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
         }
 
-        /* New styles for the Recently Expired button */
-        .expired-button {
-            border: 2px solid red; /* Red border */
-            animation: running-red-outline 1.5s infinite; /* Running outline animation */
+        th:last-child, td:last-child {
+            border-right: none;
         }
 
-        @keyframes running-red-outline {
-            0% {
-                box-shadow: 0 0 0 red; /* No shadow */
-            }
-            50% {
-                box-shadow: 0 0 5px red; /* Subtle shadow */
-            }
-            100% {
-                box-shadow: 0 0 0 red; /* No shadow */
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 95%;
+                padding: 20px;
             }
         }
 
-        /* New styles for the glowing orange effect */
-        .glowing-orange-button {
-            border: 2px solid rgb(255, 145, 0); /* Red border */
-            animation: running-red-outline 1.5s infinite; 
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
         }
-        @keyframes running-red-outline {
-            0% {
-                box-shadow: 0 0 0 rgb(255, 166, 0); /* No shadow */
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
             }
-            50% {
-                box-shadow: 0 0 5px rgb(255, 153, 0); /* Subtle shadow */
+
+            .container {
+                padding: 15px;
             }
-            100% {
-                box-shadow: 0 0 0 rgb(255, 153, 0); /* No shadow */
+
+            table {
+                font-size: 12px;
             }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        /* Horizontal scrolling for table on smaller screens */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
         }
     </style>
 </head>
-<body class="fade-in">
-
-<!-- Header -->
-<div class="header-container">
-    <div class="header-top">
-        <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
-        <h1 class="header-title">NATIONAL TVET TRAINER'S CERTIFICATE RECORDS</h1>
-        <img src="./icons/blogo.png" alt="Right Logo" class="logo">
-    </div>
-    <div class="button-container">
-        <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
-        <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-        <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
-        <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
-        <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-    </div>
-</div>
-
-<div class="container">
-    <!-- New Entry Count Display -->
-    <div id="entryCount" class="entry-count"></div>
-    <!-- Date Subheader -->
-    <div class="date-subheader">
-        Current NTTC Holders As of: <span id="currentDate"></span>
-    </div>
-
-    <!-- Search Input Field -->
-    <div class="search-container">
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-            <button id="searchButton" onclick="searchTable()">
-                <i class="fas fa-search"></i>
-            </button>
+<body>
+    <div class="container">
+        <h1>
+            <img src="/icons/tlogo.png" alt="Left Logo" style="height: 50px; vertical-align: middle; margin-right: 10px;">
+            Number of Registered Programs and TVET Providers Offering Registered Programs by Province
+            <img src="/icons/blogo.png" alt="Right Logo" style="height: 50px; vertical-align: middle; margin-left: 10px;">
+        </h1>
+        <div class="date-subheader">
+            As of: <span id="currentDate"></span>
+        </div>
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Province</th>
+                        <th>WTR</th>
+                        <th>NTR</th>
+                        <th>MTP</th>
+                        <th>CoC</th>
+                        <th><strong>Total</strong></th>
+                        <th>TVIs</th>
+                        <th>Farm School</th>
+                        <th>HEIs</th>
+                        <th>LGU</th>
+                        <th>LUC</th>
+                        <th>SUC</th>
+                        <th>TTI</th>
+                        <th><strong>Total</strong></th>
+                    </tr>
+                </thead>
+                <tbody id="data-body">
+                    <!-- Data will be dynamically populated here -->
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong id="totalWTR"></strong></td>
+                        <td><strong id="totalNTR"></strong></td>
+                        <td><strong id="totalMTP"></strong></td>
+                        <td><strong id="totalCoC"></strong></td>
+                        <td><strong id="totalOverall"></strong></td>
+                        <td><strong id="totalTVIs"></strong></td>
+                        <td><strong id="totalFarmSchool"></strong></td>
+                        <td><strong id="totalHEIs"></strong></td>
+                        <td><strong id="totalLGU"></strong></td>
+                        <td><strong id="totalLUC"></strong></td>
+                        <td><strong id="totalSUC"></strong></td>
+                        <td><strong id="totalTTI"></strong></td>
+                        <td><strong id="totalPublicOverall"></strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Extension</th>
-                <th>Qualification</th>
-                <th>Certificate Number</th>
-                <th>Control Number</th>
-                <th>Date Issuance</th>
-                <th>Validity</th>
-            </tr>
-        </thead>
-        <tbody id="data-table-body">
-            <!-- Data will be dynamically loaded here -->
-        </tbody>
-    </table>
+    <script>
+        // Function to fetch and display data from data.json
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('data-body');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
 
-    <div class="pagination">
-        <span id="pagination"></span>
-    </div>
-</div>
+                    row.innerHTML = `
+                        <td>${item.Province || ''}</td>
+                        <td>${item.WTR || ''}</td>
+                        <td>${item.NTR || ''}</td>
+                        <td>${item.MTP || ''}</td>
+                        <td>${item.CoC || ''}</td>
+                        <td><strong>${item.Total || ''}</strong></td>
+                        <td>${item.Private_TVIs || ''}</td>
+                        <td>${item.Private_Farm_School || ''}</td>
+                        <td>${item.Private_HEIs || ''}</td>
+                        <td>${item.Public_LGU || ''}</td>
+                        <td>${item.Public_LUC || ''}</td>
+                        <td>${item.Public_SUC || ''}</td>
+                        <td>${item.Public_TTI || ''}</td>
+                        <td><strong>${item.Public_Total || ''}</strong></td>
+                    `;
 
-<!-- Footer -->
-<footer>
-    <div class="footer-content">
-        <p>&copy; 2024 Certificate Records Management System</p>
-        <div class="footer-links">
-            <a href="./index.html"><i class="fas fa-home"></i> Home</a>
-            <a href="#"><i class="fas fa-info-circle"></i> About</a>
-            <a href="#"><i class="fas fa-envelope"></i> Contact</a>
-        </div>
-    </div>
-</footer>
+                    // Append the row to the table body
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading the data:', error);
+            });
 
-<script>
-    const entriesPerPage = 200;
-    let currentPage = 1;
-    let filteredData = [];
-    let originalData = [];
-
-    async function loadData() {
-        try {
-            const response = await fetch('data.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            originalData = data;
-            filteredData = originalData;
-            renderTable();
-        } catch (error) {
-            console.error("Error loading data:", error);
-        }
-    }
-
-    function renderTable() {
-        const startIndex = (currentPage - 1) * entriesPerPage;
-        const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
-        const tableBody = document.getElementById("data-table-body");
-        
-        tableBody.innerHTML = paginatedData.map(row => {
-            const validityDate = new Date(row.nttc_validity);
-            const today = new Date();
-            const threeMonthsFromNow = new Date();
-            threeMonthsFromNow.setMonth(today.getMonth() + 3);
-            
-            let validityColor = 'green';
-            if (validityDate < today) {
-                validityColor = 'red';
-            } else if (validityDate <= threeMonthsFromNow) {
-                validityColor = 'orange';
-            }
-
-            return `
-                <tr>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
-                    <td>${row.middle_initial || ''}</td>
-                    <td>${row.extension || ''}</td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                </tr>
-            `;
-        }).join("");
-        
-        renderPagination();
-        document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
-    }
-
-    function renderPagination() {
-        const totalPages = Math.ceil(filteredData.length / entriesPerPage);
-        const pagination = document.getElementById("pagination");
-        let paginationHTML = '';
-
-        paginationHTML += `<a href="#" class="page-link ${currentPage === 1 ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage - 1})">Previous</a>`;
-
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<a href="#" class="page-link ${i === currentPage ? 'active' : ''}" 
-                onclick="setPage(${i})">${i}</a>`;
-        }
-
-        paginationHTML += `<a href="#" class="page-link ${currentPage === totalPages ? 'disabled' : ''}" 
-            onclick="setPage(${currentPage + 1})">Next</a>`;
-
-        pagination.innerHTML = paginationHTML;
-    }
-
-    function setPage(page) {
-        currentPage = page;
-        renderTable();
-    }
-
-    function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
-        );
-        currentPage = 1; 
-        renderTable();
-    }
-
-    loadData();
-
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    function formatDate(dateString) {
+        // Set the current date in the date-subheader with the format "Month Day, Year"
+        const currentDateElement = document.getElementById('currentDate');
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-    }
-
-    // Add this line to trigger the fade-in effect after the content is loaded
-    window.onload = () => {
-        document.body.classList.add('fade-in');
-    };
-</script>
-
-<style>
-.pagination {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.page-link {
-    padding: 8px 12px;
-    margin: 0 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #333;
-}
-
-.page-link.active {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.page-link.disabled {
-    pointer-events: none;
-    color: #ccc;
-}
-
-.search-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: #f8f9fa;
-    border-radius: 50px;
-    padding: 5px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.search-wrapper input {
-    border: none;
-    background: none;
-    outline: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    width: 100%;
-    color: #495057;
-    font-weight: 500;
-    border-radius: 50px;
-}
-
-.search-wrapper button {
-    border: none;
-    background: #007bff;
-    color: white;
-    padding: 0 15px;
-    height: 36px;
-    cursor: pointer;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-/* Centering and styling for the entry count and date subheader */
-.entry-count, .date-subheader {
-    text-align: center; /* Center the text */
-    font-size: 18px; /* Increase font size */
-    margin: 10px 0; /* Add some margin */
-    color: #333; /* Darker color for better visibility */
-}
-</style>
+        const today = new Date().toLocaleDateString(undefined, options);
+        currentDateElement.textContent = today;
+    </script>
 </body>
 </html>
