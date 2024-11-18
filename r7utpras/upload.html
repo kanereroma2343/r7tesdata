@@ -34,20 +34,27 @@
                     return;
                 }
 
-                // Extract data from B4:B10 to O4:O10 range
+                // Extract data from B4:O10 range
                 const range = "B4:O10";
                 const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
-                // Transform data to structured JSON format
-                const jsonData = [];
-                for (let i = 0; i < extractedData.length; i++) {
-                    const row = extractedData[i];
-                    const jsonRow = {};
-                    for (let j = 0; j < row.length; j++) {
-                        jsonRow[`Column${j + 1}`] = row[j] || null; // Assign default headers like Column1, Column2, etc.
-                    }
-                    jsonData.push(jsonRow);
-                }
+                // Map extracted data to specific field names
+                const jsonData = extractedData.map(row => ({
+                    Province: row[0] || null,
+                    WTR: row[1] || null,
+                    NTR: row[2] || null,
+                    MTP: row[3] || null,
+                    CoC: row[4] || null,
+                    Total: row[5] || null,
+                    Private_TVIs: row[6] || null,
+                    Private_Farm_School: row[7] || null,
+                    Private_HEIs: row[8] || null,
+                    Public_LGU: row[9] || null,
+                    Public_LUC: row[10] || null,
+                    Public_SUC: row[11] || null,
+                    Public_TTI: row[12] || null,
+                    Public_Total: row[13] || null,
+                }));
 
                 // Create a JSON file and download it
                 const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });

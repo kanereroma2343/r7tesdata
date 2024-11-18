@@ -1,123 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NTTC Data Summary</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f4f4f4;
+<script>
+    document.getElementById('convertButton').addEventListener('click', () => {
+        const fileInput = document.getElementById('fileInput');
+        if (!fileInput.files.length) {
+            alert('Please select an Excel file first.');
+            return;
         }
 
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+        reader.onload = function (event) {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
 
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            text-align: center;
-        }
+            // Access the "Summary" sheet
+            const sheetName = "Summary";
+            const sheet = workbook.Sheets[sheetName];
+            if (!sheet) {
+                alert(`Sheet "${sheetName}" not found in the Excel file.`);
+                return;
+            }
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
+            // Extract data from B4:O10 range
+            const range = "B4:O10";
+            const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
-        th {
-            background-color: #333;
-            color: white;
-        }
+            // Map extracted data to match field names
+            const jsonData = extractedData.map(row => ({
+                Province: row[0] || null,
+                WTR: row[1] || null,
+                NTR: row[2] || null,
+                MTP: row[3] || null,
+                CoC: row[4] || null,
+                Total: row[5] || null,
+                Private_TVIs: row[6] || null,
+                Private_Farm_School: row[7] || null,
+                Private_HEIs: row[8] || null,
+                Public_LGU: row[9] || null,
+                Public_LUC: row[10] || null,
+                Public_SUC: row[11] || null,
+                Public_TTI: row[12] || null,
+                Public_Total: row[13] || null,
+            }));
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+            // Create a JSON file and download it
+            const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(jsonBlob);
+            link.download = "data.json";
+            link.click();
+        };
 
-        tr:hover {
-            background-color: #eaeaea;
-        }
-
-        .total-row {
-            font-weight: bold;
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>NTTC Data Summary</h1>
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Province</th>
-                    <th>WTR</th>
-                    <th>NTR</th>
-                    <th>MTP</th>
-                    <th>CoC</th>
-                    <th>Total</th>
-                    <th>Private TVIs</th>
-                    <th>Private Farm School</th>
-                    <th>Private HEIs</th>
-                    <th>Public LGU</th>
-                    <th>Public LUC</th>
-                    <th>Public SUC</th>
-                    <th>Public TTI</th>
-                    <th>Public Total</th>
-                </tr>
-            </thead>
-            <tbody id="data-body">
-                <!-- Data will be populated here -->
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        // Function to fetch and display data from data.json
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('data-body');
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-                        <td>${item.Province}</td>
-                        <td>${item.WTR}</td>
-                        <td>${item.NTR}</td>
-                        <td>${item.MTP}</td>
-                        <td>${item.CoC}</td>
-                        <td>${item.Total}</td>
-                        <td>${item.Private_TVIs}</td>
-                        <td>${item.Private_Farm_School}</td>
-                        <td>${item.Private_HEIs}</td>
-                        <td>${item.Public_LGU}</td>
-                        <td>${item.Public_LUC}</td>
-                        <td>${item.Public_SUC}</td>
-                        <td>${item.Public_TTI}</td>
-                        <td>${item.Public_Total}</td>
-                    `;
-                    
-                    // Add the row to the table body
-                    tableBody.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('Error loading the data:', error);
-            });
-    </script>
-</body>
-</html>
+        reader.readAsArrayBuffer(file);
+    });
+</script>
