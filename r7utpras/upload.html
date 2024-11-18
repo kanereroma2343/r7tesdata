@@ -45,7 +45,12 @@
                 const summarySheet = workbook.Sheets[workbook.SheetNames[0]];
                 const summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
 
-                displaySummary(summaryData);
+                // Check if the first sheet is the summary sheet
+                if (workbook.SheetNames[0] === 'Summary') {
+                    displaySummary(summaryData);
+                } else {
+                    alert('The first sheet is not the summary sheet.');
+                }
 
                 // Store the full workbook data in localStorage
                 localStorage.setItem('excelData', JSON.stringify(workbook));
