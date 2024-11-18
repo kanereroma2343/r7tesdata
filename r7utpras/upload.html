@@ -69,7 +69,10 @@
             const summaryDiv = document.getElementById('summary');
             let html = '<h2>Summary Data</h2><table border="1">';
 
-            for (let row of data) {
+            // Extracting only the data from B4 to O10
+            const filteredData = data.slice(3, 10).map(row => row.slice(1, 15)); // B4 is index 1, O10 is index 14
+
+            for (let row of filteredData) {
                 html += '<tr>';
                 for (let cell of row) {
                     html += `<td>${cell}</td>`;
