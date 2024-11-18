@@ -27,7 +27,8 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: blur(8px);
+            filter: blur(6px);
+            opacity: 0.8;
             z-index: -1;
         }
 
@@ -40,7 +41,7 @@
             border-radius: 8px;
             position: relative;
             z-index: 1;
-            background: linear-gradient(to bottom, #000000, #3498db);
+            background: rgba(255, 255, 255, 0.9);
         }
 
         h1 {
@@ -107,136 +108,110 @@
             background-color: #f5f5f5;
         }
 
-        /* Responsive Design */
-        /* @media (max-width: 1200px) { */
-        /*     .container { */
-        /*         width: 95%; */
-        /*         padding: 20px; */
-        /*     } */
-        /* } */
-
-        /* @media (max-width: 768px) { */
-        /*     h1 { */
-        /*         font-size: 1.6em; */
-        /*     } */
-
-        /*     .header-title { */
-        /*         font-size: 1.4em; */
-        /*     } */
-
-        /*     table { */
-        /*         font-size: 12px; */
-        /*     } */
-
-        /*     th, td { */
-        /*         padding: 8px; */
-        /*     } */
-
-        /*     .button-container { */
-        /*         flex-direction: column; */
-        /*         align-items: center; */
-        /*     } */
-
-        /*     .action-button { */
-        /*         width: 100%; */
-        /*         margin: 5px 0; */
-        /*     } */
-        /* } */
-
-        /* @media (max-width: 480px) { */
-        /*     h1 { */
-        /*         font-size: 1.5em; */
-        /*     } */
-
-        /*     .container { */
-        /*         padding: 15px; */
-        /*     } */
-
-        /*     table { */
-        /*         font-size: 12px; */
-        /*     } */
-
-        /*     th, td { */
-        /*         padding: 8px; */
-        /*     } */
-        /* } */
-
-        /* Horizontal scrolling for table on smaller screens */
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
         }
 
-        /* Header Container */
         .header-container {
-            display: flex; /* Use flexbox for alignment */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
-            margin-bottom: 20px; /* Add space below the header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .header-top {
-            display: flex; /* Use flexbox for alignment */
-            justify-content: space-between; /* Space logos and title evenly */
-            align-items: center; /* Center items vertically */
-            width: 100%; /* Full width */
-            padding: 10px 0; /* Add padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
         }
 
-        /* Logo Styles */
         .logo {
-            max-width: 100px; /* Set a max width for logos */
-            height: auto; /* Maintain aspect ratio */
-            margin: 0 10px; /* Add margin for spacing */
+            max-width: 100px;
+            height: auto;
+            margin: 0 10px;
         }
 
-        /* Header Title */
         .header-title {
-            flex-grow: 1; /* Allow title to take available space */
-            text-align: center; /* Center the title */
-            margin: 0; /* Remove default margin */
-            font-size: 1.5em; /* Increase font size */
-            color: #ffffff; /* Set title color */
-            text-shadow: 2px 2px 2px black; /* Add black shadow effect */
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
+            font-size: 1.5em;
+            color: #ffffff;
+            text-shadow: 2px 2px 2px black;
         }
 
-        /* Button Container */
         .button-container {
-            display: flex; /* Use flexbox for button alignment */
-            justify-content: center; /* Center buttons */
-            margin-top: 10px; /* Add space above buttons */
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
         }
 
-        /* Button Styles */
         .action-button {
-            background-color: #3498db; /* Button background color */
-            color: white; /* Button text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            padding: 10px 15px; /* Padding for buttons */
-            margin: 0 5px; /* Space between buttons */
-            cursor: pointer; /* Pointer cursor on hover */
-            transition: background-color 0.3s; /* Smooth transition */
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .action-button:hover {
-            background-color: #2980b9; /* Darker shade on hover */
+            background-color: #2980b9;
         }
 
         .expired-button {
-            background-color: #e74c3c; /* Red background for expired button */
+            background-color: #e74c3c;
         }
 
         .expired-button:hover {
-            background-color: #c0392b; /* Darker red on hover */
+            background-color: #c0392b;
         }
 
         .glowing-button {
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glowing effect */
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         .glowing-orange-button:hover {
-            box-shadow: 0 0 10px rgba(255, 165, 0, 0.7); /* Enhanced glow on hover */
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
+        }
+
+        footer {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: #fff;
+            text-align: center;
+            padding: 20px 10px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #f1c40f;
+        }
+
+        footer .social-icons {
+            margin-top: 10px;
+        }
+
+        footer .social-icons img {
+            width: 30px;
+            margin: 0 5px;
+            transition: transform 0.3s;
+        }
+
+        footer .social-icons img:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
@@ -245,7 +220,7 @@
         <div class="header-container">
             <div class="header-top">
                 <img src="/icons/tlogo.png" alt="Left Logo" class="logo">
-                <h1 class="header-title">Number of Registered Programs and TVET Providers </h1>
+                <h1 class="header-title">Number of Registered Programs and TVET Providers</h1>
                 <img src="/icons/blogo.png" alt="Right Logo" class="logo">
             </div>
             <div class="button-container">
@@ -284,15 +259,22 @@
         </div>
     </div>
 
+    <footer>
+        <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#"><img src="/icons/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="/icons/twitter.png" alt="Twitter"></a>
+            <a href="#"><img src="/icons/linkedin.png" alt="LinkedIn"></a>
+        </div>
+    </footer>
+
     <script>
-        // Function to fetch and display data from data.json
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('data-body');
                 data.forEach(item => {
                     const row = document.createElement('tr');
-
                     row.innerHTML = `
                         <td>${item.Province || ''}</td>
                         <td>${item.WTR || ''}</td>
@@ -309,20 +291,12 @@
                         <td>${item.Public_TTI || ''}</td>
                         <td>${item.Public_Total || ''}</td>
                     `;
-
-                    // Append the row to the table body
                     tableBody.appendChild(row);
                 });
             })
-            .catch(error => {
-                console.error('Error loading the data:', error);
-            });
+            .catch(error => console.error('Error fetching data:', error));
 
-        // Set the current date in the date-subheader with the format "Month Day, Year"
-        const currentDateElement = document.getElementById('currentDate');
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const today = new Date().toLocaleDateString(undefined, options);
-        currentDateElement.textContent = today;
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
     </script>
 </body>
 </html>
