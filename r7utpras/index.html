@@ -135,8 +135,17 @@
         /* Header Container */
         .header-container {
             display: flex; /* Use flexbox for alignment */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
+            margin-bottom: 20px; /* Add space below the header */
+        }
+
+        .header-top {
+            display: flex; /* Use flexbox for alignment */
             justify-content: space-between; /* Space logos and title evenly */
             align-items: center; /* Center items vertically */
+            width: 100%; /* Full width */
+            padding: 10px 0; /* Add padding */
         }
 
         /* Logo Styles */
@@ -151,6 +160,47 @@
             flex-grow: 1; /* Allow title to take available space */
             text-align: center; /* Center the title */
             margin: 0; /* Remove default margin */
+            font-size: 1.5em; /* Increase font size */
+            color: #2c3e50; /* Set title color */
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex; /* Use flexbox for button alignment */
+            justify-content: center; /* Center buttons */
+            margin-top: 10px; /* Add space above buttons */
+        }
+
+        /* Button Styles */
+        .action-button {
+            background-color: #3498db; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 15px; /* Padding for buttons */
+            margin: 0 5px; /* Space between buttons */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .action-button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
+
+        .expired-button {
+            background-color: #e74c3c; /* Red background for expired button */
+        }
+
+        .expired-button:hover {
+            background-color: #c0392b; /* Darker red on hover */
+        }
+
+        .glowing-button {
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glowing effect */
+        }
+
+        .glowing-orange-button:hover {
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.7); /* Enhanced glow on hover */
         }
     </style>
 </head>
@@ -166,8 +216,8 @@
                 <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
                 <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
                 <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
-                <button onclick="window.location.href='dfr.html'"class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
-                <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
+                <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
+                <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
             </div>
         </div>
         <div class="date-subheader">
