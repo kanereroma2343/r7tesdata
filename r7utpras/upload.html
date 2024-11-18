@@ -11,11 +11,15 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f4f4f4;
         }
         h1 {
             color: #333;
+            text-align: center;
+            margin-bottom: 20px;
         }
         #fileInput {
+            display: none;
             margin-bottom: 20px;
         }
         #summary {
@@ -23,14 +27,34 @@
             padding: 20px;
             margin-top: 20px;
         }
+        .upload-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <h1>Excel File Upload</h1>
+    <button class="upload-button" id="uploadButton">Upload Excel File</button>
     <input type="file" id="fileInput" accept=".xlsx, .xls">
     <div id="summary"></div>
 
     <script>
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
         document.getElementById('fileInput').addEventListener('change', handleFile, false);
 
         function handleFile(e) {
