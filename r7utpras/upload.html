@@ -27,7 +27,7 @@
             padding: 20px;
             margin-top: 20px;
         }
-        .upload-button {
+        .upload-button, .approved-button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
@@ -39,8 +39,11 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .upload-button:hover {
+        .upload-button:hover, .approved-button:hover {
             background-color: #0056b3;
+        }
+        .approved-button {
+            background-color: #28a745;
         }
     </style>
 </head>
@@ -64,7 +67,7 @@
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, {type: 'array'});
-                
+
                 let summaryData;
                 const summarySheetName = 'Summary';
                 const summarySheet = workbook.Sheets[summarySheetName];
@@ -79,6 +82,12 @@
 
                 // Store the full workbook data in localStorage
                 localStorage.setItem('excelData', JSON.stringify(workbook));
+
+                // Change the button to "Approved"
+                const uploadButton = document.getElementById('uploadButton');
+                uploadButton.classList.remove('upload-button');
+                uploadButton.classList.add('approved-button');
+                uploadButton.innerText = 'Approved';
 
                 // Redirect to index.html after a short delay
                 setTimeout(() => {

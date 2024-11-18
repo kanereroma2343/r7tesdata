@@ -4,77 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel Data Display</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f4f4f4;
         }
-        h1, h2 {
+        h1 {
             color: #333;
-        }
-        #sheetSelector {
+            text-align: center;
             margin-bottom: 20px;
         }
         table {
-            border-collapse: collapse;
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            padding: 10px;
+            text-align: center;
         }
-        th {
-            background-color: #f2f2f2;
+        .approved-message {
+            color: green;
+            text-align: center;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <h1>Excel Data Display</h1>
-    <select id="sheetSelector"></select>
-    <div id="dataDisplay"></div>
+    <h1>Excel Data Summary</h1>
+    
+    <div id="approvedMessage" class="approved-message"></div>
+    
+    <div id="summary"></div>
 
     <script>
-        const workbook = JSON.parse(localStorage.getItem('excelData'));
-        const sheetSelector = document.getElementById('sheetSelector');
-        const dataDisplay = document.getElementById('dataDisplay');
+        // Check if data exists in localStorage
+        const excelData = localStorage.getItem('excelData');
+        if (excelData) {
+            const workbook = JSON.parse(excelData);
+            const summarySheetName = 'Summary';
+            const summarySheet = workbook.Sheets[summarySheetName];
 
-        function populateSheetSelector() {
-            for (let sheetName of workbook.SheetNames) {
-                const option = document.createElement('option');
-                option.value = sheetName;
-                option.textContent = sheetName;
-                sheetSelector.appendChild(option);
+            if (summarySheet) {
+                const summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
+                displaySummary(summaryData);
+            } else {
+                document.getElementById('summary').innerText = 'The summary sheet is missing in the uploaded file.';
             }
+
+            // Show "Approved" message
+            document.getElementById('approvedMessage').innerText = 'File has been approved and processed!';
+        } else {
+            document.getElementById('summary').innerText = 'No data found. Please upload a file first.';
         }
 
-        function displaySheetData(sheetName) {
-            const sheet = workbook.Sheets[sheetName];
-            const data = XLSX.utils.sheet_to_json(sheet, {header: 1});
+        function displaySummary(data) {
+            const summaryDiv = document.getElementById('summary');
+            let html = '<h2>Summary Data</h2><table>';
 
-            let html = `<h2>${sheetName}</h2><table>`;
+            // Extracting only the data from B4 to O10
+            const filteredData = data.slice(3, 10).map(row => row.slice(1, 15)); // B4 is index 1, O10 is index 14
 
-            for (let i = 0; i < data.length; i++) {
+            for (let row of filteredData) {
                 html += '<tr>';
-                for (let cell of data[i]) {
-                    html += i === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`;
+                for (let cell of row) {
+                    html += `<td>${cell}</td>`;
                 }
                 html += '</tr>';
             }
 
             html += '</table>';
-            dataDisplay.innerHTML = html;
-        }
-
-        populateSheetSelector();
-        sheetSelector.addEventListener('change', (e) => displaySheetData(e.target.value));
-
-        // Display the first sheet by default
-        if (workbook.SheetNames.length > 0) {
-            displaySheetData(workbook.SheetNames[0]);
+            summaryDiv.innerHTML = html;
         }
     </script>
 </body>
