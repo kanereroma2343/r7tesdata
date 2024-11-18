@@ -68,16 +68,32 @@
             margin-top: 10px;
             font-style: italic;
         }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        .progress-bar {
+            height: 20px;
+            width: 0;
+            border-radius: 5px;
+            transition: width 0.4s ease;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="text-align: center;">
         <h1>Excel to JSON Converter</h1>
         <div class="file-input-wrapper">
             <label for="fileInput" class="file-input-label">Choose Excel File</label>
             <input type="file" id="fileInput" accept=".xlsx, .xls" />
             <div id="fileName"></div>
             <button id="convertButton" disabled>Convert to JSON</button>
+        </div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
     </div>
 
@@ -105,11 +121,38 @@
             const file = fileInput.files[0];
             const reader = new FileReader();
 
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            progressContainer.style.display = 'block';
+
+            const totalSteps = 100;
+            let currentStep = 0;
+
+            const interval = setInterval(() => {
+                if (currentStep <= totalSteps) {
+                    const percentage = (currentStep / totalSteps) * 100;
+                    progressBar.style.width = percentage + '%';
+
+                    if (percentage <= 25) {
+                        progressBar.style.backgroundColor = 'red';
+                    } else if (percentage <= 50) {
+                        progressBar.style.backgroundColor = 'orange';
+                    } else if (percentage <= 75) {
+                        progressBar.style.backgroundColor = 'yellow';
+                    } else {
+                        progressBar.style.backgroundColor = 'green';
+                    }
+
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100);
+
             reader.onload = function (event) {
                 const data = new Uint8Array(event.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
 
-                // Access the "Summary" sheet
                 const sheetName = "Summary";
                 const sheet = workbook.Sheets[sheetName];
                 if (!sheet) {
@@ -117,11 +160,9 @@
                     return;
                 }
 
-                // Extract data from B6:O10 range
                 const range = "B6:O10";
                 const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
-                // Map extracted data to specific field names
                 const jsonData = extractedData.map(row => ({
                     Province: row[0] || null,
                     WTR: row[1] || null,
@@ -139,12 +180,14 @@
                     Public_Total: row[13] || null,
                 }));
 
-                // Create a JSON file and download it
                 const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(jsonBlob);
                 link.download = "data.json";
                 link.click();
+
+                clearInterval(interval);
+                progressContainer.style.display = 'none';
             };
 
             reader.readAsArrayBuffer(file);
