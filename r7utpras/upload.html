@@ -3,119 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel File Upload</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        #fileInput {
-            display: none;
-            margin-bottom: 20px;
-        }
-        #summary {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .upload-button, .approved-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .upload-button:hover, .approved-button:hover {
-            background-color: #0056b3;
-        }
-        .approved-button {
-            background-color: #28a745;
-        }
-    </style>
+    <title>Excel to JSON Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Excel File Upload</h1>
-    <button class="upload-button" id="uploadButton">Upload Excel File</button>
-    <input type="file" id="fileInput" accept=".xlsx, .xls">
-    <div id="summary"></div>
+    <h1>Excel to JSON Converter</h1>
+    <input type="file" id="fileInput" />
+    <button id="convertButton">Convert to JSON</button>
 
     <script>
-        document.getElementById('uploadButton').addEventListener('click', function() {
-            document.getElementById('fileInput').click();
-        });
+        document.getElementById('convertButton').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                alert('Please select an Excel file first.');
+                return;
+            }
 
-        document.getElementById('fileInput').addEventListener('change', handleFile, false);
-
-        function handleFile(e) {
-            const file = e.target.files[0];
+            const file = fileInput.files[0];
             const reader = new FileReader();
 
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
+            reader.onload = function (event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
 
-                let summaryData;
-                const summarySheetName = 'Summary';
-                const summarySheet = workbook.Sheets[summarySheetName];
-
-                // Check if the summary sheet exists
-                if (summarySheet) {
-                    summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
-                    displaySummary(summaryData);
-                } else {
-                    alert('The summary sheet does not exist in the uploaded file.');
+                // Access the "Summary" sheet
+                const sheetName = "Summary";
+                const sheet = workbook.Sheets[sheetName];
+                if (!sheet) {
+                    alert(`Sheet "${sheetName}" not found in the Excel file.`);
+                    return;
                 }
 
-                // Store the full workbook data in localStorage
-                localStorage.setItem('excelData', JSON.stringify(workbook));
+                // Extract data from B4:B10 to O4:O10 range
+                const range = "B4:O10";
+                const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
-                // Change the button to "Approved"
-                const uploadButton = document.getElementById('uploadButton');
-                uploadButton.classList.remove('upload-button');
-                uploadButton.classList.add('approved-button');
-                uploadButton.innerText = 'Approved';
+                // Transform data to structured JSON format
+                const jsonData = [];
+                for (let i = 0; i < extractedData.length; i++) {
+                    const row = extractedData[i];
+                    const jsonRow = {};
+                    for (let j = 0; j < row.length; j++) {
+                        jsonRow[`Column${j + 1}`] = row[j] || null; // Assign default headers like Column1, Column2, etc.
+                    }
+                    jsonData.push(jsonRow);
+                }
 
-                // Redirect to index.html after a short delay
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
+                // Create a JSON file and download it
+                const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(jsonBlob);
+                link.download = "data.json";
+                link.click();
             };
 
             reader.readAsArrayBuffer(file);
-        }
-
-        function displaySummary(data) {
-            const summaryDiv = document.getElementById('summary');
-            let html = '<h2>Summary Data</h2><table border="1">';
-
-            // Extracting only the data from B4 to O10
-            const filteredData = data.slice(3, 10).map(row => row.slice(1, 15)); // B4 is index 1, O10 is index 14
-
-            for (let row of filteredData) {
-                html += '<tr>';
-                for (let cell of row) {
-                    html += `<td>${cell}</td>`;
-                }
-                html += '</tr>';
-            }
-
-            html += '</table>';
-            summaryDiv.innerHTML = html;
-        }
+        });
     </script>
 </body>
 </html>
