@@ -99,7 +99,7 @@
 <body>
     <div class="container">
         <h1>Number of Registered Programs and TVET Providers Offering Registered Programs by Province</h1>
-        <div class="date-subheader">
+        <div class="date-subheader" style="text-align: center; color: #ffffff; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.7), 0 0 30px rgba(0, 0, 255, 0.7);">
             As of: <span id="currentDate"></span>
         </div>
         <table id="data-table">
@@ -161,9 +161,10 @@
                 console.error('Error loading the data:', error);
             });
 
-        // Set the current date in the date-subheader
+        // Set the current date in the date-subheader with the format "Month Day, Year"
         const currentDateElement = document.getElementById('currentDate');
-        const today = new Date().toLocaleDateString(); // Get today's date
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date().toLocaleDateString(undefined, options); // Get today's date in the desired format
         currentDateElement.textContent = today; // Display the date
     </script>
 </body>
