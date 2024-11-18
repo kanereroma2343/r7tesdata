@@ -1,21 +1,5 @@
 [
   {
-    "Province": "Province",
-    "WTR": "WTR ",
-    "NTR": "NTR",
-    "MTP": "MTP",
-    "CoC": "CoC",
-    "Total": "Total",
-    "Private_TVIs": "Private",
-    "Private_Farm_School": null,
-    "Private_HEIs": null,
-    "Public_LGU": "Public",
-    "Public_LUC": null,
-    "Public_SUC": null,
-    "Public_TTI": null,
-    "Public_Total": "Total"
-  },
-  {
     "Province": null,
     "WTR": null,
     "NTR": null,
