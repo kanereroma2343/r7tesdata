@@ -3,301 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Layout</title>
+    <title>Excel Data Display</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 40px;
-            background-color: #f5f5f5;
-            font-size: 16px;
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
+        h1, h2 {
+            color: #333;
+        }
+        #sheetSelector {
+            margin-bottom: 20px;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
-            max-width: 1400px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
-            background-color: white;
         }
-
         th, td {
             border: 1px solid #ddd;
-            padding: 15px 20px;
-            text-align: center;
-            min-width: 80px;
+            padding: 8px;
+            text-align: left;
         }
-
         th {
-            font-weight: 600;
-            font-size: 1.1em;
-        }
-
-        thead th {
-            background-color: #4a4a4a;
-            color: white;
-            padding: 18px 20px;
-        }
-
-        thead th.private {
-            background-color: #ff9933;
-            color: white;
-            font-size: 1.2em;
-        }
-
-        thead th.public {
-            background-color: #3399ff;
-            color: white;
-            font-size: 1.2em;
-        }
-
-        thead th.sub-private {
-            background-color: #ffcc99;
-            color: #333;
-            padding: 15px;
-        }
-
-        thead th.sub-public {
-            background-color: #99ccff;
-            color: #333;
-            padding: 15px;
-        }
-
-        tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        tbody td:first-child {
-            font-weight: 500;
             background-color: #f2f2f2;
-            font-size: 1.1em;
-            min-width: 150px;
-        }
-
-        tr:last-child {
-            font-weight: bold;
-            background-color: #f2f2f2;
-            font-size: 1.1em;
-        }
-
-        .header-container {
-            width: 100%;
-            max-width: 1400px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            width: 120px;    /* Adjust size as needed */
-            height: auto;
-            object-fit: contain;
-        }
-
-        .header-text {
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .header-text h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            font-weight: 600;
-        }
-
-        .header-text p {
-            color: #666;
-            margin: 0;
-            font-size: 18px;
-        }
-
-        /* Add these new styles */
-        .tabs {
-            width: 100%;
-            max-width: 1400px;
-            margin-bottom: 20px;
-        }
-
-        .tab-links {
-            display: flex;
-            gap: 2px;
-            background-color: #f0f0f0;
-            padding: 2px;
-            border-radius: 4px;
-        }
-
-        .tab-link {
-            padding: 12px 24px;
-            background-color: #e0e0e0;
-            border: none;
-            cursor: pointer;
-            flex: 1;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .tab-link.active {
-            background-color: #4a4a4a;
-            color: white;
-        }
-
-        .tab-link:hover:not(.active) {
-            background-color: #d0d0d0;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .update-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 16px;
-            background-color: #4a4a4a;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .update-btn:hover {
-            background-color: #333333;
         }
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
-        <div class="header-text">
-            <h1>Number of Registered Programs</h1>
-            <p>As of <span id="current-date"></span></p>
-            <a href="uploadxls.html" class="update-btn">Update Compendium</a>
-        </div>
-        <img src="../icons/blogo.png" alt="Right Logo" class="logo">
-    </div>
-    
-    <div class="tabs">
-        <div class="tab-links">
-            <button class="tab-link active" data-tab="summary">Summary</button>
-            <button class="tab-link" data-tab="bohol">Bohol</button>
-            <button class="tab-link" data-tab="bohol-uiid">Bohol UIID</button>
-            <button class="tab-link" data-tab="cebu">Cebu</button>
-            <button class="tab-link" data-tab="cebu-uiid">Cebu UIID</button>
-            <button class="tab-link" data-tab="negros">Negros Oriental</button>
-            <button class="tab-link" data-tab="negros-uiid">Negros Oriental UIID</button>
-            <button class="tab-link" data-tab="siquijor">Siquijor</button>
-            <button class="tab-link" data-tab="siquijor-uiid">Siquijor UIID</button>
-            
-        </div>
-    </div>
-
-    <div class="tab-content" id="summary-tab">
-        <table>
-            <thead>
-                <tr>
-                    <th rowspan="2">Province</th>
-                    <th colspan="5" class="private">Registered Programs</th>
-                    <th colspan="7" class="public">TVET Providers</th>
-                    <th rowspan="2">Total</th>
-                </tr>
-                <tr>
-                    <th class="sub-private">WTR</th>
-                    <th class="sub-private">NTR</th>
-                    <th class="sub-private">MTP</th>
-                    <th class="sub-private">CoC</th>
-                    <th class="sub-private">Total</th>
-                    <th class="sub-public">TVIs</th>
-                    <th class="sub-public">Farm School</th>
-                    <th class="sub-public">HEIs</th>
-                    <th class="sub-public">LGU</th>
-                    <th class="sub-public">LUC</th>
-                    <th class="sub-public">SUC</th>
-                    <th class="sub-public">TTI</th>
-                </tr>
-            </thead>
-            <tbody id="data-body">
-                <!-- Data will be populated here by JavaScript -->
-            </tbody>
-        </table>
-    </div>
+    <h1>Excel Data Display</h1>
+    <select id="sheetSelector"></select>
+    <div id="dataDisplay"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current date
-            document.getElementById('current-date').textContent = new Date().toLocaleDateString();
+        const workbook = JSON.parse(localStorage.getItem('excelData'));
+        const sheetSelector = document.getElementById('sheetSelector');
+        const dataDisplay = document.getElementById('dataDisplay');
 
-            // Simulated data fetching
-            const data = [
-                { province: 'Bohol', WTR: 10, NTR: 5, MTP: 3, CoC: 2, Total1: 20, TVIs: 4, Farm_School: 1, HEIs: 2, LGU: 1, LUC: 1, SUC: 1, TTI: 1 },
-                { province: 'Cebu', WTR: 15, NTR: 7, MTP: 4, CoC: 3, Total1: 29, TVIs: 5, Farm_School: 2, HEIs: 3, LGU: 2, LUC: 1, SUC: 2, TTI: 1 },
-                // ... more data ...
-            ];
+        function populateSheetSelector() {
+            for (let sheetName of workbook.SheetNames) {
+                const option = document.createElement('option');
+                option.value = sheetName;
+                option.textContent = sheetName;
+                sheetSelector.appendChild(option);
+            }
+        }
 
-            let total_wtr = 0, total_ntr = 0, total_mtp = 0, total_coc = 0, total1 = 0;
-            let total_tvis = 0, total_farm = 0, total_heis = 0, total_lgu = 0, total_luc = 0;
-            let total_suc = 0, total_tti = 0, total2 = 0;
+        function displaySheetData(sheetName) {
+            const sheet = workbook.Sheets[sheetName];
+            const data = XLSX.utils.sheet_to_json(sheet, {header: 1});
 
-            data.forEach(row => {
-                const row_total = row.TVIs + row.Farm_School + row.HEIs + row.LGU + row.LUC + row.SUC + row.TTI;
-                total_wtr += row.WTR;
-                total_ntr += row.NTR;
-                total_mtp += row.MTP;
-                total_coc += row.CoC;
-                total1 += row.Total1;
-                total_tvis += row.TVIs;
-                total_farm += row.Farm_School;
-                total_heis += row.HEIs;
-                total_lgu += row.LGU;
-                total_luc += row.LUC;
-                total_suc += row.SUC;
-                total_tti += row.TTI;
-                total2 += row_total;
+            let html = `<h2>${sheetName}</h2><table>`;
 
-                document.getElementById('data-body').innerHTML += `
-                    <tr>
-                        <td>${row.province}</td>
-                        <td>${row.WTR}</td>
-                        <td>${row.NTR}</td>
-                        <td>${row.MTP}</td>
-                        <td>${row.CoC}</td>
-                        <td>${row.Total1}</td>
-                        <td>${row.TVIs}</td>
-                        <td>${row.Farm_School}</td>
-                        <td>${row.HEIs}</td>
-                        <td>${row.LGU}</td>
-                        <td>${row.LUC}</td>
-                        <td>${row.SUC}</td>
-                        <td>${row.TTI}</td>
-                        <td>${row_total}</td>
-                    </tr>
-                `;
-            });
+            for (let i = 0; i < data.length; i++) {
+                html += '<tr>';
+                for (let cell of data[i]) {
+                    html += i === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`;
+                }
+                html += '</tr>';
+            }
 
-            // Display totals row
-            const final_total = total_tvis + total_farm + total_heis + total_lgu + total_luc + total_suc + total_tti;
-            document.getElementById('data-body').innerHTML += `
-                <tr>
-                    <td>Total</td>
-                    <td>${total_wtr}</td>
-                    <td>${total_ntr}</td>
-                    <td>${total_mtp}</td>
-                    <td>${total_coc}</td>
-                    <td>${total1}</td>
-                    <td>${total_tvis}</td>
-                    <td>${total_farm}</td>
-                    <td>${total_heis}</td>
-                    <td>${total_lgu}</td>
-                    <td>${total_luc}</td>
-                    <td>${total_suc}</td>
-                    <td>${total_tti}</td>
-                    <td>${final_total}</td>
-                </tr>
-            `;
-        });
+            html += '</table>';
+            dataDisplay.innerHTML = html;
+        }
+
+        populateSheetSelector();
+        sheetSelector.addEventListener('change', (e) => displaySheetData(e.target.value));
+
+        // Display the first sheet by default
+        if (workbook.SheetNames.length > 0) {
+            displaySheetData(workbook.SheetNames[0]);
+        }
     </script>
 </body>
 </html>
