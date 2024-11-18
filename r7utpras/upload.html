@@ -41,15 +41,16 @@
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, {type: 'array'});
                 
-                // Assume the first sheet is the summary sheet
-                const summarySheet = workbook.Sheets[workbook.SheetNames[0]];
-                const summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
+                let summaryData;
+                const summarySheetName = 'Summary';
+                const summarySheet = workbook.Sheets[summarySheetName];
 
-                // Check if the first sheet is the summary sheet
-                if (workbook.SheetNames[0] === 'Summary') {
+                // Check if the summary sheet exists
+                if (summarySheet) {
+                    summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
                     displaySummary(summaryData);
                 } else {
-                    alert('The first sheet is not the summary sheet.');
+                    alert('The summary sheet does not exist in the uploaded file.');
                 }
 
                 // Store the full workbook data in localStorage
