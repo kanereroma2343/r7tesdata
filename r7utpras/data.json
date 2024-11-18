@@ -1,21 +1,5 @@
 [
   {
-    "Province": null,
-    "WTR": null,
-    "NTR": null,
-    "MTP": null,
-    "CoC": null,
-    "Total": null,
-    "Private_TVIs": "TVIs",
-    "Private_Farm_School": "Farm School",
-    "Private_HEIs": "HEIs",
-    "Public_LGU": "LGU",
-    "Public_LUC": "LUC",
-    "Public_SUC": "SUC",
-    "Public_TTI": "TTI",
-    "Public_Total": null
-  },
-  {
     "Province": "Bohol",
     "WTR": 147,
     "NTR": 11,
