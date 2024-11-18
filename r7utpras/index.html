@@ -2,130 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Display</title>
-    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <style>
-        /* Fade-in animation */
         body {
-            opacity: 0; /* Start invisible */
-            transition: opacity 3s ease-in; /* Transition effect */
-        }
-
-        body.fade-in {
-            opacity: 1; /* Fully visible */
-        }
-
-        /* Glowing button styles */
-        .glowing-button {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
             position: relative;
             overflow: hidden;
-            border: 2px solid orange; /* Orange border */
-            transition: box-shadow 0.3s ease;
         }
 
-        .glowing-button:hover {
-            box-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 30px orange; /* Glowing effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150%;
+            height: 100%;
+            background-image: url('/icons/office.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(8px);
+            z-index: -1;
         }
 
-        /* Expired button styles */
-        .expired-button {
-            border: 2px solid red; /* Red border */
-            animation: running-red-outline 1.5s infinite; /* Running outline animation */
-        }
-
-        @keyframes running-red-outline {
-            0% {
-                box-shadow: 0 0 0 red; /* No shadow */
-            }
-            50% {
-                box-shadow: 0 0 5px red; /* Subtle shadow */
-            }
-            100% {
-                box-shadow: 0 0 0 red; /* No shadow */
-            }
-        }
-
-        /* Glowing orange button styles */
-        .glowing-orange-button {
-            border: 2px solid rgb(255, 145, 0); /* Orange border */
-            animation: running-red-outline 1.5s infinite; /* Running outline animation */
-        }
-
-        /* Search input styles */
-        .search-wrapper {
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             position: relative;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: #f8f9fa;
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            width: 100%;
+            z-index: 1;
+            background: linear-gradient(to bottom, #000000, #3498db);
         }
 
-        .search-wrapper input {
-            border: none;
-            background: none;
-            outline: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            width: 100%;
-            color: #495057;
-            font-weight: 500;
-            border-radius: 50px;
-        }
-
-        .search-wrapper button {
-            border: none;
-            background: #007bff;
-            color: white;
-            padding: 0 15px;
-            height: 36px;
-            cursor: pointer;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        /* Entry count and date subheader styles */
-        .entry-count, .date-subheader {
-            text-align: center; /* Center the text */
-            font-size: 18px; /* Increase font size */
-            margin: 10px 0; /* Add some margin */
-            color: #333; /* Darker color for better visibility */
-        }
-
-        /* Pagination styles */
-        .pagination {
-            margin: 20px 0;
+        h1 {
             text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.7em;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
         }
 
-        .page-link {
-            padding: 8px 12px;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #333;
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #3498db;
         }
 
-        .page-link.active {
-            background-color: #007bff;
-            color: #fff;
+        .date-subheader {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 2px black;
         }
 
-        .page-link.disabled {
-            pointer-events: none;
-            color: #ccc;
-        }
-
-        /* Table styles */
         table {
             border-collapse: separate;
             border-spacing: 0;
@@ -161,7 +107,67 @@
             background-color: #f5f5f5;
         }
 
-        /* Additional styles for the header */
+        /* Responsive Design */
+        /* @media (max-width: 1200px) { */
+        /*     .container { */
+        /*         width: 95%; */
+        /*         padding: 20px; */
+        /*     } */
+        /* } */
+
+        /* @media (max-width: 768px) { */
+        /*     h1 { */
+        /*         font-size: 1.6em; */
+        /*     } */
+
+        /*     .header-title { */
+        /*         font-size: 1.4em; */
+        /*     } */
+
+        /*     table { */
+        /*         font-size: 12px; */
+        /*     } */
+
+        /*     th, td { */
+        /*         padding: 8px; */
+        /*     } */
+
+        /*     .button-container { */
+        /*         flex-direction: column; */
+        /*         align-items: center; */
+        /*     } */
+
+        /*     .action-button { */
+        /*         width: 100%; */
+        /*         margin: 5px 0; */
+        /*     } */
+        /* } */
+
+        /* @media (max-width: 480px) { */
+        /*     h1 { */
+        /*         font-size: 1.5em; */
+        /*     } */
+
+        /*     .container { */
+        /*         padding: 15px; */
+        /*     } */
+
+        /*     table { */
+        /*         font-size: 12px; */
+        /*     } */
+
+        /*     th, td { */
+        /*         padding: 8px; */
+        /*     } */
+        /* } */
+
+        /* Horizontal scrolling for table on smaller screens */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        /* Header Container */
         .header-container {
             display: flex; /* Use flexbox for alignment */
             flex-direction: column; /* Stack items vertically */
@@ -193,32 +199,63 @@
             color: #ffffff; /* Set title color */
             text-shadow: 2px 2px 2px black; /* Add black shadow effect */
         }
+
+        /* Button Container */
+        .button-container {
+            display: flex; /* Use flexbox for button alignment */
+            justify-content: center; /* Center buttons */
+            margin-top: 10px; /* Add space above buttons */
+        }
+
+        /* Button Styles */
+        .action-button {
+            background-color: #3498db; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 15px; /* Padding for buttons */
+            margin: 0 5px; /* Space between buttons */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .action-button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
+
+        .expired-button {
+            background-color: #e74c3c; /* Red background for expired button */
+        }
+
+        .expired-button:hover {
+            background-color: #c0392b; /* Darker red on hover */
+        }
+
+        .glowing-button {
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glowing effect */
+        }
+
+        .glowing-orange-button:hover {
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.7); /* Enhanced glow on hover */
+        }
     </style>
 </head>
-<body class="fade-in">
-    <div class="header-container">
-        <div class="header-top">
-            <img src="/icons/tlogo.png" alt="Left Logo" class="logo">
-            <h1 class="header-title">Number of Registered Programs and TVET Providers</h1>
-            <img src="/icons/blogo.png" alt="Right Logo" class="logo">
-        </div>
-        <div class="button-container">
-            <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
-            <button onclick="window.location.href='conve.html'" class="action-button">Convert Excel</button>
-            <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-        </div>
-    </div>
+<body>
     <div class="container">
+        <div class="header-container">
+            <div class="header-top">
+                <img src="/icons/tlogo.png" alt="Left Logo" class="logo">
+                <h1 class="header-title">Number of Registered Programs and TVET Providers </h1>
+                <img src="/icons/blogo.png" alt="Right Logo" class="logo">
+            </div>
+            <div class="button-container">
+                <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
+                <button onclick="window.location.href='conve.html'" class="action-button">Convert Excel</button>
+                <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
+            </div>
+        </div>
         <div class="date-subheader">
             As of: <span id="currentDate"></span>
-        </div>
-        <div class="search-container">
-            <div class="search-wrapper">
-                <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-                <button id="searchButton" onclick="searchTable()">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
         </div>
         <div class="table-container">
             <table id="data-table">
@@ -244,9 +281,6 @@
                     <!-- Data will be dynamically populated here -->
                 </tbody>
             </table>
-        </div>
-        <div class="pagination">
-            <span id="pagination"></span>
         </div>
     </div>
 
@@ -289,94 +323,6 @@
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const today = new Date().toLocaleDateString(undefined, options);
         currentDateElement.textContent = today;
-
-        // Add this line to trigger the fade-in effect after the content is loaded
-        window.onload = () => {
-            document.body.classList.add('fade-in');
-        };
-
-        // Search functionality
-        const entriesPerPage = 200;
-        let currentPage = 1;
-        let filteredData = [];
-        let originalData = [];
-
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                originalData = data;
-                filteredData = originalData;
-                renderTable();
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        }
-
-        function renderTable() {
-            const startIndex = (currentPage - 1) * entriesPerPage;
-            const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
-            const tableBody = document.getElementById("data-body");
-            
-            tableBody.innerHTML = paginatedData.map(row => `
-                <tr>
-                    <td>${row.Province || ''}</td>
-                    <td>${row.WTR || ''}</td>
-                    <td>${row.NTR || ''}</td>
-                    <td>${row.MTP || ''}</td>
-                    <td>${row.CoC || ''}</td>
-                    <td>${row.Total || ''}</td>
-                    <td>${row.Private_TVIs || ''}</td>
-                    <td>${row.Private_Farm_School || ''}</td>
-                    <td>${row.Private_HEIs || ''}</td>
-                    <td>${row.Public_LGU || ''}</td>
-                    <td>${row.Public_LUC || ''}</td>
-                    <td>${row.Public_SUC || ''}</td>
-                    <td>${row.Public_TTI || ''}</td>
-                    <td>${row.Public_Total || ''}</td>
-                </tr>
-            `).join("");
-            
-            renderPagination();
-        }
-
-        function renderPagination() {
-            const totalPages = Math.ceil(filteredData.length / entriesPerPage);
-            const pagination = document.getElementById("pagination");
-            let paginationHTML = '';
-
-            paginationHTML += `<a href="#" class="page-link ${currentPage === 1 ? 'disabled' : ''}" 
-                onclick="setPage(${currentPage - 1})">Previous</a>`;
-
-            for (let i = 1; i <= totalPages; i++) {
-                paginationHTML += `<a href="#" class="page-link ${i === currentPage ? 'active' : ''}" 
-                    onclick="setPage(${i})">${i}</a>`;
-            }
-
-            paginationHTML += `<a href="#" class="page-link ${currentPage === totalPages ? 'disabled' : ''}" 
-                onclick="setPage(${currentPage + 1})">Next</a>`;
-
-            pagination.innerHTML = paginationHTML;
-        }
-
-        function setPage(page) {
-            currentPage = page;
-            renderTable();
-        }
-
-        function searchTable() {
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            filteredData = originalData.filter(row =>
-                Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
-            );
-            currentPage = 1; 
-            renderTable();
-        }
-
-        loadData();
     </script>
 </body>
 </html>
