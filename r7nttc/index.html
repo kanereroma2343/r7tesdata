@@ -17,6 +17,17 @@
         body.fade-in {
             opacity: 1; /* Fully visible */
         }
+
+        .glowing-button {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid orange; /* Orange border */
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glowing-button:hover {
+            box-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 30px orange; /* Glowing effect */
+        }
     </style>
 </head>
 <body class="fade-in">
@@ -29,8 +40,8 @@
     <div class="button-container">
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-        <button onclick="window.location.href='recently-expired.html'" class="action-button">Recently Expired</button> 
-        <button onclick="window.location.href='dfr.html'"class="action-button">Due For Renewal</button>
+        <button onclick="window.location.href='recently-expired.html'" class="action-button glowing-button">Recently Expired</button> 
+        <button onclick="window.location.href='dfr.html'"class="action-button glowing-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
     </div>
 </div>
