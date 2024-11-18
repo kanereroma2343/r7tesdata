@@ -12,6 +12,22 @@
             background-color: #ffffff;
             color: #333;
             line-height: 1.6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('/icons/office.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            z-index: -1;
         }
 
         .container {
@@ -164,7 +180,7 @@
             text-align: center; /* Center the title */
             margin: 0; /* Remove default margin */
             font-size: 1.5em; /* Increase font size */
-            color: #2c3e50; /* Set title color */
+            color: #ffffff; /* Set title color */
         }
 
         /* Button Container */
