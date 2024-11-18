@@ -28,6 +28,24 @@
         .glowing-button:hover {
             box-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 30px orange; /* Glowing effect */
         }
+
+        /* New styles for the Recently Expired button */
+        .expired-button {
+            border: 2px solid red; /* Red border */
+            animation: glowing-red 1.5s infinite; /* Running animation */
+        }
+
+        @keyframes glowing-red {
+            0% {
+                box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red;
+            }
+            50% {
+                box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red;
+            }
+            100% {
+                box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red;
+            }
+        }
     </style>
 </head>
 <body class="fade-in">
@@ -40,7 +58,7 @@
     <div class="button-container">
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-        <button onclick="window.location.href='recently-expired.html'" class="action-button glowing-button">Recently Expired</button> 
+        <button onclick="window.location.href='recently-expired.html'" class="action-button glowing-button expired-button">Recently Expired</button> 
         <button onclick="window.location.href='dfr.html'"class="action-button glowing-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
     </div>
