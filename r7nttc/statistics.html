@@ -127,24 +127,22 @@
 </footer>
 
 <script>
-   const entriesPerPage = 18; // Limit per page
-   let currentPage = 1; // Current page number
-   let qualificationData = []; // Store qualification data
-
    async function loadTallyData() {
     try {
         const response = await fetch('data.json');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
 
-        const qualificationCount = {}; // Initialize qualification count
-        qualificationData = []; // Reset qualification data
+        const sectorCount = {};
+        const qualificationCount = {};
 
-        // Count qualifications
+        // Count sectors and qualifications
         data.forEach(entry => {
+            if (entry.sector) {
+                sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
+            }
             if (entry.qualification) {
                 qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
-                qualificationData.push(entry.qualification); // Store qualification for pagination
             }
         });
 
