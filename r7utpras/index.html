@@ -21,18 +21,16 @@
             padding: 30px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            background: linear-gradient(to right, #000000, #3498db); /* Black to blue gradient */
         }
 
         h1 {
             text-align: center;
-            color: #ffffff;
+            color: #2c3e50;
             margin-bottom: 20px;
             font-size: 1.7em;
             font-weight: 700;
             position: relative;
             padding-bottom: 15px;
-            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* Black stroke effect */
         }
 
         h1::after {
@@ -48,10 +46,9 @@
 
         .date-subheader {
             text-align: center;
-            color: #ffffff;
+            color: #7f8c8d;
             font-size: 1.1em;
             margin-bottom: 30px;
-            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
         }
 
         table {
@@ -164,7 +161,7 @@
             text-align: center; /* Center the title */
             margin: 0; /* Remove default margin */
             font-size: 1.5em; /* Increase font size */
-            color: #ffffff; /* Set title color */
+            color: #2c3e50; /* Set title color */
         }
 
         /* Button Container */
@@ -205,31 +202,6 @@
         .glowing-orange-button:hover {
             box-shadow: 0 0 10px rgba(255, 165, 0, 0.7); /* Enhanced glow on hover */
         }
-
-        /* Footer Styles */
-        .footer {
-            background-color: #2c3e50; /* Dark background */
-            color: #ffffff; /* White text */
-            text-align: center; /* Centered text */
-            padding: 20px 0; /* Padding for spacing */
-            position: relative; /* Positioning */
-            bottom: 0; /* Stick to the bottom */
-            width: 100%; /* Full width */
-        }
-
-        .footer-content {
-            max-width: 1200px; /* Max width for content */
-            margin: 0 auto; /* Center the content */
-        }
-
-        .footer-link {
-            color: #3498db; /* Link color */
-            text-decoration: none; /* Remove underline */
-        }
-
-        .footer-link:hover {
-            text-decoration: underline; /* Underline on hover */
-        }
     </style>
 </head>
 <body>
@@ -242,7 +214,7 @@
             </div>
             <div class="button-container">
                 <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
-                <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
+                <button onclick="window.location.href='conve.html'" class="action-button">Convert Excel</button>
                 <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
             </div>
         </div>
@@ -275,17 +247,6 @@
             </table>
         </div>
     </div>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2023 TESDA Region. All rights reserved.</p>
-            <p>Follow us on:
-                <a href="#" class="footer-link">Facebook</a>,
-                <a href="#" class="footer-link">Twitter</a>,
-                <a href="#" class="footer-link">Instagram</a>
-            </p>
-        </div>
-    </footer>
 
     <script>
         // Function to fetch and display data from data.json
