@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel File Upload</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #fileInput {
+            margin-bottom: 20px;
+        }
+        #summary {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Excel File Upload</h1>
+    <input type="file" id="fileInput" accept=".xlsx, .xls">
+    <div id="summary"></div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', handleFile, false);
+
+        function handleFile(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                
+                // Assume the first sheet is the summary sheet
+                const summarySheet = workbook.Sheets[workbook.SheetNames[0]];
+                const summaryData = XLSX.utils.sheet_to_json(summarySheet, {header: 1});
+
+                displaySummary(summaryData);
+
+                // Store the full workbook data in localStorage
+                localStorage.setItem('excelData', JSON.stringify(workbook));
+
+                // Redirect to index.html after a short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function displaySummary(data) {
+            const summaryDiv = document.getElementById('summary');
+            let html = '<h2>Summary Data</h2><table border="1">';
+
+            for (let row of data) {
+                html += '<tr>';
+                for (let cell of row) {
+                    html += `<td>${cell}</td>`;
+                }
+                html += '</tr>';
+            }
+
+            html += '</table>';
+            summaryDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
