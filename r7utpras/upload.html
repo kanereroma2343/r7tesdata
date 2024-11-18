@@ -133,6 +133,7 @@
                     const percentage = (currentStep / totalSteps) * 100;
                     progressBar.style.width = percentage + '%';
 
+                    // Update progress bar color based on percentage
                     if (percentage <= 25) {
                         progressBar.style.backgroundColor = 'red';
                     } else if (percentage <= 50) {
@@ -186,10 +187,12 @@
                 link.download = "data.json";
                 link.click();
 
+                // Hide the progress bar once conversion is complete
                 clearInterval(interval);
                 progressContainer.style.display = 'none';
             };
 
+            // Simulate file reading progress by reading the file
             reader.readAsArrayBuffer(file);
         });
     </script>
