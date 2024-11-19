@@ -7,6 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #000000, #000033, #000066);
             color: #ffffff;
             min-height: 100vh;
@@ -19,6 +21,9 @@
         h1, h2, h3 {
             color: #4da6ff;
         }
+        .hidden {
+            display: none;
+        }
         #trainerList {
             list-style-type: none;
             padding: 0;
@@ -30,16 +35,29 @@
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
+        #trainerList li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
         #trainerProfile {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 2rem;
             margin-top: 2rem;
         }
+        .info-item {
+            margin-bottom: 0.5rem;
+        }
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
+        }
+        a {
+            color: #4da6ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
         .btn {
             display: inline-block;
@@ -50,11 +68,19 @@
             text-decoration: none;
             transition: background-color 0.3s ease;
         }
+        .btn:hover {
+            background-color: #3399ff;
+            text-decoration: none;
+        }
         .section {
             margin-top: 2rem;
             padding: 1rem;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
+        }
+        .section h3 {
+            margin-bottom: 1rem;
+            color: #4da6ff;
         }
     </style>
 </head>
@@ -97,8 +123,49 @@
                             <div class="grid">
                                 ${createInfoItem('Last Name', trainer.last_name)}
                                 ${createInfoItem('First Name', trainer.first_name)}
+                                ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                                ${createInfoItem('Extension', trainer.extension)}
                                 ${createInfoItem('Birthday', trainer.birthday)}
+                                ${createInfoItem('Sex', trainer.sex)}
+                                ${createInfoItem('Address', trainer.address)}
+                                ${createInfoItem('Training Institution', trainer.training_institution)}
+                                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
                                 ${createInfoItem('Contact Number', trainer.contact_number)}
+                                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                                ${createInfoItem('Training Hours', trainer.training_hours)}
+                                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                                ${createInfoItem('Sector', trainer.sector)}
+                                ${createInfoItem('Qualification', trainer.qualification)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                                ${createInfoItem('NC Validity', trainer.nc_validity)}
+                                ${createInfoItem('Sector', trainer.sector)}
+                                ${createInfoItem('Qualification', trainer.qualification)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>TM Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                                ${createInfoItem('TM Validity', trainer.tm_validity)}
+                                ${createInfoItem('Assessor 1', trainer.assessor1)}
+                                ${createInfoItem('Assessor 2', trainer.assessor2)}
+                                ${createInfoItem('Assessor 3', trainer.assessor3)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NTTC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
                             </div>
                         </div>
                     </div>
@@ -117,7 +184,6 @@
 
                     trainersData.forEach(trainer => {
                         const li = document.createElement('li');
-                        li.textContent = `${trainer.first_name} ${trainer.last_name}`; // Display trainer name
                         trainerList.appendChild(li);
                     });
 
