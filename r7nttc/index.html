@@ -140,7 +140,7 @@
     let currentPage = 1;
     let filteredData = [];
     let originalData = [];
-    let debounceTimeout;
+    let throttleTimeout;
 
     async function loadData() {
         try {
@@ -218,26 +218,40 @@
         renderTable();
     }
 
-    // Debounce function
-    function debounce(func, delay) {
+    // Throttle function
+    function throttle(func, limit) {
+        let lastFunc;
+        let lastRan;
+
         return function(...args) {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+            const context = this;
+            if (!lastRan) {
+                func.apply(context, args);
+                lastRan = Date.now();
+            } else {
+                clearTimeout(lastFunc);
+                lastFunc = setTimeout(function() {
+                    if ((Date.now() - lastRan) >= limit) {
+                        func.apply(context, args);
+                        lastRan = Date.now();
+                    }
+                }, limit - (Date.now() - lastRan));
+            }
         };
     }
 
-    // Debounced search function
-    const debouncedSearchTable = debounce(function() {
+    // Throttled search function
+    const throttledSearchTable = throttle(function() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
             Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
         );
         currentPage = 1; 
         renderTable();
-    }, 300); // Adjust the delay as needed
+    }, 300); // Adjust the limit as needed
 
-    // Attach the debounced function to the input event
-    document.getElementById("searchInput").addEventListener("input", debouncedSearchTable);
+    // Attach the throttled function to the input event
+    document.getElementById("searchInput").addEventListener("input", throttledSearchTable);
 
     loadData();
 
