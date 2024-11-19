@@ -68,15 +68,6 @@
         tbody tr {
             transition: opacity 0.5s ease; /* Smooth transition for table rows */
         }
-
-        /* Add this CSS for smooth transition */
-        tbody {
-            transition: opacity 1.5s ease; /* Smooth transition for table body */
-            opacity: 1; /* Default opacity */
-        }
-        tbody.hidden {
-            opacity: 0; /* Hidden state */
-        }
     </style>
 </head>
 <body class="fade-in">
@@ -163,17 +154,11 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            if (!Array.isArray(data)) {
-                throw new Error('Invalid data format');
-            }
-            originalData = data.filter(row => row && (row.last_name || row.extension));
+            originalData = data;
             filteredData = originalData;
             renderTable();
         } catch (error) {
             console.error("Error loading data:", error);
-            originalData = [];
-            filteredData = [];
-            renderTable();
         }
     }
 
@@ -182,37 +167,43 @@
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
-        tableBody.innerHTML = paginatedData.map(row => {
-            // Parse the validity date
-            const validityDate = new Date(row.V);
-            const today = new Date();
-            const threeMonthsFromNow = new Date();
-            threeMonthsFromNow.setMonth(today.getMonth() + 3);
-            
-            // Determine the validity status and color
-            let validityColor = 'green'; // Active dates are green
-            if (validityDate < today) {
-                validityColor = 'red'; // Expired
-            } else if (validityDate <= threeMonthsFromNow) {
-                validityColor = 'orange'; // Expiring soon (within 3 months)
-            }
+        // Fade out the table body before updating
+        tableBody.style.opacity = 0; // Start with invisible
 
-            return `
-                 <tr>
-                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
-                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
-                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
-                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                </tr>
-            `;
-        }).join("");
+        setTimeout(() => {
+            tableBody.innerHTML = paginatedData.map(row => {
+                const validityDate = new Date(row.nttc_validity);
+                const today = new Date();
+                const threeMonthsFromNow = new Date();
+                threeMonthsFromNow.setMonth(today.getMonth() + 3);
+                
+                let validityColor = 'green';
+                if (validityDate < today) {
+                    validityColor = 'red';
+                } else if (validityDate <= threeMonthsFromNow) {
+                    validityColor = 'orange';
+                }
+
+                return `
+                    <tr>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
+                        <td>${row.qualification || ''}</td>
+                        <td>${row.nttc_cert_number || ''}</td>
+                        <td>${row.nttc_serial_number || ''}</td>
+                        <td>${formatDate(row.nttc_date_issuance)}</td>
+                        <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                    </tr>
+                `;
+            }).join("");
+
+            // Fade in the table body after updating
+            tableBody.style.opacity = 1; // Make it visible again
+        }, 100); // Delay to allow fade out effect
+        
         renderPagination();
-        // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
@@ -241,18 +232,20 @@
     }
 
     function searchTable() {
-        // clearTimeout(debounceTimeout); // Removed debounce timeout
-        // document.getElementById("loadingMessage").style.display = 'block'; // Removed loading message
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            [row.last_name, row.first_name, row.middle_initial, row.extension, 
-             row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
-             formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
-            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-        );
-        currentPage = 1; 
-        renderTable();
-        // document.getElementById("loadingMessage").style.display = 'none'; // Removed loading message
+        clearTimeout(debounceTimeout); // Clear the previous timeout
+        document.getElementById("loadingMessage").style.display = 'block'; // Show loading message
+        debounceTimeout = setTimeout(() => { // Set a new timeout
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            filteredData = originalData.filter(row =>
+                [row.last_name, row.first_name, row.middle_initial, row.extension, 
+                 row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
+                 formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
+                .some(value => value && value.toString().toLowerCase().includes(searchTerm))
+            );
+            currentPage = 1; 
+            renderTable();
+            document.getElementById("loadingMessage").style.display = 'none'; // Hide loading message
+        }, 300); // Adjust the delay as needed (300ms in this case)
     }
 
     loadData();
