@@ -76,8 +76,8 @@
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
-        <button onclick="window.location.href='dfr.html'"class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
-        <button onclick="window.location.href='statistics.html'"class="action-button">Statistics</button>
+        <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
+        <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
     </div>
 </div>
 
@@ -175,8 +175,8 @@
 
             return `
                 <tr>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
+                    <td><a href="view_record.html?name=${encodeURIComponent(row.first_name + ' ' + row.last_name)}&qualification=${encodeURIComponent(row.qualification)}&nttc_number=${encodeURIComponent(row.nttc_cert_number)}" class="record-link">${row.last_name || ''}</a></td>
+                    <td><a href="view_record.html?name=${encodeURIComponent(row.first_name + ' ' + row.last_name)}&qualification=${encodeURIComponent(row.qualification)}&nttc_number=${encodeURIComponent(row.nttc_cert_number)}" class="record-link">${row.first_name || ''}</a></td>
                     <td>${row.middle_initial || ''}</td>
                     <td>${row.extension || ''}</td>
                     <td>${row.qualification || ''}</td>
