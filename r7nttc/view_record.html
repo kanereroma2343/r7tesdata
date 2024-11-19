@@ -129,80 +129,110 @@
     </div>
 
     <script>
-        async function fetchTrainerData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        (async function() {
+            async function fetchTrainersData() {
+                try {
+                    const response = await fetch('data.json');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data.json');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Fetch error:', error.message);
+                    alert('Error fetching trainer data. Please try again later.');
+                    return [];
                 }
-                const trainer = await response.json();
-                displayProfile(trainer);
-            } catch (error) {
-                console.error('Error fetching trainer data:', error);
-                alert("Failed to fetch trainer data. Please try again later.");
             }
-        }
 
-        function createInfoItem(label, value) {
-            return `
-                <div class="info-item">
-                    <strong>${label}:</strong> ${value || 'N/A'}
-                </div>
-            `;
-        }
+            function createInfoItem(label, value) {
+                return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
+            }
 
-        function displayProfile(trainer) {
-            console.log(trainer);
-            document.getElementById('personal-grid').innerHTML = `
-                ${createInfoItem('Last Name', trainer.last_name)}
-                ${createInfoItem('First Name', trainer.first_name)}
-                ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                ${createInfoItem('Extension', trainer.extension)}
-                ${createInfoItem('Birthday', trainer.birthday)}
-                ${createInfoItem('Sex', trainer.sex)}
-                ${createInfoItem('Address', trainer.address)}
-                ${createInfoItem('Contact Number', trainer.contact_number)}
-            `;
-            document.getElementById('nc-grid').innerHTML = `
-                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                ${createInfoItem('NC Validity', trainer.nc_validity)}
-            `;
-            document.getElementById('tm-grid').innerHTML = `
-                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                ${createInfoItem('TM Validity', trainer.tm_validity)}
-            `;
-            document.getElementById('nttc-grid').innerHTML = `
-                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
-                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-            `;
-        }
+            function displayProfile(trainer) {
+                const trainerProfile = document.getElementById('trainerProfile');
+                trainerProfile.classList.remove('hidden');
+                trainerProfile.innerHTML = `
+                    <h2>${trainer.first_name} ${trainer.last_name}</h2>
+                    <div>
+                        <div class="section">
+                            <h3>Personal Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('Last Name', trainer.last_name)}
+                                ${createInfoItem('First Name', trainer.first_name)}
+                                ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                                ${createInfoItem('Extension', trainer.extension)}
+                                ${createInfoItem('Birthday', trainer.birthday)}
+                                ${createInfoItem('Sex', trainer.sex)}
+                                ${createInfoItem('Address', trainer.address)}
+                                ${createInfoItem('Training Institution', trainer.training_institution)}
+                                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                                ${createInfoItem('Contact Number', trainer.contact_number)}
+                                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                                ${createInfoItem('Training Hours', trainer.training_hours)}
+                                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                                ${createInfoItem('Sector', trainer.sector)}
+                                ${createInfoItem('Qualification', trainer.qualification)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                                ${createInfoItem('NC Validity', trainer.nc_validity)}
+                                ${createInfoItem('Sector', trainer.sector)}
+                                ${createInfoItem('Qualification', trainer.qualification)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>TM Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                                ${createInfoItem('TM Validity', trainer.tm_validity)}
+                                ${createInfoItem('Assessor 1', trainer.assessor1)}
+                                ${createInfoItem('Assessor 2', trainer.assessor2)}
+                                ${createInfoItem('Assessor 3', trainer.assessor3)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NTTC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-        function setupTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
-
-                    tabContents.forEach(content => {
-                        content.classList.toggle('active', content.id === tabId);
-                    });
-
-                    tabButtons.forEach(btn => {
-                        btn.classList.toggle('active', btn === button);
-                    });
+                document.getElementById('backToList').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    trainerProfile.classList.add('hidden');
                 });
-            });
-        }
+            }
 
-        window.onload = () => {
-            setupTabs();
-            fetchTrainerData();
-        };
+            async function initialize() {
+                try {
+                    const trainersData = await fetchTrainersData();
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id');
+                    if (id) {
+                        const trainer = trainersData.find((t) => t.id.toString() === id);
+                        if (trainer) {
+                            displayProfile(trainer);
+                        } else {
+                            alert('Trainer not found.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Initialization failed:', error.message);
+                }
+            }
+
+            initialize();
+        })();
     </script>
 </body>
 </html>
