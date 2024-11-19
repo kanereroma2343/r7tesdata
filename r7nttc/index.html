@@ -63,11 +63,6 @@
                 box-shadow: 0 0 0 rgb(255, 153, 0); /* No shadow */
             }
         }
-
-        /* Add this CSS for smooth transition */
-        tbody tr {
-            transition: opacity 0.5s ease; /* Smooth transition for table rows */
-        }
     </style>
 </head>
 <body class="fade-in">
@@ -102,7 +97,6 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
-        <div id="loadingMessage" style="display: none;">Loading data...</div>
     </div>
 
     <table>
@@ -145,7 +139,6 @@
     let currentPage = 1;
     let filteredData = [];
     let originalData = [];
-    let debounceTimeout;
 
     async function loadData() {
         try {
@@ -167,41 +160,33 @@
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
-        // Fade out the table body before updating
-        tableBody.style.opacity = 0; // Start with invisible
+        tableBody.innerHTML = paginatedData.map(row => {
+            const validityDate = new Date(row.nttc_validity);
+            const today = new Date();
+            const threeMonthsFromNow = new Date();
+            threeMonthsFromNow.setMonth(today.getMonth() + 3);
+            
+            let validityColor = 'green';
+            if (validityDate < today) {
+                validityColor = 'red';
+            } else if (validityDate <= threeMonthsFromNow) {
+                validityColor = 'orange';
+            }
 
-        setTimeout(() => {
-            tableBody.innerHTML = paginatedData.map(row => {
-                const validityDate = new Date(row.nttc_validity);
-                const today = new Date();
-                const threeMonthsFromNow = new Date();
-                threeMonthsFromNow.setMonth(today.getMonth() + 3);
-                
-                let validityColor = 'green';
-                if (validityDate < today) {
-                    validityColor = 'red';
-                } else if (validityDate <= threeMonthsFromNow) {
-                    validityColor = 'orange';
-                }
-
-                return `
-                    <tr>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
-                        <td>${row.qualification || ''}</td>
-                        <td>${row.nttc_cert_number || ''}</td>
-                        <td>${row.nttc_serial_number || ''}</td>
-                        <td>${formatDate(row.nttc_date_issuance)}</td>
-                        <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                    </tr>
-                `;
-            }).join("");
-
-            // Fade in the table body after updating
-            tableBody.style.opacity = 1; // Make it visible again
-        }, 100); // Delay to allow fade out effect
+            return `
+                <tr>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
+                    <td>${row.qualification || ''}</td>
+                    <td>${row.nttc_cert_number || ''}</td>
+                    <td>${row.nttc_serial_number || ''}</td>
+                    <td>${formatDate(row.nttc_date_issuance)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                </tr>
+            `;
+        }).join("");
         
         renderPagination();
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
@@ -232,20 +217,12 @@
     }
 
     function searchTable() {
-        clearTimeout(debounceTimeout); // Clear the previous timeout
-        document.getElementById("loadingMessage").style.display = 'block'; // Show loading message
-        debounceTimeout = setTimeout(() => { // Set a new timeout
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            filteredData = originalData.filter(row =>
-                [row.last_name, row.first_name, row.middle_initial, row.extension, 
-                 row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
-                 formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
-                .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-            );
-            currentPage = 1; 
-            renderTable();
-            document.getElementById("loadingMessage").style.display = 'none'; // Hide loading message
-        }, 300); // Adjust the delay as needed (300ms in this case)
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+        filteredData = originalData.filter(row =>
+            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
+        );
+        currentPage = 1; 
+        renderTable();
     }
 
     loadData();
