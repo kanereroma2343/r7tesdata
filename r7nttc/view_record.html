@@ -1,109 +1,135 @@
-<script>
-    (function() {
-        // Fetch data from data.json
-        async function fetchTrainersData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data.json');
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('Fetch error:', error.message);
-                alert('Error fetching trainer data. Please try again later.');
-                return [];
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden {
+            display: none;
         }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Trainer Directory</h1>
+        <ul id="trainerList" class="space-y-2"></ul>
+        <div id="trainerProfile" class="hidden mt-8"></div>
+    </div>
 
-        // Display the list of trainer names
-        function displayNameList(trainersData) {
-            const nameList = document.getElementById('nameList');
-            nameList.innerHTML = ''; // Clear existing content
-            trainersData.forEach((trainer) => {
-                const li = document.createElement('li');
-                li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
-                li.onclick = () => {
-                    // Update the URL with the trainer's ID
-                    const params = new URLSearchParams(window.location.search);
-                    params.set('id', trainer.id);
-                    window.location.search = params.toString();
-                };
-                nameList.appendChild(li);
-            });
-        }
-
-        // Create profile information item
-        function createInfoItem(label, value) {
-            return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
-        }
-
-        // Display the trainer's profile based on their ID
-        function displayProfile(trainer) {
-            const profileDetails = document.getElementById('profileDetails');
-            profileDetails.style.display = 'block';
-            profileDetails.innerHTML = `
-                <h2>${trainer.first_name} ${trainer.last_name}</h2>
-                <div class="section">
-                    <div class="section-title">Personal Information</div>
-                    <div class="info-grid">
-                        ${createInfoItem('Last Name', trainer.last_name)}
-                        ${createInfoItem('First Name', trainer.first_name)}
-                        ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                        ${createInfoItem('Extension', trainer.extension)}
-                        ${createInfoItem('Birthday', trainer.birthday)}
-                        ${createInfoItem('Sex', trainer.sex)}
-                        ${createInfoItem('Address', trainer.address)}
-                        ${createInfoItem('Training Institution', trainer.training_institution)}
-                        ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
-                        ${createInfoItem('Contact Number', trainer.contact_number)}
-                        ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
-                        ${createInfoItem('Training Hours', trainer.training_hours)}
-                        ${createInfoItem('Years of Experience', trainer.years_of_experience)}
-                        ${createInfoItem('Sector', trainer.sector)}
-                        ${createInfoItem('Qualification', trainer.qualification)}
-                        ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                        ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                        ${createInfoItem('NC Validity', trainer.nc_validity)}
-                        ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                        ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                        ${createInfoItem('TM Validity', trainer.tm_validity)}
-                        ${createInfoItem('Assessor 1', trainer.assessor1)}
-                        ${createInfoItem('Assessor 2', trainer.assessor2)}
-                        ${createInfoItem('Assessor 3', trainer.assessor3)}
-                        ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
-                        ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                        ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                        ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Initialize the page
-        async function initialize() {
-            try {
-                const trainersData = await fetchTrainersData();
-
-                // Display the list of names
-                displayNameList(trainersData);
-
-                // Check for ID in the URL and display the corresponding profile
-                const params = new URLSearchParams(window.location.search);
-                const id = params.get('id');
-                if (id) {
-                    const trainer = trainersData.find((t) => t.id.toString() === id);
-                    if (trainer) {
-                        displayProfile(trainer);
-                    } else {
-                        alert('Trainer not found.');
+    <script>
+        (async function() {
+            // Fetch data from data.json
+            async function fetchTrainersData() {
+                try {
+                    const response = await fetch('data.json');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data.json');
                     }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Fetch error:', error.message);
+                    alert('Error fetching trainer data. Please try again later.');
+                    return [];
                 }
-            } catch (error) {
-                console.error('Initialization failed:', error.message);
             }
-        }
 
-        // Run the initialize function
-        initialize();
-    })();
-</script>
+            // Display the list of trainer names
+            function displayNameList(trainersData) {
+                const trainerList = document.getElementById('trainerList');
+                trainerList.innerHTML = ''; // Clear existing content
+                trainersData.forEach((trainer) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="#" class="text-blue-600 hover:underline" data-id="${trainer.id}">${trainer.last_name}, ${trainer.first_name}</a>`;
+                    li.querySelector('a').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        displayProfile(trainer);
+                    });
+                    trainerList.appendChild(li);
+                });
+            }
+
+            // Create profile information item
+            function createInfoItem(label, value) {
+                return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
+            }
+
+            // Display the trainer's profile
+            function displayProfile(trainer) {
+                const trainerProfile = document.getElementById('trainerProfile');
+                trainerProfile.classList.remove('hidden');
+                trainerProfile.innerHTML = `
+                    <a href="#" class="text-blue-600 hover:underline mb-4 inline-block" id="backToList">&larr; Back to Trainer List</a>
+                    <h2 class="text-2xl font-bold mb-4">${trainer.first_name} ${trainer.last_name}</h2>
+                    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Personal Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${createInfoItem('Last Name', trainer.last_name)}
+                            ${createInfoItem('First Name', trainer.first_name)}
+                            ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                            ${createInfoItem('Extension', trainer.extension)}
+                            ${createInfoItem('Birthday', trainer.birthday)}
+                            ${createInfoItem('Sex', trainer.sex)}
+                            ${createInfoItem('Address', trainer.address)}
+                            ${createInfoItem('Training Institution', trainer.training_institution)}
+                            ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                            ${createInfoItem('Contact Number', trainer.contact_number)}
+                            ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                            ${createInfoItem('Training Hours', trainer.training_hours)}
+                            ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                            ${createInfoItem('Sector', trainer.sector)}
+                            ${createInfoItem('Qualification', trainer.qualification)}
+                            ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                            ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                            ${createInfoItem('NC Validity', trainer.nc_validity)}
+                            ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                            ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                            ${createInfoItem('TM Validity', trainer.tm_validity)}
+                            ${createInfoItem('Assessor 1', trainer.assessor1)}
+                            ${createInfoItem('Assessor 2', trainer.assessor2)}
+                            ${createInfoItem('Assessor 3', trainer.assessor3)}
+                            ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                            ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                            ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                            ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('backToList').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    trainerProfile.classList.add('hidden');
+                });
+            }
+
+            // Initialize the page
+            async function initialize() {
+                try {
+                    const trainersData = await fetchTrainersData();
+
+                    // Display the list of names
+                    displayNameList(trainersData);
+
+                    // Check for ID in the URL and display the corresponding profile
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id');
+                    if (id) {
+                        const trainer = trainersData.find((t) => t.id.toString() === id);
+                        if (trainer) {
+                            displayProfile(trainer);
+                        } else {
+                            alert('Trainer not found.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Initialization failed:', error.message);
+                }
+            }
+
+            // Run the initialize function
+            initialize();
+        })();
+    </script>
+</body>
+</html>
