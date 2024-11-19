@@ -7,78 +7,106 @@
     <style>
         body {
             background: linear-gradient(to bottom, #000000, #3498db);
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: #fff;
-            max-width: 1200px;
-            margin: 0 auto;
+            color: #ffffff;
+            margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
         }
+
         .logo {
             max-width: 80px;
             height: auto;
         }
+
         .header-title {
-            font-size: 1.5em;
+            font-size: 1.8em;
             text-align: center;
-            flex-grow: 1;
+            color: #ffffff;
         }
+
         .button-container {
             display: flex;
             justify-content: center;
+            gap: 10px;
             margin: 20px 0;
         }
+
         .action-button {
-            background-color: #3498db;
-            color: white;
+            background: linear-gradient(90deg, #3498db, #1f78b4);
+            color: #ffffff;
             border: none;
             border-radius: 5px;
-            padding: 10px 15px;
-            margin: 0 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
+
         .action-button:hover {
-            background-color: #2980b9;
+            background: linear-gradient(90deg, #1f78b4, #3498db);
+            transform: translateY(-2px);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             margin-top: 20px;
         }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 12px;
             text-align: left;
+            color: #ffffff;
         }
+
         th {
-            background-color: #f2f2f2;
+            background: rgba(0, 0, 0, 0.7);
             font-weight: bold;
         }
+
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background: rgba(255, 255, 255, 0.05);
         }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         footer {
             margin-top: auto;
             text-align: center;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: #fff;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 0.9rem;
         }
+
         footer a {
-            color: #3498db;
+            color: #1f78b4;
             text-decoration: none;
         }
+
         footer a:hover {
             text-decoration: underline;
         }
