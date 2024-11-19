@@ -140,6 +140,7 @@
     let currentPage = 1;
     let filteredData = [];
     let originalData = [];
+    let debounceTimeout;
 
     async function loadData() {
         try {
@@ -217,14 +218,26 @@
         renderTable();
     }
 
-    function searchTable() {
+    // Debounce function
+    function debounce(func, delay) {
+        return function(...args) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Debounced search function
+    const debouncedSearchTable = debounce(function() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
             Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
         );
         currentPage = 1; 
         renderTable();
-    }
+    }, 300); // Adjust the delay as needed
+
+    // Attach the debounced function to the input event
+    document.getElementById("searchInput").addEventListener("input", debouncedSearchTable);
 
     loadData();
 
