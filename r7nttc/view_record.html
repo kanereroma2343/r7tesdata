@@ -182,8 +182,24 @@
 
         async function initialize() {
             const trainersData = await fetchTrainersData();
-            const trainerId = new URLSearchParams(window.location.search).get('id'); // Get the trainer ID from the URL
-            const trainerIndex = trainersData.findIndex(trainer => trainer.id === trainerId); // Find the index of the trainer
+            const params = new URLSearchParams(window.location.search);
+            
+            // Get parameters from the URL
+            const nttcCertNumber = params.get('nttc_cert_number');
+            const lastName = params.get('last_name');
+            const firstName = params.get('first_name');
+            const middleInitial = params.get('middle_initial');
+            const extension = params.get('extension');
+
+            // Find the trainer based on the provided parameters
+            const trainerIndex = trainersData.findIndex(trainer => 
+                trainer.nttc_cert_number === nttcCertNumber &&
+                trainer.last_name === lastName &&
+                trainer.first_name === firstName &&
+                trainer.middle_initial === middleInitial &&
+                trainer.extension === extension
+            );
+
             if (trainerIndex !== -1) {
                 displayProfile(trainerIndex, trainersData); // Display the profile if found
             } else {
