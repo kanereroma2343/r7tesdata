@@ -97,39 +97,38 @@
         <div class="tab-content active" id="personal-info">
             <div class="section">
                 <h3>Personal Information</h3>
-                <div class="grid">
-                    <!-- Dynamic personal info fields -->
+                <div class="grid" id="personal-grid">
+                    <!-- Personal Info Fields -->
                 </div>
             </div>
         </div>
         <div class="tab-content" id="nc-info">
             <div class="section">
                 <h3>NC Information</h3>
-                <div class="grid">
-                    <!-- Dynamic NC info fields -->
+                <div class="grid" id="nc-grid">
+                    <!-- NC Info Fields -->
                 </div>
             </div>
         </div>
         <div class="tab-content" id="tm-info">
             <div class="section">
                 <h3>TM Information</h3>
-                <div class="grid">
-                    <!-- Dynamic TM info fields -->
+                <div class="grid" id="tm-grid">
+                    <!-- TM Info Fields -->
                 </div>
             </div>
         </div>
         <div class="tab-content" id="nttc-info">
             <div class="section">
                 <h3>NTTC Information</h3>
-                <div class="grid">
-                    <!-- Dynamic NTTC info fields -->
+                <div class="grid" id="nttc-grid">
+                    <!-- NTTC Info Fields -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Fetch data from data.json
         async function fetchTrainerData() {
             try {
                 const response = await fetch('data.json');
@@ -137,17 +136,20 @@
                 displayProfile(trainer);
             } catch (error) {
                 console.error('Error fetching trainer data:', error);
+                alert("Failed to fetch trainer data. Please try again later.");
             }
         }
 
-        function displayProfile(trainer) {
-            const trainerProfile = document.getElementById('trainerProfile');
-            const trainerName = document.getElementById('trainerName');
-            trainerProfile.classList.remove('hidden');
-            trainerName.innerText = `${trainer.first_name} ${trainer.last_name}`;
+        function createInfoItem(label, value) {
+            return `
+                <div class="info-item">
+                    <strong>${label}:</strong> ${value || 'N/A'}
+                </div>
+            `;
+        }
 
-            // Populate Personal Information
-            document.querySelector('#personal .grid').innerHTML = `
+        function displayProfile(trainer) {
+            document.getElementById('personal-grid').innerHTML = `
                 ${createInfoItem('Last Name', trainer.last_name)}
                 ${createInfoItem('First Name', trainer.first_name)}
                 ${createInfoItem('Middle Initial', trainer.middle_initial)}
@@ -155,71 +157,48 @@
                 ${createInfoItem('Birthday', trainer.birthday)}
                 ${createInfoItem('Sex', trainer.sex)}
                 ${createInfoItem('Address', trainer.address)}
-                ${createInfoItem('Training Institution', trainer.training_institution)}
-                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
                 ${createInfoItem('Contact Number', trainer.contact_number)}
-                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
-                ${createInfoItem('Training Hours', trainer.training_hours)}
-                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
-                ${createInfoItem('Sector', trainer.sector)}
-                ${createInfoItem('Qualification', trainer.qualification)}
             `;
-
-            // Populate NC Information
-            document.querySelector('#nc .grid').innerHTML = `
+            document.getElementById('nc-grid').innerHTML = `
                 ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
                 ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
                 ${createInfoItem('NC Validity', trainer.nc_validity)}
-                ${createInfoItem('Sector', trainer.sector)}
-                ${createInfoItem('Qualification', trainer.qualification)}
             `;
-
-            // Populate TM Information
-            document.querySelector('#tm .grid').innerHTML = `
+            document.getElementById('tm-grid').innerHTML = `
                 ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
                 ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
                 ${createInfoItem('TM Validity', trainer.tm_validity)}
-                ${createInfoItem('Assessor 1', trainer.assessor1)}
-                ${createInfoItem('Assessor 2', trainer.assessor2)}
-                ${createInfoItem('Assessor 3', trainer.assessor3)}
             `;
-
-            // Populate NTTC Information
-            document.querySelector('#nttc .grid').innerHTML = `
+            document.getElementById('nttc-grid').innerHTML = `
                 ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
                 ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
                 ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
             `;
+        }
 
-            // Show the personal information tab by default
-            showTab('personal');
-
-            // Add event listeners for tab buttons
+        function setupTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const tabId = button.getAttribute('data-tab');
-                    showTab(tabId);
+
+                    tabContents.forEach(content => {
+                        content.classList.toggle('active', content.id === tabId);
+                    });
+
+                    tabButtons.forEach(btn => {
+                        btn.classList.toggle('active', btn === button);
+                    });
                 });
             });
         }
 
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const tabButtons = document.querySelectorAll('.tab-button');
-
-            tabs.forEach(tab => {
-                tab.style.display = tab.id === tabId ? 'block' : 'none';
-            });
-
-            tabButtons.forEach(button => {
-                button.classList.toggle('active', button.getAttribute('data-tab') === tabId);
-            });
-        }
-
-        // Call the fetch function when the page loads
-        window.onload = fetchTrainerData;
+        window.onload = () => {
+            setupTabs();
+            fetchTrainerData();
+        };
     </script>
 </body>
 </html>
