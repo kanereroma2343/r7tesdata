@@ -1,97 +1,109 @@
 <script>
-    // Fetch data from data.json
-    async function fetchTrainersData() {
-        const response = await fetch('data.json');
-        if (!response.ok) {
-            throw new Error('Failed to fetch data.json');
-        }
-        return await response.json();
-    }
-
-    // Display the list of trainer names
-    function displayNameList(trainersData) {
-        const nameList = document.getElementById('nameList');
-        nameList.innerHTML = '';
-        trainersData.forEach((trainer) => {
-            const li = document.createElement('li');
-            li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
-            li.onclick = () => {
-                // Update the URL with the trainer's ID
-                const params = new URLSearchParams(window.location.search);
-                params.set('id', trainer.id);
-                window.location.search = params.toString();
-            };
-            nameList.appendChild(li);
-        });
-    }
-
-    // Display the trainer's profile based on their ID
-    function displayProfile(trainer) {
-        const profileDetails = document.getElementById('profileDetails');
-        profileDetails.style.display = 'block';
-        profileDetails.innerHTML = `
-            <h2>${trainer.first_name} ${trainer.last_name}</h2>
-            <div class="section">
-                <div class="section-title">Personal Information</div>
-                <div class="info-grid">
-                    <div class="info-item"><strong>Last Name:</strong> ${trainer.last_name}</div>
-                    <div class="info-item"><strong>First Name:</strong> ${trainer.first_name}</div>
-                    <div class="info-item"><strong>Middle Initial:</strong> ${trainer.middle_initial}</div>
-                    <div class="info-item"><strong>Extension:</strong> ${trainer.extension}</div>
-                    <div class="info-item"><strong>Birthday:</strong> ${trainer.birthday}</div>
-                    <div class="info-item"><strong>Sex:</strong> ${trainer.sex}</div>
-                    <div class="info-item"><strong>Address:</strong> ${trainer.address}</div>
-                    <div class="info-item"><strong>Training Institution:</strong> ${trainer.training_institution}</div>
-                    <div class="info-item"><strong>Type of Training Institution:</strong> ${trainer.type_training_institution}</div>
-                    <div class="info-item"><strong>Contact Number:</strong> ${trainer.contact_number}</div>
-                    <div class="info-item"><strong>Educational Attainment:</strong> ${trainer.educational_attainment}</div>
-                    <div class="info-item"><strong>Training Hours:</strong> ${trainer.training_hours}</div>
-                    <div class="info-item"><strong>Years of Experience:</strong> ${trainer.years_of_experience}</div>
-                    <div class="info-item"><strong>Sector:</strong> ${trainer.sector}</div>
-                    <div class="info-item"><strong>Qualification:</strong> ${trainer.qualification}</div>
-                    <div class="info-item"><strong>NC Cert Number:</strong> ${trainer.nc_cert_number}</div>
-                    <div class="info-item"><strong>NC Date Issuance:</strong> ${trainer.nc_date_issuance}</div>
-                    <div class="info-item"><strong>NC Validity:</strong> ${trainer.nc_validity}</div>
-                    <div class="info-item"><strong>TM Cert Number:</strong> ${trainer.tm_cert_number}</div>
-                    <div class="info-item"><strong>TM Date Issuance:</strong> ${trainer.tm_date_issuance}</div>
-                    <div class="info-item"><strong>TM Validity:</strong> ${trainer.tm_validity}</div>
-                    <div class="info-item"><strong>Assessor 1:</strong> ${trainer.assessor1}</div>
-                    <div class="info-item"><strong>Assessor 2:</strong> ${trainer.assessor2}</div>
-                    <div class="info-item"><strong>Assessor 3:</strong> ${trainer.assessor3}</div>
-                    <div class="info-item"><strong>NTTC Serial Number:</strong> ${trainer.nttc_serial_number}</div>
-                    <div class="info-item"><strong>NTTC Cert Number:</strong> ${trainer.nttc_cert_number}</div>
-                    <div class="info-item"><strong>NTTC Date Issuance:</strong> ${trainer.nttc_date_issuance}</div>
-                    <div class="info-item"><strong>NTTC Validity:</strong> ${trainer.nttc_validity}</div>
-                </div>
-            </div>
-            <!-- Add more sections here as required -->
-        `;
-    }
-
-    // Initialize the page
-    async function initialize() {
-        try {
-            const trainersData = await fetchTrainersData();
-
-            // Display the list of names
-            displayNameList(trainersData);
-
-            // Check for ID in the URL and display the corresponding profile
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            if (id) {
-                const trainer = trainersData.find((t) => t.id === id);
-                if (trainer) {
-                    displayProfile(trainer);
-                } else {
-                    alert('Trainer not found.');
+    (function() {
+        // Fetch data from data.json
+        async function fetchTrainersData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data.json');
                 }
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error.message);
+                alert('Error fetching trainer data. Please try again later.');
+                return [];
             }
-        } catch (error) {
-            console.error(error.message);
         }
-    }
 
-    // Run the initialize function
-    initialize();
+        // Display the list of trainer names
+        function displayNameList(trainersData) {
+            const nameList = document.getElementById('nameList');
+            nameList.innerHTML = ''; // Clear existing content
+            trainersData.forEach((trainer) => {
+                const li = document.createElement('li');
+                li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
+                li.onclick = () => {
+                    // Update the URL with the trainer's ID
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('id', trainer.id);
+                    window.location.search = params.toString();
+                };
+                nameList.appendChild(li);
+            });
+        }
+
+        // Create profile information item
+        function createInfoItem(label, value) {
+            return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
+        }
+
+        // Display the trainer's profile based on their ID
+        function displayProfile(trainer) {
+            const profileDetails = document.getElementById('profileDetails');
+            profileDetails.style.display = 'block';
+            profileDetails.innerHTML = `
+                <h2>${trainer.first_name} ${trainer.last_name}</h2>
+                <div class="section">
+                    <div class="section-title">Personal Information</div>
+                    <div class="info-grid">
+                        ${createInfoItem('Last Name', trainer.last_name)}
+                        ${createInfoItem('First Name', trainer.first_name)}
+                        ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                        ${createInfoItem('Extension', trainer.extension)}
+                        ${createInfoItem('Birthday', trainer.birthday)}
+                        ${createInfoItem('Sex', trainer.sex)}
+                        ${createInfoItem('Address', trainer.address)}
+                        ${createInfoItem('Training Institution', trainer.training_institution)}
+                        ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                        ${createInfoItem('Contact Number', trainer.contact_number)}
+                        ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                        ${createInfoItem('Training Hours', trainer.training_hours)}
+                        ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                        ${createInfoItem('Sector', trainer.sector)}
+                        ${createInfoItem('Qualification', trainer.qualification)}
+                        ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                        ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                        ${createInfoItem('NC Validity', trainer.nc_validity)}
+                        ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                        ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                        ${createInfoItem('TM Validity', trainer.tm_validity)}
+                        ${createInfoItem('Assessor 1', trainer.assessor1)}
+                        ${createInfoItem('Assessor 2', trainer.assessor2)}
+                        ${createInfoItem('Assessor 3', trainer.assessor3)}
+                        ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                        ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                        ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                        ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize the page
+        async function initialize() {
+            try {
+                const trainersData = await fetchTrainersData();
+
+                // Display the list of names
+                displayNameList(trainersData);
+
+                // Check for ID in the URL and display the corresponding profile
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                if (id) {
+                    const trainer = trainersData.find((t) => t.id.toString() === id);
+                    if (trainer) {
+                        displayProfile(trainer);
+                    } else {
+                        alert('Trainer not found.');
+                    }
+                }
+            } catch (error) {
+                console.error('Initialization failed:', error.message);
+            }
+        }
+
+        // Run the initialize function
+        initialize();
+    })();
 </script>
