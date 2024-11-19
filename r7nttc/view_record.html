@@ -16,7 +16,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, var(--background-start), var(--background-end), var(--secondary-color));
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
             color: var(--text-color);
             min-height: 100vh;
             line-height: 1.6;
@@ -26,101 +26,61 @@
             margin: 0 auto;
             padding: 2rem;
         }
-        h1, h2, h3 {
+        h1 {
             color: var(--primary-color);
-            text-shadow: 0 0 10px rgba(77, 166, 255, 0.3);
+            text-align: center;
+            text-shadow: 0 0 10px rgba(77, 166, 255, 0.5);
         }
-        .hidden {
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+        .tab-button {
+            flex: 1;
+            max-width: 200px;
+            padding: 0.5rem;
+            text-align: center;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: var(--primary-color);
+        }
+        .tab-content {
             display: none;
         }
-        #trainerList {
-            list-style-type: none;
-            padding: 0;
+        .tab-content.active {
+            display: block;
         }
-        #trainerList li {
+        .section {
+            margin-top: 1rem;
+            padding: 1.5rem;
             background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .section h3 {
+            color: var(--primary-color);
             margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 0.5rem;
         }
-        #trainerList li:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        #trainerProfile {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-top: 2rem;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
         .info-item {
             margin-bottom: 0.5rem;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.25rem;
-        }
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--background-end);
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #3399ff;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-        }
-        .section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        .section:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .section h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-        }
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 1rem;
-            }
             .grid {
                 grid-template-columns: 1fr;
-            }
-            h1, h2, h3 {
-                font-size: 1.5rem;
-            }
-            .btn {
-                width: 100%;
-                text-align: center;
             }
         }
     </style>
@@ -128,114 +88,84 @@
 <body>
     <div class="container">
         <h1>Trainer Directory</h1>
-        <div id="trainerProfile" class="hidden"></div>
+        <div class="tabs">
+            <button class="tab-button active" data-tab="personal-info">Personal Information</button>
+            <button class="tab-button" data-tab="nc-info">NC Information</button>
+            <button class="tab-button" data-tab="tm-info">TM Information</button>
+            <button class="tab-button" data-tab="nttc-info">NTTC Information</button>
+        </div>
+        <div class="tab-content active" id="personal-info">
+            <div class="section">
+                <h3>Personal Information</h3>
+                <div class="grid">
+                    <!-- Dynamic personal info fields -->
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="nc-info">
+            <div class="section">
+                <h3>NC Information</h3>
+                <div class="grid">
+                    <!-- Dynamic NC info fields -->
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tm-info">
+            <div class="section">
+                <h3>TM Information</h3>
+                <div class="grid">
+                    <!-- Dynamic TM info fields -->
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="nttc-info">
+            <div class="section">
+                <h3>NTTC Information</h3>
+                <div class="grid">
+                    <!-- Dynamic NTTC info fields -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        (async function() {
-            async function fetchTrainersData() {
-                try {
-                    const response = await fetch('data.json');
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch data.json');
-                    }
-                    return await response.json();
-                } catch (error) {
-                    console.error('Fetch error:', error.message);
-                    alert('Error fetching trainer data. Please try again later.');
-                    return [];
-                }
-            }
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-            function createInfoItem(label, value) {
-                return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
-            }
+                // Add active class to the clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
 
-            function displayProfile(trainer) {
-                const trainerProfile = document.getElementById('trainerProfile');
-                trainerProfile.classList.remove('hidden');
-                trainerProfile.innerHTML = `
-                    <h2>${trainer.first_name} ${trainer.last_name}</h2>
-                    <div>
-                        <div class="section">
-                            <h3>Personal Information</h3>
-                            <div class="grid">
-                                ${createInfoItem('Last Name', trainer.last_name)}
-                                ${createInfoItem('First Name', trainer.first_name)}
-                                ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                                ${createInfoItem('Extension', trainer.extension)}
-                                ${createInfoItem('Birthday', trainer.birthday)}
-                                ${createInfoItem('Sex', trainer.sex)}
-                                ${createInfoItem('Address', trainer.address)}
-                                ${createInfoItem('Training Institution', trainer.training_institution)}
-                                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
-                                ${createInfoItem('Contact Number', trainer.contact_number)}
-                                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
-                                ${createInfoItem('Training Hours', trainer.training_hours)}
-                                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
-                                ${createInfoItem('Sector', trainer.sector)}
-                                ${createInfoItem('Qualification', trainer.qualification)}
-                            </div>
-                        </div>
-                        <div class="section">
-                            <h3>NC Information</h3>
-                            <div class="grid">
-                                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                                ${createInfoItem('NC Validity', trainer.nc_validity)}
-                                ${createInfoItem('Sector', trainer.sector)}
-                                ${createInfoItem('Qualification', trainer.qualification)}
-                            </div>
-                        </div>
-                        <div class="section">
-                            <h3>TM Information</h3>
-                            <div class="grid">
-                                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                                ${createInfoItem('TM Validity', trainer.tm_validity)}
-                                ${createInfoItem('Assessor 1', trainer.assessor1)}
-                                ${createInfoItem('Assessor 2', trainer.assessor2)}
-                                ${createInfoItem('Assessor 3', trainer.assessor3)}
-                            </div>
-                        </div>
-                        <div class="section">
-                            <h3>NTTC Information</h3>
-                            <div class="grid">
-                                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
-                                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
-                            </div>
-                        </div>
-                    </div>
-                `;
+        // Function to create information items dynamically
+        function createInfoItem(label, value) {
+            return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
+        }
 
-                document.getElementById('backToList').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    trainerProfile.classList.add('hidden');
-                });
-            }
-
-            async function initialize() {
-                try {
-                    const trainersData = await fetchTrainersData();
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const id = urlParams.get('id');
-                    if (id) {
-                        const trainer = trainersData.find((t) => t.id.toString() === id);
-                        if (trainer) {
-                            displayProfile(trainer);
-                        } else {
-                            alert('Trainer not found.');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Initialization failed:', error.message);
-                }
-            }
-
-            initialize();
-        })();
+        // Example of how dynamic data could populate tabs
+        function displayProfile(trainer) {
+            document.querySelector('#personal-info .grid').innerHTML = `
+                ${createInfoItem('Last Name', trainer.last_name)}
+                ${createInfoItem('First Name', trainer.first_name)}
+                ${createInfoItem('Middle Initial', trainer.middle_initial)}
+            `;
+            document.querySelector('#nc-info .grid').innerHTML = `
+                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+            `;
+            document.querySelector('#tm-info .grid').innerHTML = `
+                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+            `;
+            document.querySelector('#nttc-info .grid').innerHTML = `
+                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+            `;
+        }
     </script>
 </body>
 </html>
