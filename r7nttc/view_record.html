@@ -180,16 +180,10 @@
         const params = new URLSearchParams(window.location.search);
 
         // Get parameters from the URL
-        const name = params.get('name');
-        const qualification = params.get('qualification');
-        const nttcNumber = params.get('nttc_number');
+        const id = params.get('id');
 
-        // Find the trainer based on the provided parameters
-        const trainer = trainersData.find(trainer => 
-            `${trainer.first_name} ${trainer.last_name}` === name &&
-            trainer.qualification === qualification &&
-            trainer.nttc_cert_number === nttcNumber
-        );
+        // Find the trainer based on the provided ID
+        const trainer = trainersData.find(trainer => trainer.id === id);
 
         if (trainer) {
             // Display the trainer's profile
@@ -207,10 +201,15 @@
         function displayNameList(trainersData) {
             const nameList = document.getElementById('nameList');
             nameList.innerHTML = '';
-            trainersData.forEach((trainer, index) => {
+            trainersData.forEach((trainer) => {
                 const li = document.createElement('li');
                 li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
-                li.onclick = () => displayProfile(index, trainersData);
+                li.onclick = () => {
+                    // Update the URL with the trainer's ID
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('id', trainer.id);
+                    window.location.search = params.toString();
+                };
                 nameList.appendChild(li);
             });
         }
