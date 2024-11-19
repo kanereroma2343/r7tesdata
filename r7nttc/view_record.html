@@ -3,187 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Display</title>
+    <title>View Records</title>
     <style>
-        /* CSS Styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            line-height: 1.6;
             margin: 0;
             padding: 20px;
+            background-color: #f4f4f4;
         }
-
-        .form-container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-
-        .form-group {
-            margin-bottom: 15px;
+        h1 {
+            text-align: center;
+            color: #333;
         }
-
-        .form-group label {
+        #nameList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #nameList li {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        #nameList li:hover {
+            background-color: #f0f0f0;
+        }
+        #recordDetails {
+            margin-top: 20px;
+            display: none;
+        }
+        .record-item {
+            margin-bottom: 10px;
+        }
+        .record-item strong {
+            display: inline-block;
+            width: 200px;
             font-weight: bold;
-            display: block;
-            color: #333;
-        }
-
-        .form-group span {
-            display: block;
-            padding: 8px;
-            background-color: #e8f0fe;
-            border-radius: 4px;
-            color: #333;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>View Records</h1>
+        <ul id="nameList"></ul>
+        <div id="recordDetails"></div>
+    </div>
 
-<div class="form-container">
-    <div class="form-group">
-        <label for="last-name">Last Name</label>
-        <span id="last-name"></span>
-    </div>
-    <div class="form-group">
-        <label for="first-name">First Name</label>
-        <span id="first-name"></span>
-    </div>
-    <div class="form-group">
-        <label for="middle-initial">Middle Initial</label>
-        <span id="middle-initial"></span>
-    </div>
-    <div class="form-group">
-        <label for="extension">Extension</label>
-        <span id="extension"></span>
-    </div>
-    <div class="form-group">
-        <label for="birthday">Birthday</label>
-        <span id="birthday"></span>
-    </div>
-    <div class="form-group">
-        <label for="sex">Sex</label>
-        <span id="sex"></span>
-    </div>
-    <div class="form-group">
-        <label for="address">Address</label>
-        <span id="address"></span>
-    </div>
-    <div class="form-group">
-        <label for="training-institution">Training Institution</label>
-        <span id="training-institution"></span>
-    </div>
-    <div class="form-group">
-        <label for="type-training-institution">Type of Training Institution</label>
-        <span id="type-training-institution"></span>
-    </div>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <span id="email"></span>
-    </div>
-    <div class="form-group">
-        <label for="contact-number">Contact Number</label>
-        <span id="contact-number"></span>
-    </div>
-    <div class="form-group">
-        <label for="educational-attainment">Educational Attainment</label>
-        <span id="educational-attainment"></span>
-    </div>
-    <div class="form-group">
-        <label for="years-of-experience">Years of Experience</label>
-        <span id="years-of-experience"></span>
-    </div>
-    <div class="form-group">
-        <label for="nc-cert-number">NC Certificate Number</label>
-        <span id="nc-cert-number"></span>
-    </div>
-    <div class="form-group">
-        <label for="nc-date-issuance">NC Date of Issuance</label>
-        <span id="nc-date-issuance"></span>
-    </div>
-    <div class="form-group">
-        <label for="nc-validity">NC Validity</label>
-        <span id="nc-validity"></span>
-    </div>
-    <div class="form-group">
-        <label for="tm-cert-number">TM Certificate Number</label>
-        <span id="tm-cert-number"></span>
-    </div>
-    <div class="form-group">
-        <label for="tm-date-issuance">TM Date of Issuance</label>
-        <span id="tm-date-issuance"></span>
-    </div>
-    <div class="form-group">
-        <label for="tm-validity">TM Validity</label>
-        <span id="tm-validity"></span>
-    </div>
-    <div class="form-group">
-        <label for="assessor1">Assessor 1</label>
-        <span id="assessor1"></span>
-    </div>
-    <div class="form-group">
-        <label for="assessor2">Assessor 2</label>
-        <span id="assessor2"></span>
-    </div>
-    <div class="form-group">
-        <label for="assessor3">Assessor 3</label>
-        <span id="assessor3"></span>
-    </div>
-    <div class="form-group">
-        <label for="nttc-serial-number">NTTC Serial Number</label>
-        <span id="nttc-serial-number"></span>
-    </div>
-    <div class="form-group">
-        <label for="nttc-cert-number">NTTC Certificate Number</label>
-        <span id="nttc-cert-number"></span>
-    </div>
-    <div class="form-group">
-        <label for="nttc-date-issuance">NTTC Date of Issuance</label>
-        <span id="nttc-date-issuance"></span>
-    </div>
-    <div class="form-group">
-        <label for="nttc-validity">NTTC Validity</label>
-        <span id="nttc-validity"></span>
-    </div>
-</div>
+    <script>
+        // Fetch the data from data.json
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const nameList = document.getElementById('nameList');
+                const recordDetails = document.getElementById('recordDetails');
 
-<script>
-    // Fetch data from data.json and populate fields
-    fetch('data.json')
-        .then(response => response.json())
-        .then(record => {
-            document.getElementById("last-name").innerText = record.last_name;
-            document.getElementById("first-name").innerText = record.first_name;
-            document.getElementById("middle-initial").innerText = record.middle_initial;
-            document.getElementById("extension").innerText = record.extension;
-            document.getElementById("birthday").innerText = record.birthday;
-            document.getElementById("sex").innerText = record.sex;
-            document.getElementById("address").innerText = record.address;
-            document.getElementById("training-institution").innerText = record.training_institution;
-            document.getElementById("type-training-institution").innerText = record.type_training_institution;
-            document.getElementById("email").innerText = record.email;
-            document.getElementById("contact-number").innerText = record.contact_number;
-            document.getElementById("educational-attainment").innerText = record.educational_attainment;
-            document.getElementById("years-of-experience").innerText = record.years_of_experience;
-            document.getElementById("nc-cert-number").innerText = record.nc_cert_number;
-            document.getElementById("nc-date-issuance").innerText = record.nc_date_issuance;
-            document.getElementById("nc-validity").innerText = record.nc_validity;
-            document.getElementById("tm-cert-number").innerText = record.tm_cert_number;
-            document.getElementById("tm-date-issuance").innerText = record.tm_date_issuance;
-            document.getElementById("tm-validity").innerText = record.tm_validity;
-            document.getElementById("assessor1").innerText = record.assessor1;
-            document.getElementById("assessor2").innerText = record.assessor2;
-            document.getElementById("assessor3").innerText = record.assessor3;
-            document.getElementById("nttc-serial-number").innerText = record.nttc_serial_number;
-            document.getElementById("nttc-cert-number").innerText = record.nttc_cert_number;
-            document.getElementById("nttc-date-issuance").innerText = record.nttc_date_issuance;
-            document.getElementById("nttc-validity").innerText = record.nttc_validity;
-        })
-        .catch(error => console.error('Error fetching data:', error));
-</script>
+                // Populate the name list
+                data.forEach((record, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${record.last_name}, ${record.first_name}`;
+                    li.addEventListener('click', () => showRecord(record));
+                    nameList.appendChild(li);
+                });
 
+                function showRecord(record) {
+                    recordDetails.innerHTML = '';
+                    recordDetails.style.display = 'block';
+
+                    for (const [key, value] of Object.entries(record)) {
+                        const div = document.createElement('div');
+                        div.className = 'record-item';
+                        div.innerHTML = `<strong>${key.replace(/_/g, ' ')}:</strong> ${value}`;
+                        recordDetails.appendChild(div);
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
 </body>
 </html>
