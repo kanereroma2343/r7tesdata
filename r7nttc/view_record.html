@@ -4,23 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trainer Directory</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #000000, #000033, #000066);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1, h2, h3 {
+            color: #4da6ff;
+        }
         .hidden {
             display: none;
         }
+        #trainerList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #trainerList li {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #trainerList li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #trainerProfile {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .info-item {
+            margin-bottom: 0.5rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        a {
+            color: #4da6ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #4da6ff;
+            color: #000033;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #3399ff;
+            text-decoration: none;
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Trainer Directory</h1>
-        <ul id="trainerList" class="space-y-2"></ul>
-        <div id="trainerProfile" class="hidden mt-8"></div>
+<body>
+    <div class="container">
+        <h1>Trainer Directory</h1>
+        <ul id="trainerList"></ul>
+        <div id="trainerProfile" class="hidden"></div>
     </div>
 
     <script>
         (async function() {
-            // Fetch data from data.json
             async function fetchTrainersData() {
                 try {
                     const response = await fetch('data.json');
@@ -35,21 +97,19 @@
                 }
             }
 
-            // Create profile information item
             function createInfoItem(label, value) {
                 return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
             }
 
-            // Display the trainer's profile
             function displayProfile(trainer) {
                 const trainerProfile = document.getElementById('trainerProfile');
                 trainerProfile.classList.remove('hidden');
                 trainerProfile.innerHTML = `
-                    <a href="#" class="text-blue-600 hover:underline mb-4 inline-block" id="backToList">&larr; Back to Trainer List</a>
-                    <h2 class="text-2xl font-bold mb-4">${trainer.first_name} ${trainer.last_name}</h2>
-                    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                        <h3 class="text-xl font-semibold mb-2">Personal Information</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="#" class="btn" id="backToList">&larr; Back to Trainer List</a>
+                    <h2>${trainer.first_name} ${trainer.last_name}</h2>
+                    <div>
+                        <h3>Personal Information</h3>
+                        <div class="grid">
                             ${createInfoItem('Last Name', trainer.last_name)}
                             ${createInfoItem('First Name', trainer.first_name)}
                             ${createInfoItem('Middle Initial', trainer.middle_initial)}
@@ -88,12 +148,32 @@
                 });
             }
 
-            // Initialize the page
             async function initialize() {
                 try {
                     const trainersData = await fetchTrainersData();
+                    const trainerList = document.getElementById('trainerList');
 
-                    // Check for ID in the URL and display the corresponding profile
+                    trainersData.forEach(trainer => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <h3>${trainer.first_name} ${trainer.last_name}</h3>
+                            <p>${trainer.qualification}</p>
+                            <a href="#" class="btn view-profile" data-id="${trainer.id}">View Profile</a>
+                        `;
+                        trainerList.appendChild(li);
+                    });
+
+                    trainerList.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('view-profile')) {
+                            e.preventDefault();
+                            const id = e.target.getAttribute('data-id');
+                            const trainer = trainersData.find(t => t.id.toString() === id);
+                            if (trainer) {
+                                displayProfile(trainer);
+                            }
+                        }
+                    });
+
                     const urlParams = new URLSearchParams(window.location.search);
                     const id = urlParams.get('id');
                     if (id) {
@@ -109,7 +189,6 @@
                 }
             }
 
-            // Run the initialize function
             initialize();
         })();
     </script>
