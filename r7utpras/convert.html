@@ -23,6 +23,9 @@
             padding: 30px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 100%;
         }
         h1 {
             font-size: 24px;
@@ -64,6 +67,7 @@
             font-weight: bold;
             text-transform: uppercase;
             transition: transform 0.3s, background 0.3s;
+            width: 100%;
         }
         #convertButton:hover {
             transform: scale(1.05);
@@ -79,9 +83,10 @@
         }
         .progress-container {
             width: 100%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 5px;
             margin-top: 20px;
+            overflow: hidden;
             display: none;
         }
         .progress-bar {
@@ -89,6 +94,10 @@
             width: 0;
             border-radius: 5px;
             transition: width 0.4s ease;
+        }
+        #progressText {
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -99,17 +108,21 @@
             <label for="fileInput" class="file-input-label">Choose Excel File</label>
             <input type="file" id="fileInput" accept=".xlsx, .xls" />
             <div id="fileName"></div>
-            <button id="convertButton" disabled>Convert to JSON</button>
         </div>
+        <button id="convertButton" disabled>Convert to JSON</button>
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>
         </div>
+        <div id="progressText"></div>
     </div>
 
     <script>
         const fileInput = document.getElementById('fileInput');
         const convertButton = document.getElementById('convertButton');
         const fileNameDisplay = document.getElementById('fileName');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
 
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length) {
@@ -130,28 +143,9 @@
             const file = fileInput.files[0];
             const reader = new FileReader();
 
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
             progressContainer.style.display = 'block';
-
-            const totalSteps = 100;
-            let currentStep = 0;
-
-            const interval = setInterval(() => {
-                if (currentStep <= totalSteps) {
-                    const percentage = (currentStep / totalSteps) * 100;
-                    progressBar.style.width = percentage + '%';
-
-                    if (percentage <= 25) progressBar.style.backgroundColor = 'red';
-                    else if (percentage <= 50) progressBar.style.backgroundColor = 'orange';
-                    else if (percentage <= 75) progressBar.style.backgroundColor = 'yellow';
-                    else progressBar.style.backgroundColor = 'green';
-
-                    currentStep++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 100);
+            progressText.textContent = '0%';
+            convertButton.disabled = true;
 
             reader.onload = function (event) {
                 const data = new Uint8Array(event.target.result);
@@ -161,6 +155,7 @@
                 const sheet = workbook.Sheets[sheetName];
                 if (!sheet) {
                     alert(`Sheet "${sheetName}" not found in the Excel file.`);
+                    resetProgress();
                     return;
                 }
 
@@ -184,18 +179,47 @@
                     Public_Total: row[13] || null,
                 }));
 
-                const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(jsonBlob);
-                link.download = "data.json";
-                link.click();
+                simulateProgress(() => {
+                    const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(jsonBlob);
+                    link.download = "data.json";
+                    link.click();
 
-                clearInterval(interval);
-                progressContainer.style.display = 'none';
+                    resetProgress();
+                });
             };
 
             reader.readAsArrayBuffer(file);
         });
+
+        function simulateProgress(callback) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1;
+                updateProgress(progress);
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    callback();
+                }
+            }, 20);
+        }
+
+        function updateProgress(value) {
+            progressBar.style.width = `${value}%`;
+            progressText.textContent = `${value}%`;
+            if (value <= 25) progressBar.style.backgroundColor = 'red';
+            else if (value <= 50) progressBar.style.backgroundColor = 'orange';
+            else if (value <= 75) progressBar.style.backgroundColor = 'yellow';
+            else progressBar.style.backgroundColor = 'green';
+        }
+
+        function resetProgress() {
+            progressContainer.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressText.textContent = '';
+            convertButton.disabled = false;
+        }
     </script>
 </body>
 </html>
