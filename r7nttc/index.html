@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="script.js" defer></script>
     <style>
         /* Fade-in animation */
         body {
@@ -66,34 +67,34 @@
     </style>
 </head>
 <body class="fade-in">
-<div class="header-container">
+<header class="header-container">
     <div class="header-top">
-        <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
+        <img src="./icons/tlogo.png" alt="National TVET Trainer's Certificate Logo" class="logo">
         <h1 class="header-title">NATIONAL TVET TRAINER'S CERTIFICATE RECORDS</h1>
-        <img src="./icons/blogo.png" alt="Right Logo" class="logo">
+        <img src="./icons/blogo.png" alt="Another Logo" class="logo">
     </div>
-    <div class="button-container">
+    <nav class="button-container">
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
         <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-    </div>
-</div>
+    </nav>
+</header>
 
-<div class="container">
+<main class="container">
     <!-- New Entry Count Display -->
-    <div id="entryCount" class="entry-count"></div>
+    <div id="entryCount" class="entry-count" role="status"></div>
     <!-- Date Subheader -->
-    <div class="date-subheader">
+    <div class="date-subheader" role="contentinfo">
         Current NTTC Holders As of: <span id="currentDate"></span>
     </div>
 
     <!-- Search Input Field -->
     <div class="search-container">
         <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-            <button id="searchButton" onclick="searchTable()">
+            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()" aria-label="Search records">
+            <button id="searchButton" onclick="searchTable()" aria-label="Search">
                 <i class="fas fa-search"></i>
             </button>
         </div>
@@ -118,10 +119,10 @@
         </tbody>
     </table>
 
-    <div class="pagination">
+    <div class="pagination" role="navigation">
         <span id="pagination"></span>
     </div>
-</div>
+</main>
 
 <footer>
     <div class="footer-content">
