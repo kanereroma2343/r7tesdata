@@ -166,7 +166,7 @@
             if (!Array.isArray(data)) {
                 throw new Error('Invalid data format');
             }
-            originalData = data.filter(row => row && (row.D || row.E));
+            originalData = data.filter(row => row && (row.last_name || row.extension));
             filteredData = originalData;
             renderTable();
         } catch (error) {
