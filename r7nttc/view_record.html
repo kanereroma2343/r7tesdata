@@ -87,7 +87,6 @@
 <body>
     <div class="container">
         <h1>Trainer Directory</h1>
-        <ul id="trainerList" class="hidden"></ul>
         <div id="trainerProfile" class="hidden"></div>
     </div>
 
@@ -180,13 +179,6 @@
             async function initialize() {
                 try {
                     const trainersData = await fetchTrainersData();
-                    const trainerList = document.getElementById('trainerList');
-
-                    trainersData.forEach(trainer => {
-                        const li = document.createElement('li');
-                        trainerList.appendChild(li);
-                    });
-
                     const urlParams = new URLSearchParams(window.location.search);
                     const id = urlParams.get('id');
                     if (id) {
