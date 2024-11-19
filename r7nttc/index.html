@@ -139,6 +139,7 @@
     let currentPage = 1;
     let filteredData = [];
     let originalData = [];
+    let debounceTimeout;
 
     async function loadData() {
         try {
@@ -217,15 +218,18 @@
     }
 
     function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            [row.last_name, row.first_name, row.middle_initial, row.extension, 
-             row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
-             formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
-            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-        );
-        currentPage = 1; 
-        renderTable();
+        clearTimeout(debounceTimeout); // Clear the previous timeout
+        debounceTimeout = setTimeout(() => { // Set a new timeout
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            filteredData = originalData.filter(row =>
+                [row.last_name, row.first_name, row.middle_initial, row.extension, 
+                 row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
+                 formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
+                .some(value => value && value.toString().toLowerCase().includes(searchTerm))
+            );
+            currentPage = 1; 
+            renderTable();
+        }, 300); // Adjust the delay as needed (300ms in this case)
     }
 
     loadData();
