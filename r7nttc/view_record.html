@@ -174,28 +174,13 @@
 
     <script>
         // Fetch data from data.json
-        async function initialize() {
-            try {
-                const trainersData = await fetchTrainersData();
-                const params = new URLSearchParams(window.location.search);
-
-                // Get parameters from the URL
-                const id = params.get('id');
-
-                // Find the trainer based on the provided ID
-                const trainer = trainersData.find(trainer => trainer.id === id);
-
-                if (trainer) {
-                    // Display the trainer's profile
-                    displayProfile(trainersData.indexOf(trainer), trainersData);
-                } else {
-                    console.error('Trainer not found');
-                    document.getElementById('profileDetails').innerHTML = '<p>Trainer not found.</p>';
-                }
-            } catch (error) {
-                console.error('Error fetching or processing data:', error);
-            }
-        }
+        async function fetchTrainersData() {
+    const response = await fetch('data.json');
+    if (!response.ok) {
+        throw new Error('Failed to fetch data.json');
+    }
+    return await response.json();
+}
 
         function displayNameList(trainersData) {
             const nameList = document.getElementById('nameList');
