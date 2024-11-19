@@ -6,288 +6,298 @@
     <title>Trainer Directory</title>
     <style>
         :root {
-            --primary-color: #4da6ff;
-            --secondary-color: #000066;
-            --background-start: #000000;
-            --background-end: #000033;
-            --text-color: #ffffff;
+            --primary: #3b82f6;
+            --primary-foreground: #ffffff;
+            --muted: #6b7280;
+            --muted-foreground: #9ca3af;
+            --card: #ffffff;
+            --card-foreground: #000000;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, var(--background-start), var(--background-end), var(--secondary-color));
-            color: var(--text-color);
+            background: linear-gradient(135deg, #000000, #000033, #000066);
+            color: var(--card-foreground);
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem;
+            background-color: var(--card);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        h1, h2, h3 {
-            color: var(--primary-color);
-            text-shadow: 0 0 10px rgba(77, 166, 255, 0.3);
-        }
-        .hidden {
-            display: none;
-        }
-        #trainerList {
-            list-style-type: none;
-            padding: 0;
-        }
-        #trainerList li {
-            background-color: rgba(255, 255, 255, 0.1);
-            margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        #trainerList li:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        #trainerProfile {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-top: 2rem;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        .info-item {
-            margin-bottom: 0.5rem;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.25rem;
-        }
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--background-end);
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #3399ff;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-        }
-        .section {
-            margin-top: 2rem;
+        .card-header {
             padding: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            border-bottom: 1px solid #e5e7eb;
         }
-        .section:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
         }
-        .section h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--primary-color);
-            padding-bottom: 0.5rem;
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: transparent;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            h1, h2, h3 {
-                font-size: 1.5rem;
-            }
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
+        .back-button:hover {
+            background-color: #f3f4f6;
+        }
+        .back-button svg {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        .card-content {
+            padding: 1.5rem;
         }
         .tabs {
             display: flex;
-            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
         }
-        .tab-button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: 1px solid transparent;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
+        .tab {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            background-color: transparent;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: color 0.2s, border-color 0.2s;
         }
-        .tab-button.active {
-            background-color: #3399ff;
-            border-color: var(--primary-color);
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
         }
-        .tab-button:hover {
-            background-color: rgba(77, 166, 255, 0.7);
-            border-color: rgba(255, 255, 255, 0.5);
+        .tab-content {
+            display: none;
+            padding: 1.5rem 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            margin-bottom: 0.25rem;
+        }
+        .info-value {
+            font-size: 0.875rem;
+        }
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .loader svg {
+            animation: spin 1s linear infinite;
+            color: var(--primary);
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @media (max-width: 640px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab {
+                flex: 1 0 50%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Trainer Directory</h1>
-        <div id="trainerProfile" class="hidden"></div>
+    <div id="app" class="container">
+        <div id="loader" class="loader">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="2" x2="12" y2="6"></line>
+                <line x1="12" y1="18" x2="12" y2="22"></line>
+                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                <line x1="2" y1="12" x2="6" y2="12"></line>
+                <line x1="18" y1="12" x2="22" y2="12"></line>
+                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+            </svg>
+        </div>
     </div>
-
     <script>
-        (async function() {
-            async function fetchTrainersData() {
-                try {
-                    const response = await fetch('data.json');
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch data.json');
-                    }
-                    return await response.json();
-                } catch (error) {
-                    console.error('Fetch error:', error.message);
-                    alert('Error fetching trainer data. Please try again later.');
-                    return [];
+        async function fetchTrainerData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data.json');
                 }
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Error fetching trainer data. Please try again later.');
+                return null;
             }
+        }
 
-            function createInfoItem(label, value) {
-                return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
-            }
+        function createInfoItem(label, value) {
+            return `
+                <div class="info-item">
+                    <span class="info-label">${label}</span>
+                    <span class="info-value">${value || 'N/A'}</span>
+                </div>
+            `;
+        }
 
-            function displayProfile(trainer) {
-                const trainerProfile = document.getElementById('trainerProfile');
-                trainerProfile.classList.remove('hidden');
-                
-                // Tab navigation
-                trainerProfile.innerHTML = `
-                    <h2>${trainer.first_name} ${trainer.last_name}</h2>
+        function renderTrainerProfile(trainer) {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="card-header">
+                    <h1 class="card-title">${trainer.first_name} ${trainer.last_name}</h1>
+                    <button class="back-button" onclick="window.history.back()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back to List
+                    </button>
+                </div>
+                <div class="card-content">
                     <div class="tabs">
-                        <button class="tab-button active" data-tab="personal">Personal Information</button>
-                        <button class="tab-button" data-tab="nc">NC Information</button>
-                        <button class="tab-button" data-tab="tm">TM Information</button>
-                        <button class="tab-button" data-tab="nttc">NTTC Information</button>
+                        <button class="tab active" data-tab="personal">Personal</button>
+                        <button class="tab" data-tab="nc">NC</button>
+                        <button class="tab" data-tab="tm">TM</button>
+                        <button class="tab" data-tab="nttc">NTTC</button>
                     </div>
-                    <div class="tab-content">
-                        <div class="tab" id="personal" style="display: block;">
-                            <div class="section">
-                                <h3>Personal Information</h3>
-                                <div class="grid">
-                                    ${createInfoItem('Last Name', trainer.last_name)}
-                                    ${createInfoItem('First Name', trainer.first_name)}
-                                    ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                                    ${createInfoItem('Extension', trainer.extension)}
-                                    ${createInfoItem('Birthday', trainer.birthday)}
-                                    ${createInfoItem('Sex', trainer.sex)}
-                                    ${createInfoItem('Address', trainer.address)}
-                                    ${createInfoItem('Training Institution', trainer.training_institution)}
-                                    ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
-                                    ${createInfoItem('Contact Number', trainer.contact_number)}
-                                    ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
-                                    ${createInfoItem('Training Hours', trainer.training_hours)}
-                                    ${createInfoItem('Years of Experience', trainer.years_of_experience)}
-                                </div>
-                            </div>
+                    <div id="personal" class="tab-content active">
+                        <div class="info-grid">
+                            ${createInfoItem('Last Name', trainer.last_name)}
+                            ${createInfoItem('First Name', trainer.first_name)}
+                            ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                            ${createInfoItem('Extension', trainer.extension)}
+                            ${createInfoItem('Birthday', trainer.birthday)}
+                            ${createInfoItem('Sex', trainer.sex)}
+                            ${createInfoItem('Address', trainer.address)}
+                            ${createInfoItem('Training Institution', trainer.training_institution)}
+                            ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                            ${createInfoItem('Contact Number', trainer.contact_number)}
+                            ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                            ${createInfoItem('Training Hours', trainer.training_hours)}
+                            ${createInfoItem('Years of Experience', trainer.years_of_experience)}
                         </div>
-                        <div class="tab" id="nc" style="display: none;">
-                            <div class="section">
-                                <h3>NC Information</h3>
-                                <div class="grid">
-                                    ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                                    ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                                    ${createInfoItem('NC Validity', trainer.nc_validity)}
-                                    ${createInfoItem('Sector', trainer.sector)}
-                                    ${createInfoItem('Qualification', trainer.qualification)}
-                                </div>
-                            </div>
+                    </div>
+                    <div id="nc" class="tab-content">
+                        <div class="info-grid">
+                            ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                            ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                            ${createInfoItem('NC Validity', trainer.nc_validity)}
+                            ${createInfoItem('Sector', trainer.sector)}
+                            ${createInfoItem('Qualification', trainer.qualification)}
                         </div>
-                        <div class="tab" id="tm" style="display: none;">
-                            <div class="section">
-                                <h3>TM Information</h3>
-                                <div class="grid">
-                                    ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                                    ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                                    ${createInfoItem('TM Validity', trainer.tm_validity)}
-                                    ${createInfoItem('Assessor 1', trainer.assessor1)}
-                                    ${createInfoItem('Assessor 2', trainer.assessor2)}
-                                    ${createInfoItem('Assessor 3', trainer.assessor3)}
-                                </div>
-                            </div>
+                    </div>
+                    <div id="tm" class="tab-content">
+                        <div class="info-grid">
+                            ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                            ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                            ${createInfoItem('TM Validity', trainer.tm_validity)}
+                            ${createInfoItem('Assessor 1', trainer.assessor1)}
+                            ${createInfoItem('Assessor 2', trainer.assessor2)}
+                            ${createInfoItem('Assessor 3', trainer.assessor3)}
                         </div>
-                        <div class="tab" id="nttc" style="display: none;">
-                            <div class="section">
-                                <h3>NTTC Information</h3>
-                                <div class="grid">
-                                    ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
-                                    ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                                    ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                                    ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
-                                </div>
-                            </div>
+                    </div>
+                    <div id="nttc" class="tab-content">
+                        <div class="info-grid">
+                            ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                            ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                            ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                            ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
                         </div>
+                    </div>
+                </div>
+            `;
+
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        async function initialize() {
+            const loader = document.getElementById('loader');
+            try {
+                const trainersData = await fetchTrainerData();
+                if (!trainersData) {
+                    throw new Error('No trainer data available');
+                }
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                if (id) {
+                    const trainer = trainersData.find(t => t.id.toString() === id);
+                    if (trainer) {
+                        renderTrainerProfile(trainer);
+                    } else {
+                        throw new Error('Trainer not found');
+                    }
+                } else {
+                    throw new Error('No trainer ID provided');
+                }
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                document.getElementById('app').innerHTML = `
+                    <div class="card-header">
+                        <h1 class="card-title">Error</h1>
+                    </div>
+                    <div class="card-content">
+                        <p>${error.message}</p>
+                        <button class="back-button" onclick="window.history.back()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Go Back
+                        </button>
                     </div>
                 `;
-
-                // Tab switching functionality
-                const tabButtons = document.querySelectorAll('.tab-button');
-                const tabs = document.querySelectorAll('.tab');
-
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const tabId = button.getAttribute('data-tab');
-
-                        tabButtons.forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-
-                        tabs.forEach(tab => {
-                            tab.style.display = tab.id === tabId ? 'block' : 'none';
-                        });
-                    });
-                });
-
-                document.getElementById('backToList').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    trainerProfile.classList.add('hidden');
-                });
+            } finally {
+                loader.style.display = 'none';
             }
+        }
 
-            async function initialize() {
-                try {
-                    const trainersData = await fetchTrainersData();
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const id = urlParams.get('id');
-                    if (id) {
-                        const trainer = trainersData.find((t) => t.id.toString() === id);
-                        if (trainer) {
-                            displayProfile(trainer);
-                        } else {
-                            alert('Trainer not found.');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Initialization failed:', error.message);
-                }
-            }
-
-            initialize();
-        })();
+        initialize();
     </script>
 </body>
 </html>
