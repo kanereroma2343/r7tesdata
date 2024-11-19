@@ -163,11 +163,17 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            originalData = data;
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            originalData = data.filter(row => row && (row.D || row.E));
             filteredData = originalData;
             renderTable();
         } catch (error) {
             console.error("Error loading data:", error);
+            originalData = [];
+            filteredData = [];
+            renderTable();
         }
     }
 
@@ -176,43 +182,37 @@
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
-        // Add the hidden class to fade out
-        tableBody.classList.add('hidden'); // Start with invisible
+        tableBody.innerHTML = paginatedData.map(row => {
+            // Parse the validity date
+            const validityDate = new Date(row.V);
+            const today = new Date();
+            const threeMonthsFromNow = new Date();
+            threeMonthsFromNow.setMonth(today.getMonth() + 3);
+            
+            // Determine the validity status and color
+            let validityColor = 'green'; // Active dates are green
+            if (validityDate < today) {
+                validityColor = 'red'; // Expired
+            } else if (validityDate <= threeMonthsFromNow) {
+                validityColor = 'orange'; // Expiring soon (within 3 months)
+            }
 
-        setTimeout(() => {
-            tableBody.innerHTML = paginatedData.map(row => {
-                const validityDate = new Date(row.nttc_validity);
-                const today = new Date();
-                const threeMonthsFromNow = new Date();
-                threeMonthsFromNow.setMonth(today.getMonth() + 3);
-                
-                let validityColor = 'green';
-                if (validityDate < today) {
-                    validityColor = 'red';
-                } else if (validityDate <= threeMonthsFromNow) {
-                    validityColor = 'orange';
-                }
-
-                return `
-                    <tr>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
-                        <td>${row.qualification || ''}</td>
-                        <td>${row.nttc_cert_number || ''}</td>
-                        <td>${row.nttc_serial_number || ''}</td>
-                        <td>${formatDate(row.nttc_date_issuance)}</td>
-                        <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                    </tr>
-                `;
-            }).join("");
-
-            // Remove the hidden class to fade in
-            tableBody.classList.remove('hidden'); // Make it visible again
-        }, 100); // Delay to allow fade out effect
-        
+            return `
+                 <tr>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
+                    <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
+                    <td>${row.qualification || ''}</td>
+                    <td>${row.nttc_cert_number || ''}</td>
+                    <td>${row.nttc_serial_number || ''}</td>
+                    <td>${formatDate(row.nttc_date_issuance)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                </tr>
+            `;
+        }).join("");
         renderPagination();
+        // Update entry count display
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
     }
 
