@@ -210,8 +210,9 @@
                     </div>
                 `;
 
-                tabButtons.forEach(button => {
-                    button.classList.toggle('active', button.getAttribute('data-tab') === tabId);
+                document.getElementById('backToList').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    trainerProfile.classList.add('hidden');
                 });
             }
 
