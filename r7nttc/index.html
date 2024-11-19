@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="script.js" defer></script>
     <style>
         /* Fade-in animation */
         body {
@@ -67,34 +66,34 @@
     </style>
 </head>
 <body class="fade-in">
-<header class="header-container">
+<div class="header-container">
     <div class="header-top">
-        <img src="./icons/tlogo.png" alt="National TVET Trainer's Certificate Logo" class="logo">
+        <img src="./icons/tlogo.png" alt="Left Logo" class="logo">
         <h1 class="header-title">NATIONAL TVET TRAINER'S CERTIFICATE RECORDS</h1>
-        <img src="./icons/blogo.png" alt="Another Logo" class="logo">
+        <img src="./icons/blogo.png" alt="Right Logo" class="logo">
     </div>
-    <nav class="button-container">
+    <div class="button-container">
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
         <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-    </nav>
-</header>
+    </div>
+</div>
 
-<main class="container">
+<div class="container">
     <!-- New Entry Count Display -->
-    <div id="entryCount" class="entry-count" role="status"></div>
+    <div id="entryCount" class="entry-count"></div>
     <!-- Date Subheader -->
-    <div class="date-subheader" role="contentinfo">
+    <div class="date-subheader">
         Current NTTC Holders As of: <span id="currentDate"></span>
     </div>
 
     <!-- Search Input Field -->
     <div class="search-container">
         <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()" aria-label="Search records">
-            <button id="searchButton" onclick="searchTable()" aria-label="Search">
+            <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
+            <button id="searchButton" onclick="searchTable()">
                 <i class="fas fa-search"></i>
             </button>
         </div>
@@ -119,10 +118,10 @@
         </tbody>
     </table>
 
-    <div class="pagination" role="navigation">
+    <div class="pagination">
         <span id="pagination"></span>
     </div>
-</main>
+</div>
 
 <footer>
     <div class="footer-content">
@@ -140,7 +139,6 @@
     let currentPage = 1;
     let filteredData = [];
     let originalData = [];
-    let throttleTimeout;
 
     async function loadData() {
         try {
@@ -218,40 +216,17 @@
         renderTable();
     }
 
-    // Throttle function
-    function throttle(func, limit) {
-        let lastFunc;
-        let lastRan;
-
-        return function(...args) {
-            const context = this;
-            if (!lastRan) {
-                func.apply(context, args);
-                lastRan = Date.now();
-            } else {
-                clearTimeout(lastFunc);
-                lastFunc = setTimeout(function() {
-                    if ((Date.now() - lastRan) >= limit) {
-                        func.apply(context, args);
-                        lastRan = Date.now();
-                    }
-                }, limit - (Date.now() - lastRan));
-            }
-        };
-    }
-
-    // Throttled search function
-    const throttledSearchTable = throttle(function() {
+    function searchTable() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
-            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
+            [row.last_name, row.first_name, row.middle_initial, row.extension, 
+             row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
+             formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
+            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
         );
         currentPage = 1; 
         renderTable();
-    }, 300); // Adjust the limit as needed
-
-    // Attach the throttled function to the input event
-    document.getElementById("searchInput").addEventListener("input", throttledSearchTable);
+    }
 
     loadData();
 
