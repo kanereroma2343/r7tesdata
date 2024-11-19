@@ -173,53 +173,30 @@
     </div>
 
     <script>
-        // Simulated data (replace this with actual data loading logic)
-        const trainersData = [
-            {
-                last_name: "Doe",
-                first_name: "John",
-                middle_initial: "A",
-                extension: "",
-                birthday: "1990-01-01",
-                sex: "Male",
-                address: "123 Main St, City",
-                training_institution: "Tech Institute",
-                type_training_institution: "Private",
-                contact_number: "123-456-7890",
-                educational_attainment: "Bachelor's Degree",
-                training_hours: "500",
-                years_of_experience: "5",
-                sector: "IT",
-                qualification: "Web Development",
-                nc_cert_number: "NC-001",
-                nc_date_issuance: "2020-01-01",
-                nc_validity: "2025-01-01",
-                tm_cert_number: "TM-001",
-                tm_date_issuance: "2020-02-01",
-                tm_validity: "2025-02-01",
-                assessor1: "Jane Smith",
-                assessor2: "Mike Johnson",
-                assessor3: "Sarah Williams",
-                nttc_serial_number: "NTTC-001",
-                nttc_cert_number: "CERT-001",
-                nttc_date_issuance: "2020-03-01",
-                nttc_validity: "2025-03-01"
-            },
-            // Add more trainer data objects here
-        ];
+        // Fetch data from data.json
+        async function fetchTrainersData() {
+            const response = await fetch('data.json');
+            const data = await response.json();
+            return data.trainers; // Assuming the JSON structure has a "trainers" array
+        }
 
-        function displayNameList() {
+        async function initialize() {
+            const trainersData = await fetchTrainersData();
+            displayNameList(trainersData);
+        }
+
+        function displayNameList(trainersData) {
             const nameList = document.getElementById('nameList');
             nameList.innerHTML = '';
             trainersData.forEach((trainer, index) => {
                 const li = document.createElement('li');
                 li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
-                li.onclick = () => displayProfile(index);
+                li.onclick = () => displayProfile(index, trainersData);
                 nameList.appendChild(li);
             });
         }
 
-        function displayProfile(index) {
+        function displayProfile(index, trainersData) {
             const profile = trainersData[index];
             const profileDetails = document.getElementById('profileDetails');
             profileDetails.style.display = 'block';
@@ -282,7 +259,7 @@
         }
 
         // Initialize the page
-        displayNameList();
+        initialize();
     </script>
 </body>
 </html>
