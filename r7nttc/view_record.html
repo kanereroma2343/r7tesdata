@@ -182,7 +182,13 @@
 
         async function initialize() {
             const trainersData = await fetchTrainersData();
-            displayNameList(trainersData);
+            const trainerId = new URLSearchParams(window.location.search).get('id'); // Get the trainer ID from the URL
+            const trainerIndex = trainersData.findIndex(trainer => trainer.id === trainerId); // Find the index of the trainer
+            if (trainerIndex !== -1) {
+                displayProfile(trainerIndex, trainersData); // Display the profile if found
+            } else {
+                console.error('Trainer not found');
+            }
         }
 
         function displayNameList(trainersData) {
