@@ -129,43 +129,97 @@
     </div>
 
     <script>
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons and contents
-                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-                // Add active class to the clicked button and corresponding content
-                button.classList.add('active');
-                document.getElementById(button.dataset.tab).classList.add('active');
-            });
-        });
-
-        // Function to create information items dynamically
-        function createInfoItem(label, value) {
-            return `<div class="info-item"><strong>${label}:</strong> ${value || 'N/A'}</div>`;
+        // Fetch data from data.json
+        async function fetchTrainerData() {
+            try {
+                const response = await fetch('data.json');
+                const trainer = await response.json();
+                displayProfile(trainer);
+            } catch (error) {
+                console.error('Error fetching trainer data:', error);
+            }
         }
 
-        // Example of how dynamic data could populate tabs
         function displayProfile(trainer) {
-            document.querySelector('#personal-info .grid').innerHTML = `
+            const trainerProfile = document.getElementById('trainerProfile');
+            const trainerName = document.getElementById('trainerName');
+            trainerProfile.classList.remove('hidden');
+            trainerName.innerText = `${trainer.first_name} ${trainer.last_name}`;
+
+            // Populate Personal Information
+            document.querySelector('#personal .grid').innerHTML = `
                 ${createInfoItem('Last Name', trainer.last_name)}
                 ${createInfoItem('First Name', trainer.first_name)}
                 ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                ${createInfoItem('Extension', trainer.extension)}
+                ${createInfoItem('Birthday', trainer.birthday)}
+                ${createInfoItem('Sex', trainer.sex)}
+                ${createInfoItem('Address', trainer.address)}
+                ${createInfoItem('Training Institution', trainer.training_institution)}
+                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                ${createInfoItem('Contact Number', trainer.contact_number)}
+                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                ${createInfoItem('Training Hours', trainer.training_hours)}
+                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                ${createInfoItem('Sector', trainer.sector)}
+                ${createInfoItem('Qualification', trainer.qualification)}
             `;
-            document.querySelector('#nc-info .grid').innerHTML = `
+
+            // Populate NC Information
+            document.querySelector('#nc .grid').innerHTML = `
                 ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
                 ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                ${createInfoItem('NC Validity', trainer.nc_validity)}
+                ${createInfoItem('Sector', trainer.sector)}
+                ${createInfoItem('Qualification', trainer.qualification)}
             `;
-            document.querySelector('#tm-info .grid').innerHTML = `
+
+            // Populate TM Information
+            document.querySelector('#tm .grid').innerHTML = `
                 ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
                 ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                ${createInfoItem('TM Validity', trainer.tm_validity)}
+                ${createInfoItem('Assessor 1', trainer.assessor1)}
+                ${createInfoItem('Assessor 2', trainer.assessor2)}
+                ${createInfoItem('Assessor 3', trainer.assessor3)}
             `;
-            document.querySelector('#nttc-info .grid').innerHTML = `
+
+            // Populate NTTC Information
+            document.querySelector('#nttc .grid').innerHTML = `
                 ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
                 ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
             `;
+
+            // Show the personal information tab by default
+            showTab('personal');
+
+            // Add event listeners for tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    showTab(tabId);
+                });
+            });
         }
+
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => {
+                tab.style.display = tab.id === tabId ? 'block' : 'none';
+            });
+
+            tabButtons.forEach(button => {
+                button.classList.toggle('active', button.getAttribute('data-tab') === tabId);
+            });
+        }
+
+        // Call the fetch function when the page loads
+        window.onload = fetchTrainerData;
     </script>
 </body>
 </html>
