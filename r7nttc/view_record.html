@@ -1,267 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NTTC Information</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #000000, #0000FF, #FFFFFF);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            transition: margin-left 0.3s;
+<script>
+    // Fetch data from data.json
+    async function fetchTrainersData() {
+        const response = await fetch('data.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch data.json');
         }
-
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(to bottom, #000000, #0000FF, #FFFFFF);
-            color: #FFFFFF;
-            position: fixed;
-            height: 100%;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.7);
-            left: -250px;
-            transition: left 0.3s;
-            overflow-y: auto;
-        }
-
-        .sidebar:hover {
-            left: 0;
-        }
-
-        .sidebar .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar .logo img {
-            width: 40%;
-            max-width: 180px;
-            height: auto;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            color: #FFFFFF;
-            margin-top: 0;
-            font-size: 24px;
-            padding-bottom: 20px;
-        }
-
-        .sidebar button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #0000FF, #00008B);
-            border: none;
-            color: #FFFFFF;
-            font-size: 18px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        .sidebar button:hover {
-            background: linear-gradient(to right, #00008B, #0000FF);
-            transform: scale(1.05);
-        }
-
-        .container {
-            margin-left: 270px;
-            width: calc(100% - 270px);
-            padding: 20px;
-        }
-
-        .profile-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1s ease-in-out forwards;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            text-align: center;
-            color: #000000;
-            margin-bottom: 30px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            padding: 15px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #fff;
-            background-color: #00008B;
-            padding: 8px;
-            border-radius: 5px;
-            text-align: center;
-            border: 2px solid #000000;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .info-item {
-            background-color: #ffffff;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .info-item strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        #nameList {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #nameList li {
-            cursor: pointer;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            transition: background-color 0.3s;
-        }
-
-        #nameList li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="placeholder-logo.png" alt="Logo" />
-        </div>
-        <h2>Menu</h2>
-        <button onclick="location.href='#'">Home</button>
-        <button onclick="location.href='#'">Statistics</button>
-        <button onclick="location.href='#'">Delete</button>
-        <button onclick="location.href='#'">Due for Renewal</button>
-        <button onclick="location.href='#'">ICT Unit</button>
-        <button onclick="location.href='#'">Privacy Policy</button>
-        <button onclick="location.href='#'">NTTC Guidelines</button>
-    </div>
-
-    <div class="container">
-        <div class="profile-container">
-            <h1>Trainer Profiles</h1>
-            <ul id="nameList"></ul>
-            <div id="profileDetails" style="display: none;"></div>
-        </div>
-    </div>
-
-    <script>
-        // Fetch data from data.json
-        async function fetchTrainersData() {
-    const response = await fetch('data.json');
-    if (!response.ok) {
-        throw new Error('Failed to fetch data.json');
+        return await response.json();
     }
-    return await response.json();
-}
 
-        function displayNameList(trainersData) {
-            const nameList = document.getElementById('nameList');
-            nameList.innerHTML = '';
-            trainersData.forEach((trainer) => {
-                const li = document.createElement('li');
-                li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
-                li.onclick = () => {
-                    // Update the URL with the trainer's ID
-                    const params = new URLSearchParams(window.location.search);
-                    params.set('id', trainer.id);
-                    window.location.search = params.toString();
-                };
-                nameList.appendChild(li);
-            });
+    // Display the list of trainer names
+    function displayNameList(trainersData) {
+        const nameList = document.getElementById('nameList');
+        nameList.innerHTML = '';
+        trainersData.forEach((trainer) => {
+            const li = document.createElement('li');
+            li.textContent = `${trainer.last_name}, ${trainer.first_name}`;
+            li.onclick = () => {
+                // Update the URL with the trainer's ID
+                const params = new URLSearchParams(window.location.search);
+                params.set('id', trainer.id);
+                window.location.search = params.toString();
+            };
+            nameList.appendChild(li);
+        });
+    }
+
+    // Display the trainer's profile based on their ID
+    function displayProfile(trainer) {
+        const profileDetails = document.getElementById('profileDetails');
+        profileDetails.style.display = 'block';
+        profileDetails.innerHTML = `
+            <h2>${trainer.first_name} ${trainer.last_name}</h2>
+            <div class="section">
+                <div class="section-title">Personal Information</div>
+                <div class="info-grid">
+                    <div class="info-item"><strong>Last Name:</strong> ${trainer.last_name}</div>
+                    <div class="info-item"><strong>First Name:</strong> ${trainer.first_name}</div>
+                    <div class="info-item"><strong>Middle Initial:</strong> ${trainer.middle_initial}</div>
+                    <div class="info-item"><strong>Extension:</strong> ${trainer.extension}</div>
+                    <div class="info-item"><strong>Birthday:</strong> ${trainer.birthday}</div>
+                    <div class="info-item"><strong>Sex:</strong> ${trainer.sex}</div>
+                    <div class="info-item"><strong>Address:</strong> ${trainer.address}</div>
+                    <div class="info-item"><strong>Contact Number:</strong> ${trainer.contact_number}</div>
+                </div>
+            </div>
+            <!-- Add more sections here as required -->
+        `;
+    }
+
+    // Initialize the page
+    async function initialize() {
+        try {
+            const trainersData = await fetchTrainersData();
+
+            // Display the list of names
+            displayNameList(trainersData);
+
+            // Check for ID in the URL and display the corresponding profile
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) {
+                const trainer = trainersData.find((t) => t.id === id);
+                if (trainer) {
+                    displayProfile(trainer);
+                } else {
+                    alert('Trainer not found.');
+                }
+            }
+        } catch (error) {
+            console.error(error.message);
         }
+    }
 
-        function displayProfile(index, trainersData) {
-            const profile = trainersData[index];
-            const profileDetails = document.getElementById('profileDetails');
-            profileDetails.style.display = 'block';
-            profileDetails.innerHTML = `
-                <h2>${profile.first_name} ${profile.last_name}</h2>
-                <div class="section">
-                    <div class="section-title">Personal Information</div>
-                    <div class="info-grid">
-                        <div class="info-item"><strong>Last Name:</strong> ${profile.last_name}</div>
-                        <div class="info-item"><strong>First Name:</strong> ${profile.first_name}</div>
-                        <div class="info-item"><strong>Middle Initial:</strong> ${profile.middle_initial}</div>
-                        <div class="info-item"><strong>Extension:</strong> ${profile.extension}</div>
-                        <div class="info-item"><strong>Birthday:</strong> ${profile.birthday}</div>
-                        <div class="info-item"><strong>Sex:</strong> ${profile.sex}</div>
-                        <div class="info-item"><strong>Address:</strong> ${profile.address}</div>
-                        <div class="info-item"><strong>Contact Number:</strong> ${profile.contact_number}</div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">Training Information</div>
-                    <div class="info-grid">
-                        <div class="info-item"><strong>Training Institution:</strong> ${profile.training_institution}</div>
-                        <div class="info-item"><strong>Type of Training Institution:</strong> ${profile.type_training_institution}</div>
-                        <div class="info-item"><strong>Educational Attainment:</strong> ${profile.educational_attainment}</div>
-                        <div class="info-item"><strong>Training Hours:</strong> ${profile.training_hours}</div>
-                        <div class="info-item"><strong>Years of Experience:</strong> ${profile.years_of_experience}</div>
-                        <div class="info-item"><strong>Sector:</strong> ${profile.sector}</div>
-                        <div class="info-item"><strong>Qualification:</strong> ${profile.qualification}</div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">Certification Information</div>
-                    <div class="info-grid">
-                        <div class="info-item"><strong>NC Certificate Number:</strong> ${profile.nc_cert_number}</div>
-                        <div class="info-item"><strong>NC Date of Issuance:</strong> ${profile.nc_date_issuance}</div>
-                        <div class="info-item"><strong>NC Validity:</strong> ${profile.nc_validity}</div>
-                        <div class="info-item"><strong>TM Certificate Number:</strong> ${profile.tm_cert_number}</div>
-                        <div class="info-item"><strong>TM Date of Issuance:</strong> ${profile.tm_date_issuance}</div>
-                        <div class="info-item"><strong>TM Validity:</strong> ${profile.tm_validity}</div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">NTTC Information</div>
-                    <div class="info-grid">
-                        <div class="info-item"><strong>NTTC Serial Number:</strong> ${profile.nttc_serial_number}</div>
-                        <div class="info-item"><strong>NTTC Certificate Number:</strong> ${profile.nttc_cert_number}</div>
-                        <div class="info-item"><strong>NTTC Date of Issuance:</strong> ${profile.nttc_date_issuance}</div>
-                        <div class="info-item"><strong>NTTC Validity:</strong> ${profile.nttc_validity}</div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">Assessor Information</div>
-                    <div class="info-grid">
-                        <div class="info-item"><strong>Assessor 1:</strong> ${profile.assessor1}</div>
-                        <div class="info-item"><strong>Assessor 2:</strong> ${profile.assessor2}</div>
-                        <div class="info-item"><strong>Assessor 3:</strong> ${profile.assessor3}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Initialize the page
-        initialize();
-    </script>
-</body>
-</html>
+    // Run the initialize function
+    initialize();
+</script>
