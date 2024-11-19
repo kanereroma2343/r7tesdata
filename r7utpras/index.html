@@ -2,205 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Display</title>
-    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
     <style>
-        /* Fade-in animation */
         body {
-            opacity: 0; /* Start invisible */
-            transition: opacity 3s ease-in; /* Transition effect */
-        }
-
-        body.fade-in {
-            opacity: 1; /* Fully visible */
-        }
-
-        /* Glowing button styles */
-        .glowing-button {
-            position: relative;
-            overflow: hidden;
-            border: 2px solid orange; /* Orange border */
-            transition: box-shadow 0.3s ease;
-        }
-
-        .glowing-button:hover {
-            box-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 30px orange; /* Glowing effect */
-        }
-
-        /* Expired button styles */
-        .expired-button {
-            border: 2px solid red; /* Red border */
-            animation: running-red-outline 1.5s infinite; /* Running outline animation */
-        }
-
-        @keyframes running-red-outline {
-            0% {
-                box-shadow: 0 0 0 red; /* No shadow */
-            }
-            50% {
-                box-shadow: 0 0 5px red; /* Subtle shadow */
-            }
-            100% {
-                box-shadow: 0 0 0 red; /* No shadow */
-            }
-        }
-
-        /* Glowing orange button styles */
-        .glowing-orange-button {
-            border: 2px solid rgb(255, 145, 0); /* Orange border */
-            animation: running-red-outline 1.5s infinite; /* Running outline animation */
-        }
-
-        /* Search input styles */
-        .search-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: #f8f9fa;
-            border-radius: 50px;
-            padding: 3px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .search-wrapper input {
-            border: none;
-            background: none;
-            outline: none;
-            padding: 8px 10px;
-            font-size: 12px;
-            width: 100%;
-            color: #495057;
-            font-weight: 500;
-            border-radius: 50px;
-        }
-
-        .search-wrapper button {
-            border: none;
-            background: #007bff;
-            color: white;
-            padding: 0 10px;
-            height: 30px;
-            cursor: pointer;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        /* Entry count and date subheader styles */
-        .entry-count, .date-subheader {
-            text-align: center; /* Center the text */
-            font-size: 18px; /* Increase font size */
-            margin: 10px 0; /* Add some margin */
-            color: #333; /* Darker color for better visibility */
-        }
-
-        /* Pagination styles */
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .page-link {
-            padding: 8px 12px;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-decoration: none;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
             color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
-        .page-link.active {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .page-link.disabled {
-            pointer-events: none;
-            color: #ccc;
-        }
-
-        /* Table styles */
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            max-width: 100%;
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-            border-right: 1px solid #e0e0e0;
-        }
-
-        th:last-child, td:last-child {
-            border-right: none;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: 600;
-            color: #2c3e50;
-            text-transform: uppercase;
-            font-size: 0.9em;
-            letter-spacing: 0.5px;
-        }
-
-        tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* Additional styles for the header */
         .header-container {
-            display: flex; /* Use flexbox for alignment */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
-            margin-bottom: 20px; /* Add space below the header */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-
-        .header-top {
-            display: flex; /* Use flexbox for alignment */
-            justify-content: space-between; /* Space logos and title evenly */
-            align-items: center; /* Center items vertically */
-            width: 100%; /* Full width */
-            padding: 10px 0; /* Add padding */
-        }
-
-        /* Logo Styles */
         .logo {
-            max-width: 100px; /* Set a max width for logos */
-            height: auto; /* Maintain aspect ratio */
-            margin: 0 10px; /* Add margin for spacing */
+            max-width: 80px;
+            height: auto;
         }
-
-        /* Header Title */
         .header-title {
-            font-size: 2em; /* Increase font size for the title */
-            color: #2c3e50; /* Set title color */
-            margin: 0; /* Remove margin to center title */
-            text-align: center; /* Center the title */
-            flex-grow: 1; /* Allow title to grow and take available space */
+            font-size: 1.5em;
+            text-align: center;
+            flex-grow: 1;
         }
-
-        /* Button Container */
         .button-container {
-            display: flex; /* Use flexbox for alignment */
-            justify-content: center; /* Center buttons */
-            margin: 20px 0; /* Add margin for spacing */
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
         }
-
-        /* Button Styles */
         .action-button {
             background-color: #3498db;
             color: white;
@@ -211,19 +43,33 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         .action-button:hover {
             background-color: #2980b9;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
-<body class="fade-in">
+<body>
     <div class="header-container">
-        <div class="header-top">
-            <img src="/icons/tlogo.png" alt="Left Logo" class="logo">
-            <img src="/icons/blogo.png" alt="Right Logo" class="logo">
-        </div>
+        <img src="/icons/tlogo.png" alt="Left Logo" class="logo">
         <h1 class="header-title">Number of Registered Programs and TVET Providers</h1>
+        <img src="/icons/blogo.png" alt="Right Logo" class="logo">
     </div>
     
     <div class="button-container">
@@ -232,58 +78,38 @@
         <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
     </div>
 
-    <div class="container">
-        <div class="date-subheader">
-            As of: <span id="currentDate"></span>
-        </div>
-        <div class="search-container">
-            <!-- Removed search functionality -->
-            <!-- <div class="search-wrapper">
-                <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
-                <button id="searchButton" onclick="searchTable()">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div> -->
-        </div>
-        <div class="table-container">
-            <table id="data-table">
-                <thead>
-                    <tr>
-                        <th>Province</th>
-                        <th>WTR</th>
-                        <th>NTR</th>
-                        <th>MTP</th>
-                        <th>CoC</th>
-                        <th><strong>Total</strong></th>
-                        <th>TVIs</th>
-                        <th>Farm School</th>
-                        <th>HEIs</th>
-                        <th>LGU</th>
-                        <th>LUC</th>
-                        <th>SUC</th>
-                        <th>TTI</th>
-                        <th><strong>Total</strong></th>
-                    </tr>
-                </thead>
-                <tbody id="data-body">
-                    <!-- Data will be dynamically populated here -->
-                </tbody>
-            </table>
-        </div>
-        <div class="pagination">
-            <span id="pagination"></span>
-        </div>
+    <div>
+        <p>As of: <span id="currentDate"></span></p>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Province</th>
+                    <th>WTR</th>
+                    <th>NTR</th>
+                    <th>MTP</th>
+                    <th>CoC</th>
+                    <th><strong>Total</strong></th>
+                    <th>TVIs</th>
+                    <th>Farm School</th>
+                    <th>HEIs</th>
+                    <th>LGU</th>
+                    <th>LUC</th>
+                    <th>SUC</th>
+                    <th>TTI</th>
+                    <th><strong>Total</strong></th>
+                </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+        </table>
     </div>
 
     <script>
-        // Function to fetch and display data from data.json
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('data-body');
                 data.forEach(item => {
                     const row = document.createElement('tr');
-
                     row.innerHTML = `
                         <td>${item.Province || ''}</td>
                         <td>${item.WTR || ''}</td>
@@ -300,54 +126,14 @@
                         <td>${item.Public_TTI || ''}</td>
                         <td>${item.Public_Total || ''}</td>
                     `;
-
-                    // Append the row to the table body
                     tableBody.appendChild(row);
                 });
             })
-            .catch(error => {
-                console.error('Error loading the data:', error);
-            });
+            .catch(error => console.error('Error loading the data:', error));
 
-        // Set the current date in the date-subheader with the format "Month Day, Year"
         const currentDateElement = document.getElementById('currentDate');
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const today = new Date().toLocaleDateString(undefined, options);
-        currentDateElement.textContent = today;
-
-        // Add this line to trigger the fade-in effect after the content is loaded
-        window.onload = () => {
-            document.body.classList.add('fade-in');
-        };
-
-        // Search functionality
-        // Removed the following variables and functions:
-        // const entriesPerPage = 200;
-        // let currentPage = 1;
-        // let filteredData = [];
-        // let originalData = [];
-
-        // async function loadData() {
-        //     ...
-        // }
-
-        // function renderTable() {
-        //     ...
-        // }
-
-        // function renderPagination() {
-        //     ...
-        // }
-
-        // function setPage(page) {
-        //     ...
-        // }
-
-        // function searchTable() {
-        //     ...
-        // }
-
-        loadData(); // Keep this line to load data without search
+        currentDateElement.textContent = new Date().toLocaleDateString(undefined, options);
     </script>
 </body>
 </html>
