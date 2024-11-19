@@ -68,6 +68,15 @@
         tbody tr {
             transition: opacity 0.5s ease; /* Smooth transition for table rows */
         }
+
+        /* Add this CSS for smooth transition */
+        tbody {
+            transition: opacity 0.5s ease; /* Smooth transition for table body */
+            opacity: 1; /* Default opacity */
+        }
+        tbody.hidden {
+            opacity: 0; /* Hidden state */
+        }
     </style>
 </head>
 <body class="fade-in">
@@ -167,8 +176,8 @@
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
-        // Fade out the table body before updating
-        tableBody.style.opacity = 0; // Start with invisible
+        // Add the hidden class to fade out
+        tableBody.classList.add('hidden'); // Start with invisible
 
         setTimeout(() => {
             tableBody.innerHTML = paginatedData.map(row => {
@@ -199,8 +208,8 @@
                 `;
             }).join("");
 
-            // Fade in the table body after updating
-            tableBody.style.opacity = 1; // Make it visible again
+            // Remove the hidden class to fade in
+            tableBody.classList.remove('hidden'); // Make it visible again
         }, 100); // Delay to allow fade out effect
         
         renderPagination();
