@@ -241,20 +241,18 @@
     }
 
     function searchTable() {
-        clearTimeout(debounceTimeout); // Clear the previous timeout
-        document.getElementById("loadingMessage").style.display = 'block'; // Show loading message
-        debounceTimeout = setTimeout(() => { // Set a new timeout
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            filteredData = originalData.filter(row =>
-                [row.last_name, row.first_name, row.middle_initial, row.extension, 
-                 row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
-                 formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
-                .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-            );
-            currentPage = 1; 
-            renderTable();
-            document.getElementById("loadingMessage").style.display = 'none'; // Hide loading message
-        }, 300); // Adjust the delay as needed (300ms in this case)
+        // clearTimeout(debounceTimeout); // Remove debounce timeout
+        // document.getElementById("loadingMessage").style.display = 'block'; // Remove loading message
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+        filteredData = originalData.filter(row =>
+            [row.last_name, row.first_name, row.middle_initial, row.extension, 
+             row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
+             formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
+            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
+        );
+        currentPage = 1; 
+        renderTable();
+        // document.getElementById("loadingMessage").style.display = 'none'; // Remove loading message
     }
 
     loadData();
