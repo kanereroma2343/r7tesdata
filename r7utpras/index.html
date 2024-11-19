@@ -62,14 +62,17 @@
             transform: translateY(-2px);
         }
 
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
         }
 
         th, td {
@@ -110,6 +113,27 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.5em;
+            }
+
+            .button-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .action-button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -127,27 +151,29 @@
 
     <div>
         <p>As of: <span id="currentDate"></span></p>
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Province</th>
-                    <th>WTR</th>
-                    <th>NTR</th>
-                    <th>MTP</th>
-                    <th>CoC</th>
-                    <th><strong>Total</strong></th>
-                    <th>TVIs</th>
-                    <th>Farm School</th>
-                    <th>HEIs</th>
-                    <th>LGU</th>
-                    <th>LUC</th>
-                    <th>SUC</th>
-                    <th>TTI</th>
-                    <th><strong>Total</strong></th>
-                </tr>
-            </thead>
-            <tbody id="data-body"></tbody>
-        </table>
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Province</th>
+                        <th>WTR</th>
+                        <th>NTR</th>
+                        <th>MTP</th>
+                        <th>CoC</th>
+                        <th><strong>Total</strong></th>
+                        <th>TVIs</th>
+                        <th>Farm School</th>
+                        <th>HEIs</th>
+                        <th>LGU</th>
+                        <th>LUC</th>
+                        <th>SUC</th>
+                        <th>TTI</th>
+                        <th><strong>Total</strong></th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <footer>
