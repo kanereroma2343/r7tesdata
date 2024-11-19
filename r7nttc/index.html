@@ -241,8 +241,8 @@
     }
 
     function searchTable() {
-        // clearTimeout(debounceTimeout); // Remove debounce timeout
-        // document.getElementById("loadingMessage").style.display = 'block'; // Remove loading message
+        // clearTimeout(debounceTimeout); // Removed debounce timeout
+        // document.getElementById("loadingMessage").style.display = 'block'; // Removed loading message
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
             [row.last_name, row.first_name, row.middle_initial, row.extension, 
@@ -252,7 +252,7 @@
         );
         currentPage = 1; 
         renderTable();
-        // document.getElementById("loadingMessage").style.display = 'none'; // Remove loading message
+        // document.getElementById("loadingMessage").style.display = 'none'; // Removed loading message
     }
 
     loadData();
