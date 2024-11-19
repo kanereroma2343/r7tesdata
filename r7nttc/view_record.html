@@ -72,6 +72,16 @@
             background-color: #3399ff;
             text-decoration: none;
         }
+        .section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .section h3 {
+            margin-bottom: 1rem;
+            color: #4da6ff;
+        }
     </style>
 </head>
 <body>
@@ -108,36 +118,50 @@
                     <a href="#" class="btn" id="backToList">&larr; Back to Trainer List</a>
                     <h2>${trainer.first_name} ${trainer.last_name}</h2>
                     <div>
-                        <h3>Personal Information</h3>
-                        <div class="grid">
-                            ${createInfoItem('Last Name', trainer.last_name)}
-                            ${createInfoItem('First Name', trainer.first_name)}
-                            ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                            ${createInfoItem('Extension', trainer.extension)}
-                            ${createInfoItem('Birthday', trainer.birthday)}
-                            ${createInfoItem('Sex', trainer.sex)}
-                            ${createInfoItem('Address', trainer.address)}
-                            ${createInfoItem('Training Institution', trainer.training_institution)}
-                            ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
-                            ${createInfoItem('Contact Number', trainer.contact_number)}
-                            ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
-                            ${createInfoItem('Training Hours', trainer.training_hours)}
-                            ${createInfoItem('Years of Experience', trainer.years_of_experience)}
-                            ${createInfoItem('Sector', trainer.sector)}
-                            ${createInfoItem('Qualification', trainer.qualification)}
-                            ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                            ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                            ${createInfoItem('NC Validity', trainer.nc_validity)}
-                            ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                            ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                            ${createInfoItem('TM Validity', trainer.tm_validity)}
-                            ${createInfoItem('Assessor 1', trainer.assessor1)}
-                            ${createInfoItem('Assessor 2', trainer.assessor2)}
-                            ${createInfoItem('Assessor 3', trainer.assessor3)}
-                            ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
-                            ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                            ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                            ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                        <div class="section">
+                            <h3>Personal Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('Last Name', trainer.last_name)}
+                                ${createInfoItem('First Name', trainer.first_name)}
+                                ${createInfoItem('Middle Initial', trainer.middle_initial)}
+                                ${createInfoItem('Extension', trainer.extension)}
+                                ${createInfoItem('Birthday', trainer.birthday)}
+                                ${createInfoItem('Sex', trainer.sex)}
+                                ${createInfoItem('Address', trainer.address)}
+                                ${createInfoItem('Training Institution', trainer.training_institution)}
+                                ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
+                                ${createInfoItem('Contact Number', trainer.contact_number)}
+                                ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
+                                ${createInfoItem('Training Hours', trainer.training_hours)}
+                                ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                                ${createInfoItem('Sector', trainer.sector)}
+                                ${createInfoItem('Qualification', trainer.qualification)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
+                                ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
+                                ${createInfoItem('NC Validity', trainer.nc_validity)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>TM Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
+                                ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
+                                ${createInfoItem('TM Validity', trainer.tm_validity)}
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h3>NTTC Information</h3>
+                            <div class="grid">
+                                ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
+                                ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
+                                ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
+                                ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                            </div>
                         </div>
                     </div>
                 `;
