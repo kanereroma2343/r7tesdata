@@ -219,7 +219,15 @@
     function searchTable() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
-            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
+            row.last_name && row.last_name.toLowerCase().includes(searchTerm) ||
+            row.first_name && row.first_name.toLowerCase().includes(searchTerm) ||
+            row.middle_initial && row.middle_initial.toLowerCase().includes(searchTerm) ||
+            row.extension && row.extension.toLowerCase().includes(searchTerm) ||
+            row.qualification && row.qualification.toLowerCase().includes(searchTerm) ||
+            row.nttc_cert_number && row.nttc_cert_number.toLowerCase().includes(searchTerm) ||
+            row.nttc_serial_number && row.nttc_serial_number.toLowerCase().includes(searchTerm) ||
+            formatDate(row.nttc_date_issuance).toLowerCase().includes(searchTerm) ||
+            formatDate(row.nttc_validity).toLowerCase().includes(searchTerm)
         );
         currentPage = 1; 
         renderTable();
