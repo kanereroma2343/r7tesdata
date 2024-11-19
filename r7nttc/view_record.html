@@ -132,6 +132,9 @@
         async function fetchTrainerData() {
             try {
                 const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 const trainer = await response.json();
                 displayProfile(trainer);
             } catch (error) {
@@ -149,6 +152,7 @@
         }
 
         function displayProfile(trainer) {
+            console.log(trainer);
             document.getElementById('personal-grid').innerHTML = `
                 ${createInfoItem('Last Name', trainer.last_name)}
                 ${createInfoItem('First Name', trainer.first_name)}
