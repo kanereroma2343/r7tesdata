@@ -290,6 +290,10 @@
                             ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
                         </div>
                     </div>
+                    <div id="pagination" class="pagination">
+                        <button id="prevButton" class="pagination-button" disabled>Previous</button>
+                        <button id="nextButton" class="pagination-button">Next</button>
+                    </div>
                 </div>
             `;
 
@@ -346,6 +350,32 @@
             } finally {
                 loader.style.display = 'none';
             }
+            let currentIndex = 0; // Track the current trainer index
+
+            function renderCurrentTrainer() {
+                const trainer = trainersData[currentIndex];
+                if (trainer) {
+                    renderTrainerProfile(trainer);
+                    document.getElementById('prevButton').disabled = currentIndex === 0;
+                    document.getElementById('nextButton').disabled = currentIndex === trainersData.length - 1;
+                }
+            }
+
+            document.getElementById('prevButton').addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    renderCurrentTrainer();
+                }
+            });
+
+            document.getElementById('nextButton').addEventListener('click', () => {
+                if (currentIndex < trainersData.length - 1) {
+                    currentIndex++;
+                    renderCurrentTrainer();
+                }
+            });
+
+            renderCurrentTrainer(); // Initial render
         }
 
         initialize();
