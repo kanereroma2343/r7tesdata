@@ -6,18 +6,20 @@
     <title>Trainer Directory</title>
     <style>
         :root {
-            --primary: #3b82f6;
+            --primary: #4a90e2;
             --primary-foreground: #ffffff;
-            --muted: #6b7280;
-            --muted-foreground: #9ca3af;
+            --secondary: #f0f4f8;
+            --muted: #718096;
+            --muted-foreground: #4a5568;
             --card: #ffffff;
-            --card-foreground: #000000;
+            --card-foreground: #2d3748;
+            --background: #f7fafc;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #000000, #000033, #000066);
+            background-color: var(--background);
             color: var(--card-foreground);
             min-height: 100vh;
             display: flex;
@@ -26,37 +28,47 @@
         }
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 2rem;
-            background: linear-gradient(135deg, var(--card) 0%, var(--muted) 100%);
+            background-color: var(--card);
             border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            padding: 2rem;
+            position: relative;
         }
         .card-title {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
             margin: 0;
+            margin-bottom: 0.5rem;
+        }
+        .card-subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
         }
         .back-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             display: inline-flex;
             align-items: center;
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
             font-weight: 500;
-            color: var(--muted-foreground);
-            background-color: transparent;
-            border: 1px solid #e5e7eb;
+            color: var(--primary-foreground);
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
             border-radius: 0.375rem;
             cursor: pointer;
             transition: background-color 0.2s;
         }
         .back-button:hover {
-            background-color: #f3f4f6;
+            background-color: rgba(255, 255, 255, 0.3);
         }
         .back-button svg {
             width: 1rem;
@@ -64,30 +76,31 @@
             margin-right: 0.5rem;
         }
         .card-content {
-            padding: 1.5rem;
+            padding: 0;
         }
         .tabs {
             display: flex;
-            border-bottom: 1px solid #e5e7eb;
+            background-color: var(--secondary);
+            padding: 0 1rem;
         }
         .tab {
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--muted-foreground);
             background-color: transparent;
             border: none;
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+            transition: color 0.2s, border-color 0.2s;
+            border-bottom: 2px solid transparent;
         }
         .tab.active {
             color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-            background-color: rgba(59, 130, 246, 0.1);
+            border-bottom-color: var(--primary);
         }
         .tab-content {
             display: none;
-            padding: 1.5rem 0;
+            padding: 2rem;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -98,7 +111,7 @@
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
         }
         .info-item {
             display: flex;
@@ -106,13 +119,15 @@
         }
         .info-label {
             font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--primary-foreground);
-            text-shadow: 1px 1px 0px #000000;
+            font-weight: 600;
+            color: var(--muted);
             margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .info-value {
-            font-size: 0.875rem;
+            font-size: 1rem;
+            color: var(--card-foreground);
         }
         .loader {
             display: flex;
@@ -125,19 +140,32 @@
             color: var(--primary);
         }
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                border-radius: 0.5rem;
+            }
+            .card-header {
+                padding: 1.5rem;
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
             .tabs {
                 flex-wrap: wrap;
             }
             .tab {
                 flex: 1 0 50%;
+                text-align: center;
+            }
+            .tab-content {
+                padding: 1.5rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -186,12 +214,13 @@
             app.innerHTML = `
                 <div class="card-header">
                     <h1 class="card-title">${trainer.first_name} ${trainer.last_name}</h1>
+                    <p class="card-subtitle">${trainer.training_institution}</p>
                     <button class="back-button" onclick="window.history.back()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
-                        Back to List
+                        Back
                     </button>
                 </div>
                 <div class="card-content">
@@ -203,19 +232,16 @@
                     </div>
                     <div id="personal" class="tab-content active">
                         <div class="info-grid">
-                            ${createInfoItem('Last Name', trainer.last_name)}
-                            ${createInfoItem('First Name', trainer.first_name)}
-                            ${createInfoItem('Middle Initial', trainer.middle_initial)}
-                            ${createInfoItem('Extension', trainer.extension)}
+                            ${createInfoItem('Full Name', `${trainer.first_name} ${trainer.middle_initial || ''} ${trainer.last_name} ${trainer.extension || ''}`)}
                             ${createInfoItem('Birthday', trainer.birthday)}
                             ${createInfoItem('Sex', trainer.sex)}
                             ${createInfoItem('Address', trainer.address)}
-                            ${createInfoItem('Training Institution', trainer.training_institution)}
-                            ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
                             ${createInfoItem('Contact Number', trainer.contact_number)}
                             ${createInfoItem('Educational Attainment', trainer.educational_attainment)}
                             ${createInfoItem('Training Hours', trainer.training_hours)}
                             ${createInfoItem('Years of Experience', trainer.years_of_experience)}
+                            ${createInfoItem('Training Institution', trainer.training_institution)}
+                            ${createInfoItem('Type of Training Institution', trainer.type_training_institution)}
                         </div>
                     </div>
                     <div id="nc" class="tab-content">
