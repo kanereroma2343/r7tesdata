@@ -15,7 +15,7 @@
         <h1 class="header-title">Due for Renewal NTTC Certificates</h1>
         <img src="./icons/blogo.png" alt="Right Logo" class="logo">
     </div>
-    <div class="button-container">
+    <div class="button-c`ontainer">
         <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button">Recently Expired</button> 
@@ -55,6 +55,8 @@
                 <th>Control Number</th>
                 <th>Date Issuance</th>
                 <th>Validity</th>
+                <th>E-mail</th>
+                <th>Phone</th>
             </tr>
         </thead>
         <tbody id="data-table-body">
@@ -138,6 +140,8 @@
                     <td>${row.nttc_serial_number || ''}</td>
                     <td>${formatDate(row.nttc_date_issuance)}</td>
                     <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                    <td>${row.email || ''}</td>
+                    <td>${row.contact_number || ''}</td>
                 </tr>
             `;
         }).join("");
