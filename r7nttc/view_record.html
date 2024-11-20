@@ -78,18 +78,22 @@
             background-color: transparent;
             border: none;
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
+            transition: color 0.2s, border-color 0.2s, background-color 0.2s;
         }
         .tab.active {
             color: var(--primary);
             border-bottom: 2px solid var(--primary);
+            background-color: rgba(59, 130, 246, 0.1);
         }
         .tab-content {
             display: none;
             padding: 1.5rem 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .tab-content.active {
             display: block;
+            opacity: 1;
         }
         .info-grid {
             display: grid;
