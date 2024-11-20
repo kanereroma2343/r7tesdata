@@ -16,7 +16,7 @@
         <img src="./icons/blogo.png" alt="Right Logo" class="logo">
     </div>
     <div class="button-container">
-        <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
+        <button onclick="window.location.href='index.html'" class="action-button">Home</button>
         <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
         <button onclick="window.location.href='recently-expired.html'" class="action-button">Recently Expired</button> 
         <button onclick="window.location.href='dfr.html'"class="action-button">Due For Renewal</button>
@@ -177,7 +177,11 @@
     function searchTable() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         filteredData = originalData.filter(row =>
-            Object.values(row).some(value => value && value.toString().toLowerCase().includes(searchTerm))
+            [row.province, row.last_name, row.first_name, row.middle_initial, 
+             row.extension, row.qualification, row.nttc_cert_number, 
+             row.nttc_serial_number, row.nttc_date_issuance, 
+             row.nttc_validity, row.email, row.contact_number]
+            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
         );
         currentPage = 1; 
         renderTable();
