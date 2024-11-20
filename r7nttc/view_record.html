@@ -19,7 +19,9 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background);
+            background: url('/icons/office.jpg') no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(5px);
             color: var(--card-foreground);
             min-height: 100vh;
             display: flex;
@@ -36,7 +38,7 @@
             overflow: hidden;
         }
         .card-header {
-            background-color: var(--primary);
+            background: linear-gradient(to right, black, #4a90e2);
             color: var(--primary-foreground);
             padding: 2rem;
             position: relative;
@@ -46,6 +48,7 @@
             font-weight: 700;
             margin: 0;
             margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 0 black;
         }
         .card-subtitle {
             font-size: 1rem;
