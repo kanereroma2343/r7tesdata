@@ -115,6 +115,12 @@
                     <tbody id="qualificationTallyBody">
                         <!-- Qualifications tally data will be populated here -->
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td id="totalQualificationCount">0</td> <!-- Total count cell -->
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -165,9 +171,12 @@
         // Populate qualifications tally table
         const qualificationTallyBody = document.getElementById('qualificationTallyBody');
         qualificationTallyBody.innerHTML = ""; // Clear previous content
+        let totalQualificationCount = 0; // Initialize total count for qualifications
         for (const [qualification, count] of Object.entries(qualificationCount)) {
             qualificationTallyBody.innerHTML += `<tr><td>${qualification}</td><td>${count}</td></tr>`;
+            totalQualificationCount += count; // Add to total count for qualifications
         }
+        document.getElementById('totalQualificationCount').textContent = totalQualificationCount; // Update total count in the footer
     } catch (error) {
         console.error('Failed to load tally data:', error);
     }
