@@ -61,6 +61,7 @@
     <div class="message" id="message"></div>
   </div>
 
+  <script src="userdata.js"></script>
   <script>
     const form = document.getElementById('loginForm');
     const message = document.getElementById('message');
@@ -71,23 +72,15 @@
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
-      const response = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
+      if (userdata[username] && userdata[username].password === password) {
         message.style.color = 'green';
         message.textContent = 'Login successful!';
-        // Redirect or do something after login
         setTimeout(() => {
-          window.location.href = '/welcome.html'; // Replace with your dashboard page
+          window.location.href = '/index.html';
         }, 1500);
       } else {
         message.style.color = 'red';
-        message.textContent = data.message;
+        message.textContent = 'Invalid credentials';
       }
     });
   </script>
