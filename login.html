@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
   <style>
+    @keyframes rgb-animation {
+      0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 0, 255, 0.5);
+      }
+      25% {
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 0, 255, 0.5), 0 0 20px rgba(255, 0, 0, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(0, 0, 255, 0.5), 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5);
+      }
+      75% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 0, 255, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 0, 255, 0.5);
+      }
+    }
+
     body {
       font-family: Arial, sans-serif;
       display: flex;
@@ -19,7 +37,7 @@
       background: rgba(0, 0, 0, 0.8);
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 0, 255, 0.5);
+      animation: rgb-animation 3s infinite alternate;
       width: 300px;
       text-align: center;
     }
@@ -41,9 +59,11 @@
       border-radius: 5px;
       width: 100%;
       cursor: pointer;
+      transition: box-shadow 0.3s ease;
     }
     .login-container button:hover {
       background: #0056b3;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.7), 0 0 20px rgba(0, 123, 255, 0.5);
     }
     .message {
       margin-top: 10px;
