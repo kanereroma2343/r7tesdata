@@ -8,89 +8,112 @@
   <style>
     @keyframes rgb-animation {
       0% {
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 0, 255, 0.8);
-      }
-      25% {
-        box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 0, 255, 0.8), 0 0 20px rgba(255, 0, 0, 0.8);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6), 0 0 20px rgba(0, 255, 0, 0.6), 0 0 20px rgba(0, 0, 255, 0.6);
       }
       50% {
-        box-shadow: 0 0 20px rgba(0, 0, 255, 0.8), 0 0 20px rgba(255, 0, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
-      }
-      75% {
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 0, 255, 0.8);
+        box-shadow: 0 0 20px rgba(0, 0, 255, 0.6), 0 0 20px rgba(255, 0, 0, 0.6), 0 0 20px rgba(0, 255, 0, 0.6);
       }
       100% {
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 0, 255, 0.8);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6), 0 0 20px rgba(0, 255, 0, 0.6), 0 0 20px rgba(0, 0, 255, 0.6);
       }
     }
-
+  
     body {
-      font-family: Arial, sans-serif, Ethnocentric;
+      font-family: 'Arial', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: linear-gradient(to right, #0f2027, #78adbe, #00249b);
-      color: rgb(255, 255, 255);
+      background: linear-gradient(to right, #0f2027, #2c5364, #00249b);
+      color: #ffffff;
     }
+  
     .login-container {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.85);
       padding: 20px;
       border-radius: 10px;
-      animation: rgb-animation 3s infinite alternate;
-      width: 300px;
+      animation: rgb-animation 4s infinite alternate;
+      width: 320px;
       text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
+  
     .login-container h1 {
       margin-bottom: 20px;
       font-weight: bold;
-      color: black;
+      color: #333333;
       font-size: 24px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       font-family: 'Ethnocentric', sans-serif;
     }
+  
     .login-container input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
+      width: 95%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 14px;
     }
+  
     .login-container button {
       background: #007BFF;
-      color: white;
-      padding: 10px;
+      color: #ffffff;
+      padding: 12px;
       border: none;
       border-radius: 5px;
-      width: 100%;
+      width: 95%;
       cursor: pointer;
       transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
       font-size: 16px;
       font-weight: bold;
-      margin: 10px 0;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+  
     .login-container button:hover {
       background: #0056b3;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.7), 0 0 20px rgba(0, 123, 255, 0.5);
-      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+      transform: translateY(-2px);
     }
+  
     .message {
-      margin-top: 10px;
+      margin-top: 15px;
+      font-size: 14px;
     }
+  
     .logo {
-      width: 65px;
+      width: 70px;
       height: auto;
       margin-bottom: 20px;
     }
+  
     .login-container .small-button {
-      width: 48%;
+      width: 95%;
       font-size: 14px;
-      margin: 10px 1%;
+      margin-top: 8px;
+      padding: 10px;
+      background: #6c757d;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+  
+    .login-container .small-button:hover {
+      background: #5a6268;
+    }
+  
+    @media (max-width: 768px) {
+      .login-container {
+        width: 90%;
+      }
     }
   </style>
+  
 </head>
 <body>
   <div class="login-container">
