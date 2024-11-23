@@ -149,31 +149,83 @@
         width: 100%;
       }
     }
+  
+    .flip-container {
+      perspective: 1000px;
+    }
+  
+    .flipper {
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+  
+    .flip-container.flip .flipper {
+      transform: rotateY(180deg);
+    }
+  
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden;
+    }
+  
+    .back {
+      transform: rotateY(180deg);
+    }
   </style>
   
 </head>
 <body>
-  <div class="login-container">
-    <img src="icons/t7logo.png" alt="Logo" class="logo" />
-    <h1>Admin Login</h1>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Username" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-      <a href="createacc.html" class="small-button">Create Account</a>
-      <a href="forgotpass.html" class="small-button">Forgot Password?</a>
-    </form>
-    <div class="message" id="message"></div>
+  <div class="login-container flip-container" id="flipContainer">
+    <div class="flipper">
+      <div class="front">
+        <img src="icons/t7logo.png" alt="Logo" class="logo" />
+        <h1>Admin Login</h1>
+        <form id="loginForm">
+          <input type="text" id="username" placeholder="Username" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <button type="submit">Login</button>
+          <a href="#" class="small-button" id="createAccountBtn">Create Account</a>
+          <a href="forgotpass.html" class="small-button">Forgot Password?</a>
+        </form>
+        <div class="message" id="message"></div>
+      </div>
+      <div class="back">
+        <h1>Create Account</h1>
+        <form id="createAccountForm">
+          <input type="text" id="newUsername" placeholder="Username" required />
+          <input type="password" id="newPassword" placeholder="Password" required />
+          <button type="submit">Create Account</button>
+          <a href="#" class="small-button" id="backToLoginBtn">Back to Login</a>
+        </form>
+        <div class="message" id="createMessage"></div>
+      </div>
+    </div>
   </div>
 
   <script src="userdata.js"></script>
   <script>
     const form = document.getElementById('loginForm');
+    const createAccountForm = document.getElementById('createAccountForm');
+    const flipContainer = document.getElementById('flipContainer');
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    const backToLoginBtn = document.getElementById('backToLoginBtn');
     const message = document.getElementById('message');
+    const createMessage = document.getElementById('createMessage');
+
+    createAccountBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      flipContainer.classList.toggle('flip');
+    });
+
+    backToLoginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      flipContainer.classList.toggle('flip');
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
@@ -187,6 +239,16 @@
         message.style.color = 'red';
         message.textContent = 'Invalid credentials';
       }
+    });
+
+    createAccountForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newUsername = document.getElementById('newUsername').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      // Here you would typically handle account creation logic
+      createMessage.style.color = 'green';
+      createMessage.textContent = 'Account created successfully!';
     });
   </script>
 </body>
