@@ -170,32 +170,30 @@
   
 </head>
 <body>
-  <div class="login-container flip-container" id="flipContainer">
-    <div class="flipper">
-      <div class="front">
-        <img src="icons/t7logo.png" alt="Logo" class="logo" />
-        <h1>Admin Login</h1>
-        <form id="loginForm">
+  <form id="combinedForm">
+    <div class="login-container flip-container" id="flipContainer">
+      <div class="flipper">
+        <div class="front">
+          <img src="icons/t7logo.png" alt="Logo" class="logo" />
+          <h1>Admin Login</h1>
           <input type="text" id="username" placeholder="Username" required />
           <input type="password" id="password" placeholder="Password" required />
-          <button type="submit">Login</button>
+          <button type="submit" id="loginBtn">Login</button>
           <a href="#" class="small-button" id="createAccountBtn">Create Account</a>
           <a href="forgotpass.html" class="small-button">Forgot Password?</a>
-        </form>
-        <div class="message" id="message"></div>
-      </div>
-      <div class="back">
-        <h1>Create Account</h1>
-        <form id="createAccountForm">
+        </div>
+        <div class="back">
+          <h1>Create Account</h1>
           <input type="text" id="newUsername" placeholder="Username" required />
           <input type="password" id="newPassword" placeholder="Password" required />
-          <button type="submit">Create Account</button>
+          <button type="submit" id="createAccountBtn">Create Account</button>
           <a href="#" class="small-button" id="backToLoginBtn">Back to Login</a>
-        </form>
-        <div class="message" id="createMessage"></div>
+        </div>
       </div>
     </div>
-  </div>
+    <div class="message" id="message"></div>
+    <div class="message" id="createMessage"></div>
+  </form>
 
   <script src="userdata.js"></script>
   <script>
