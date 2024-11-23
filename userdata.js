@@ -1,7 +1,9 @@
-[
-    {
-      "username": "admin",
-      "password": "admin"
-    }
-  ]
+const userdata = {
+    testuser: {
+      password: 'password123',
+    },
+    admin: {
+      password: 'admin123',
+    },
+  };
   
