@@ -29,37 +29,62 @@
       color: #ffffff;
     }
   
-    .login-container a {
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #ffffff;
-  background: linear-gradient(135deg, #007BFF, #0056b3);
-  width: 95%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.login-container a:hover {
-  background: linear-gradient(135deg, #0056b3, #003d80);
-  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-.login-container .small-button {
+    .login-container {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+      border-radius: 10px;
+      animation: rgb-animation 4s infinite alternate;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  
+    .login-container h1 {
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #333333;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'Ethnocentric', sans-serif;
+    }
+  
+    .login-container input {
+      width: 95%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  
+    .login-container button {
+      background: linear-gradient(135deg, #007BFF, #0056b3);
+      color: #ffffff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      width: 95%;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+  
+    .login-container button:hover {
+      background: #0056b3;
+      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+      transform: translateY(-2px);
+    }
+    .login-container .small-button {
   background: linear-gradient(135deg, #6c757d, #5a6268);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
 }
-
 .login-container .small-button:hover {
   background: linear-gradient(135deg, #5a6268, #444b50);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
