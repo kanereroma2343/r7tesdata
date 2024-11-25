@@ -203,14 +203,11 @@
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
 
-            <label for="extension">Extension:</label>
-            <input type="text" id="extension" name="extension" placeholder="Enter name extension (if any)">
-
             <label for="middleInitial">Middle Initial:</label>
             <input type="text" id="middleInitial" name="middleInitial" maxlength="1" placeholder="Enter middle initial">
 
             <label for="dateOfBirth">Date of Birth:</label>
-            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+            <input type="text" id="dateOfBirth" name="dateOfBirth" required placeholder="Enter your date of birth (e.g., June 05, 1999 or 06/05/1999)">
 
             <button type="submit" aria-label="Submit form">Check Status</button>
         </form>
@@ -325,42 +322,29 @@
             modalSlides.innerHTML = ''; // Clear previous results
 
             results.forEach(result => {
-                // Determine status based on validity
-                const validityDate = new Date(result.nttc_validity);
-                const currentDate = new Date();
-                const threeMonthsFromNow = new Date();
-                threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
-
-                let statusText = 'Active';
-                let statusColor = 'green';
-
-                if (validityDate < currentDate) {
-                    statusText = 'Expired';
-                    statusColor = 'red';
-                } else if (validityDate <= threeMonthsFromNow) {
-                    statusText = 'Expiring Soon';
-                    statusColor = 'orange';
-                }
-
+                // Display all relevant information from the result
                 modalSlides.innerHTML += `
                     <div class="modal-slide">
                         <p><strong>Last Name:</strong> ${result.last_name}</p>
                         <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Middle Initial:</strong> ${result.middle_initial || 'N/A'}</p>
                         <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
+                        <p><strong>Birthday:</strong> ${result.birthday}</p>
+                        <p><strong>Sex:</strong> ${result.sex}</p>
+                        <p><strong>Address:</strong> ${result.address}</p>
+                        <p><strong>Training Institution:</strong> ${result.training_institution}</p>
                         <p><strong>Qualification:</strong> ${result.qualification}</p>
                         <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
                         <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
-                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
+                        <p><strong>Email:</strong> ${result.email || 'N/A'}</p>
+                        <p><strong>Contact Number:</strong> ${result.contact_number || 'N/A'}</p>
+                        <p><strong>Years of Experience:</strong> ${result.years_of_experience || 'N/A'}</p>
+                        <p><strong>Assessors:</strong> ${result.assessor1}, ${result.assessor2}, ${result.assessor3}</p>
                     </div>`;
             });
 
             // Show the modal
             document.getElementById('resultModal').style.display = 'block';
-            currentSlide = 0;
-            showSlide(currentSlide);
         }
 
         // Modal slide functionality
