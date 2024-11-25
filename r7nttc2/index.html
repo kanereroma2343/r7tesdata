@@ -58,24 +58,10 @@
         button:hover {
             background-color: #0000CC;
         }
-        .result {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            text-align: center;
-        }
-        .result h2 {
-            margin: 0;
-            color: #0000FF;
-        }
-        .result p {
-            color: white;
-        }
         .loader {
             display: none;
-            margin-top: 1rem;
             text-align: center;
+            margin-top: 1rem;
         }
         .loader span {
             display: inline-block;
@@ -86,319 +72,136 @@
             border-radius: 50%;
             animation: bounce 1s infinite;
         }
-        .loader span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .loader span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .loader span:nth-child(2) { animation-delay: 0.2s; }
+        .loader span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-     /* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    animation: fade-in 0.5s ease-out;
-}
-
-/* Modal Content */
-.modal-content {
-    background: linear-gradient(135deg, #ffffff, #f4f4f4);
-    margin: auto;
-    top: 50%;
-    transform: translateY(-50%);
-    position: relative;
-    padding: 30px;
-    border: none;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 10px;
-    color: #333;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    animation: slide-in 0.6s ease-out;
-}
-
-/* Close Button */
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #666;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close:hover {
-    color: #ff4d4d;
-}
-
-/* Buttons */
-.slide-button {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease-in-out;
-    margin: 10px 5px;
-}
-
-.slide-button:hover {
-    background: linear-gradient(90deg, #0056b3, #003d80);
-}
-
-/* Fade-in Animation */
-@keyframes fade-in {
-    from {
-        background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-}
-
-/* Slide-in Animation */
-@keyframes slide-in {
-    from {
-        transform: translateY(-50%) translateY(30%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(-50%) translateY(0%);
-        opacity: 1;
-    }
-}
-
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            margin: auto;
+            position: relative;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            color: #333;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .close:hover { color: #ff4d4d; }
+        .modal-slide { margin-bottom: 1rem; }
+        .status { font-weight: bold; }
+        .status.active { color: green; }
+        .status.expired { color: red; }
+        .status.expiring { color: orange; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div style="text-align: center;">
-            <img src="/icons/t7logo.png" alt="Logo" style="max-width: 30%; height: auto; margin-bottom: .5rem;">
-        </div>
-        <h1>TESDA Region VII Online NTTC Status System</h1>
-        <form id="nttcForm" aria-labelledby="Online NTTC Status System">
+        <h1>TESDA Region VII NTTC Status</h1>
+        <form id="nttcForm">
             <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
-
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
-
             <label for="extension">Extension:</label>
             <input type="text" id="extension" name="extension" placeholder="Enter name extension (if any)">
-
             <label for="middleInitial">Middle Initial:</label>
             <input type="text" id="middleInitial" name="middleInitial" maxlength="1" placeholder="Enter middle initial">
-
             <label for="dateOfBirth">Date of Birth:</label>
             <input type="date" id="dateOfBirth" name="dateOfBirth" required>
-
-            <button type="submit" aria-label="Submit form">Check Status</button>
+            <button type="submit">Check Status</button>
         </form>
-
         <div class="loader" id="loader">
             <span></span><span></span><span></span>
         </div>
-
-        <div class="result" id="result" style="display: none;"></div>
     </div>
-
-    <!-- Modal Structure -->
     <div id="resultModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>NTTC Status</h2>
-            <div class="modal-slides" id="modalSlides"></div>
-            <button id="prevSlide" class="slide-button">❮</button>
-            <button id="nextSlide" class="slide-button">❯</button>
+            <button class="close" id="closeModal">&times;</button>
+            <h2>Search Results</h2>
+            <div id="modalSlides"></div>
         </div>
     </div>
-
     <script>
         const form = document.getElementById('nttcForm');
         const loader = document.getElementById('loader');
-        const resultDiv = document.getElementById('result');
-
-        function parseDate(dateString) {
-            // Try parsing the date in "Month Day, Year" format
-            const monthDayYearFormat = new Date(dateString);
-            if (!isNaN(monthDayYearFormat)) {
-                return monthDayYearFormat.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            }
-
-            // Try parsing the date in "MM/DD/YYYY" format
-            const parts = dateString.split('/');
-            if (parts.length === 3) {
-                const month = parseInt(parts[0], 10) - 1; // Month is 0-indexed
-                const day = parseInt(parts[1], 10);
-                const year = parseInt(parts[2], 10);
-                const dateFromParts = new Date(year, month, day);
-                if (!isNaN(dateFromParts)) {
-                    return dateFromParts.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                }
-            }
-
-            // Return null if parsing fails
-            return null;
-        }
+        const modal = document.getElementById('resultModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalSlides = document.getElementById('modalSlides');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            // Show loader
             loader.style.display = 'block';
-            resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const firstNameInput = document.getElementById('firstName').value.trim().toUpperCase();
+            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
             const middleInitial = document.getElementById('middleInitial').value.trim().toUpperCase();
-            const dateOfBirthInput = document.getElementById('dateOfBirth').value; // Get raw input
-            const dateOfBirth = parseDate(dateOfBirthInput); // Parse the date
-
-            console.log('Searching for:', { lastName, firstNameInput, middleInitial, dateOfBirth });
+            const dateOfBirth = document.getElementById('dateOfBirth').value;
 
             try {
                 const response = await fetch('/r7nttc/data.json');
-                if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
-
+                if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
-                console.log('Fetched data:', data);
 
-                // Split the first name input into an array of names
-                const firstNameArray = firstNameInput.split(' ');
+                const results = data.filter(item =>
+                    item.last_name.toUpperCase() === lastName &&
+                    item.first_name.toUpperCase().includes(firstName) &&
+                    (!middleInitial || item.middle_initial.toUpperCase() === middleInitial) &&
+                    item.birthday === dateOfBirth
+                );
 
-                const results = data.filter(entry => {
-                    const entryFirstName = entry.first_name.toUpperCase();
-                    const entryMiddleInitial = entry.middle_initial ? entry.middle_initial.toUpperCase() : '';
-
-                    return (
-                        entry.last_name.toUpperCase() === lastName &&
-                        firstNameArray.every(name => entryFirstName.includes(name)) &&
-                        (middleInitial === '' || entryMiddleInitial === middleInitial) && // Check middle initial if provided
-                        entry.birthday === dateOfBirth
-                    );
-                });
-
-                if (results.length > 0) {
-                    showModal(results);
-                } else {
-                    resultDiv.innerHTML = '<p>No matching records found.</p>';
-                    resultDiv.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-            } finally {
                 loader.style.display = 'none';
+                modalSlides.innerHTML = results.map(item => `
+                    <div class="modal-slide">
+                        <p><strong>Name:</strong> ${item.first_name} ${item.last_name}</p>
+                        <p><strong>Certificate:</strong> ${item.nttc_cert_number || 'N/A'}</p>
+                        <p class="status ${getStatus(item.nttc_validity).class}"><strong>Status:</strong> ${getStatus(item.nttc_validity).text}</p>
+                    </div>`).join('');
+
+                if (!results.length) {
+                    modalSlides.innerHTML = '<p>No records found.</p>';
+                }
+                modal.style.display = 'block';
+            } catch (error) {
+                loader.style.display = 'none';
+                alert('Error fetching data');
             }
         });
 
-        function showModal(results) {
-            const modalSlides = document.getElementById('modalSlides');
-            modalSlides.innerHTML = ''; // Clear previous results
+        closeModal.addEventListener('click', () => modal.style.display = 'none');
 
-            results.forEach(result => {
-                // Determine status based on validity
-                const validityDate = new Date(result.nttc_validity);
-                const currentDate = new Date();
-                const threeMonthsFromNow = new Date();
-                threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+        function getStatus(validityDate) {
+            const date = new Date(validityDate);
+            const now = new Date();
+            const soon = new Date();
+            soon.setMonth(now.getMonth() + 3);
 
-                let statusText = 'Active';
-                let statusColor = 'green';
-
-                if (validityDate < currentDate) {
-                    statusText = 'Expired';
-                    statusColor = 'red';
-                } else if (validityDate <= threeMonthsFromNow) {
-                    statusText = 'Expiring Soon';
-                    statusColor = 'orange';
-                }
-
-                modalSlides.innerHTML += `
-                    <div class="modal-slide">
-                        <p><strong>Last Name:</strong> ${result.last_name}</p>
-                        <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || 'N/A'}</p>
-                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
-                        <p><strong>Qualification:</strong> ${result.qualification || 'N/A'}</p>
-                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
-                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
-                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
-                    </div>`;
-            });
-
-            // Show the modal
-            document.getElementById('resultModal').style.display = 'block';
-            currentSlide = 0;
-            showSlide(currentSlide);
+            if (date < now) return { text: 'Expired', class: 'expired' };
+            if (date <= soon) return { text: 'Expiring Soon', class: 'expiring' };
+            return { text: 'Active', class: 'active' };
         }
-
-        // Modal slide functionality
-        let currentSlide = 0;
-
-        function showSlide(index) {
-            const slides = document.querySelectorAll('.modal-slide');
-            slides.forEach((slide, i) => {
-                slide.style.display = (i === index) ? 'block' : 'none';
-            });
-        }
-
-        document.getElementById('prevSlide').onclick = function() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                showSlide(currentSlide);
-            }
-        };
-
-        document.getElementById('nextSlide').onclick = function() {
-            const slides = document.querySelectorAll('.modal-slide');
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            document.getElementById('resultModal').style.display = 'none';
-        };
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('resultModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
     </script>
 </body>
 </html>
