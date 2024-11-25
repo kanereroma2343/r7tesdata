@@ -100,82 +100,91 @@
                 transform: translateY(-10px);
             }
         }
-        /* Modal Styles */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-        .modal-content {
-    background-color: #ffffff;
-    margin: 10% auto;
+     /* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fade-in 0.5s ease-out;
+}
+
+/* Modal Content */
+.modal-content {
+    background: linear-gradient(135deg, #ffffff, #f4f4f4);
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    position: relative;
     padding: 30px;
     border: none;
     width: 90%;
-    max-width: 600px;
-    border-radius: 12px;
-    color: black;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    animation: pop-up 0.4s ease-out;
-    position: relative;
+    max-width: 500px;
+    border-radius: 10px;
+    color: #333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slide-in 0.6s ease-out;
 }
 
+/* Close Button */
 .close {
-    color: #555;
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px;
+    right: 10px;
     font-size: 24px;
     font-weight: bold;
-    border: none;
+    color: #666;
     background: none;
+    border: none;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.close:hover,
-.close:focus {
-    color: #d11a2a;
-    text-decoration: none;
+.close:hover {
+    color: #ff4d4d;
 }
 
-.modal-slide {
-    display: none;
-}
-
+/* Buttons */
 .slide-button {
     background: linear-gradient(90deg, #007bff, #0056b3);
     color: white;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 5px;
     padding: 10px 20px;
-    margin: 5px;
+    cursor: pointer;
     font-size: 16px;
     transition: background 0.3s ease-in-out;
+    margin: 10px 5px;
 }
 
 .slide-button:hover {
     background: linear-gradient(90deg, #0056b3, #003d80);
 }
 
-/* Pop-up Animation */
-@keyframes pop-up {
-    0% {
-        transform: scale(0.5);
+/* Fade-in Animation */
+@keyframes fade-in {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Slide-in Animation */
+@keyframes slide-in {
+    from {
+        transform: translateY(-50%) translateY(30%);
         opacity: 0;
     }
-    80% {
-        transform: scale(1.1);
+    to {
+        transform: translateY(-50%) translateY(0%);
         opacity: 1;
-    }
-    100% {
-        transform: scale(1);
     }
 }
 
