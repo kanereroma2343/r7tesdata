@@ -113,43 +113,72 @@
             background-color: rgba(0, 0, 0, 0.9);
         }
         .modal-content {
-            background-color: #ffffff;
-            margin: 10% auto;
-            padding: 30px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 12px;
-            color: black;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        .close {
-            color: #555;
-            float: right;
-            font-size: 30px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .modal-slide {
-            display: none; 
-        }
-        .slide-button {
-            background-color: #0000FF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            padding: 10px;
-            margin: 5px;
-        }
-        .slide-button:hover {
-            background-color: #0000CC;
-        }
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 30px;
+    border: none;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 12px;
+    color: black;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: pop-up 0.4s ease-out;
+    position: relative;
+}
+
+.close {
+    color: #555;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #d11a2a;
+    text-decoration: none;
+}
+
+.modal-slide {
+    display: none;
+}
+
+.slide-button {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
+}
+
+.slide-button:hover {
+    background: linear-gradient(90deg, #0056b3, #003d80);
+}
+
+/* Pop-up Animation */
+@keyframes pop-up {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
     </style>
 </head>
 <body>
