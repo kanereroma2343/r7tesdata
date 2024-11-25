@@ -163,8 +163,6 @@
 
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
-                    entry.first_name.toUpperCase().includes(firstName) &&
-                    (middleInitial === '' || entry.middle_initial.toUpperCase() === middleInitial) &&
                     entry.birthday === dateOfBirth
                 );
 
