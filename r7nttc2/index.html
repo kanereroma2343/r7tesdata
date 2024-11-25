@@ -241,15 +241,36 @@
             const modalSlides = document.getElementById('modalSlides');
             modalSlides.innerHTML = ''; // Clear previous results
 
+            const currentDate = new Date();
+            const threeMonthsFromNow = new Date();
+            threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+
             results.forEach(result => {
+                // Parse the validity date
+                const validityDate = new Date(result.validity);
+                let status;
+
+                // Determine the status based on the validity date
+                if (validityDate < currentDate) {
+                    status = "Expired";
+                } else if (validityDate <= threeMonthsFromNow) {
+                    status = "Expiring Soon";
+                } else {
+                    status = "Active";
+                }
+
                 modalSlides.innerHTML += `
                     <div class="modal-slide">
-                        <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name}</p>
-                        <p><strong>Birthday:</strong> ${result.birthday}</p>
+                        <p><strong>Last Name:</strong> ${result.last_name}</p>
+                        <p><strong>First Name:</strong> ${result.first_name}</p>
+                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
                         <p><strong>Qualification:</strong> ${result.qualification}</p>
-                        <p><strong>Contact Number:</strong> ${result.contact_number}</p>
-                        <p><strong>Training Institution:</strong> ${result.training_institution}</p>
-                        <p><strong>Years of Experience:</strong> ${result.years_of_experience}</p>
+                        <p><strong>Certificate Number:</strong> ${result.certificate_number || 'N/A'}</p>
+                        <p><strong>Control Number:</strong> ${result.control_number || 'N/A'}</p>
+                        <p><strong>Date Issuance:</strong> ${result.date_issuance || 'N/A'}</p>
+                        <p><strong>Validity:</strong> ${result.validity || 'N/A'}</p>
+                        <p><strong>Status:</strong> ${status}</p>
                     </div>`;
             });
 
