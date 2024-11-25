@@ -111,16 +111,19 @@
             height: 100%; 
             overflow: auto; 
             background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
         }
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; 
-            padding: 20px;
+            margin: 10% auto;
+            padding: 30px;
             border: 1px solid #888;
-            width: 80%; 
-            max-width: 600px;
+            width: 90%; 
+            max-width: 500px;
             border-radius: 10px;
             color: black;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: popUp 0.3s;
         }
         .close {
             color: #aaa;
@@ -148,6 +151,14 @@
         }
         .slide-button:hover {
             background-color: #0000CC;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes popUp {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
         }
     </style>
 </head>
@@ -242,6 +253,20 @@
             modalSlides.innerHTML = ''; // Clear previous results
 
             results.forEach(result => {
+                modalSlides.innerHTML += `
+                    <div class="modal-slide">
+                        <p><strong>Last Name:</strong> ${result.last_name}</p>
+                        <p><strong>First Name:</strong> ${result.first_name}</p>
+                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
+                        <p><strong>Qualification:</strong> ${result.qualification}</p>
+                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
+                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
+                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
+                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
+                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
+                    </div>`;
+
                 // Determine status based on validity
                 const validityDate = new Date(result.nttc_validity);
                 const currentDate = new Date();
@@ -258,20 +283,6 @@
                     statusText = 'Expiring Soon';
                     statusColor = 'orange';
                 }
-
-                modalSlides.innerHTML += `
-                    <div class="modal-slide">
-                        <p><strong>Last Name:</strong> ${result.last_name}</p>
-                        <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
-                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
-                        <p><strong>Qualification:</strong> ${result.qualification}</p>
-                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
-                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
-                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
-                    </div>`;
             });
 
             // Show the modal
