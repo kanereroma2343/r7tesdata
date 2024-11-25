@@ -172,11 +172,9 @@
                         resultDiv.innerHTML += `
                             <div class="result-item">
                                 <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name}</p>
-                                <p><strong>Birthday:</strong> ${result.birthday}</p>
                                 <p><strong>Qualification:</strong> ${result.qualification}</p>
-                                <p><strong>Contact Number:</strong> ${result.contact_number}</p>
-                                <p><strong>Training Institution:</strong> ${result.training_institution}</p>
-                                <p><strong>Years of Experience:</strong> ${result.years_of_experience}</p>
+                                 <p><strong>Date of Issuance:</strong> ${result.nttc_date_issuance}</p>
+                                <p><strong>Validity:</strong> ${result.validity}</p>
                                 <hr>
                             </div>`;
                     });
