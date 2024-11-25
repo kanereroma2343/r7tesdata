@@ -100,6 +100,55 @@
                 transform: translateY(-10px);
             }
         }
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 600px;
+            border-radius: 10px;
+            color: black;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-slide {
+            display: none; 
+        }
+        .slide-button {
+            background-color: #0000FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+        }
+        .slide-button:hover {
+            background-color: #0000CC;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +180,17 @@
         <div class="result" id="result" style="display: none;"></div>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>NTTC Status</h2>
+            <div class="modal-slides" id="modalSlides"></div>
+            <button id="prevSlide" class="slide-button">❮</button>
+            <button id="nextSlide" class="slide-button">❯</button>
+        </div>
+    </div>
+
     <script>
         const form = document.getElementById('nttcForm');
         const loader = document.getElementById('loader');
@@ -144,15 +204,13 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
-            const middleInitial = document.getElementById('middleInitial').value.trim().toUpperCase();
             const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
 
-            console.log('Searching for:', { lastName, firstName, middleInitial, dateOfBirth });
+            console.log('Searching for:', { lastName, dateOfBirth });
 
             try {
                 const response = await fetch('/r7nttc/data.json');
@@ -167,17 +225,7 @@
                 );
 
                 if (results.length > 0) {
-                    resultDiv.innerHTML = `<h2>NTTC Status</h2>`;
-                    results.forEach(result => {
-                        resultDiv.innerHTML += `
-                            <div class="result-item">
-                                <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name}</p>
-                                <p><strong>Qualification:</strong> ${result.qualification}</p>
-                                 <p><strong>Date of Issuance:</strong> ${result.nttc_date_issuance}</p>
-                                <p><strong>Validity:</strong> ${result.validity}</p>
-                                <hr>
-                            </div>`;
-                    });
+                    showModal(results);
                 } else {
                     resultDiv.innerHTML = '<p>No matching records found.</p>';
                 }
@@ -186,9 +234,67 @@
                 resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
             } finally {
                 loader.style.display = 'none';
-                resultDiv.style.display = 'block';
             }
         });
+
+        function showModal(results) {
+            const modalSlides = document.getElementById('modalSlides');
+            modalSlides.innerHTML = ''; // Clear previous results
+
+            results.forEach(result => {
+                modalSlides.innerHTML += `
+                    <div class="modal-slide">
+                        <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name}</p>
+                        <p><strong>Birthday:</strong> ${result.birthday}</p>
+                        <p><strong>Qualification:</strong> ${result.qualification}</p>
+                        <p><strong>Contact Number:</strong> ${result.contact_number}</p>
+                        <p><strong>Training Institution:</strong> ${result.training_institution}</p>
+                        <p><strong>Years of Experience:</strong> ${result.years_of_experience}</p>
+                    </div>`;
+            });
+
+            // Show the modal
+            document.getElementById('resultModal').style.display = 'block';
+            currentSlide = 0;
+            showSlide(currentSlide);
+        }
+
+        // Modal slide functionality
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.modal-slide');
+            slides.forEach((slide, i) => {
+                slide.style.display = (i === index) ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('prevSlide').onclick = function() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        };
+
+        document.getElementById('nextSlide').onclick = function() {
+            const slides = document.querySelectorAll('.modal-slide');
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        };
+
+        document.getElementById('closeModal').onclick = function() {
+            document.getElementById('resultModal').style.display = 'none';
+        };
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
     </script>
 </body>
 </html>
