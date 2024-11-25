@@ -238,6 +238,37 @@
         const loader = document.getElementById('loader');
         const resultDiv = document.getElementById('result');
 
+        function parseDate(dateString) {
+            // Try parsing the date in "Month Day, Year" format
+            const monthDayYearFormat = new Date(dateString);
+            if (!isNaN(monthDayYearFormat)) {
+                return monthDayYearFormat.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+
+            // Try parsing the date in "MM/DD/YYYY" format
+            const parts = dateString.split('/');
+            if (parts.length === 3) {
+                const month = parseInt(parts[0], 10) - 1; // Month is 0-indexed
+                const day = parseInt(parts[1], 10);
+                const year = parseInt(parts[2], 10);
+                const dateFromParts = new Date(year, month, day);
+                if (!isNaN(dateFromParts)) {
+                    return dateFromParts.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+            }
+
+            // Return null if parsing fails
+            return null;
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -246,11 +277,7 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+            const dateOfBirth = parseDate(document.getElementById('dateOfBirth').value);
 
             console.log('Searching for:', { lastName, dateOfBirth });
 
