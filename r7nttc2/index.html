@@ -72,12 +72,40 @@
         .result p {
             color: white;
         }
+        .loader {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .loader span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background: white;
+            border-radius: 50%;
+            animation: bounce 1s infinite;
+        }
+        .loader span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .loader span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Online NTTC Status System</h1>
-        <form id="nttcForm">
+        <form id="nttcForm" aria-labelledby="Online NTTC Status System">
             <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
 
@@ -93,61 +121,73 @@
             <label for="dateOfBirth">Date of Birth:</label>
             <input type="date" id="dateOfBirth" name="dateOfBirth" required>
 
-            <button type="submit">Check Status</button>
+            <button type="submit" aria-label="Submit form">Check Status</button>
         </form>
+
+        <div class="loader" id="loader">
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="result" id="result" style="display: none;"></div>
     </div>
 
-    <div class="result" id="result" style="display: none;"></div>
-
     <script>
-        document.getElementById('nttcForm').addEventListener('submit', function(e) {
+        const form = document.getElementById('nttcForm');
+        const loader = document.getElementById('loader');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const lastName = document.getElementById('lastName').value.toUpperCase();
-            const firstName = document.getElementById('firstName').value.toUpperCase();
-            const firstNameParts = firstName.split(' ');
-            const middleInitial = document.getElementById('middleInitial').value.toUpperCase();
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-            console.log('Last Name:', lastName);
-            console.log('First Name:', firstName);
-            console.log('Middle Initial:', middleInitial);
-            console.log('Date of Birth:', dateOfBirth);
+            // Show loader
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
 
-            fetch('../r7nttc/data.json')
-                .then(response => response.json())
-                .then(data => {
-                    const results = data.filter(entry => 
-                        entry.last_name === lastName && 
-                        firstNameParts.every(part => entry.first_name.includes(part)) && 
-                        (middleInitial === '' || entry.middle_initial === middleInitial) && 
-                        entry.birthday === dateOfBirth
-                    );
+            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
+            const middleInitial = document.getElementById('middleInitial').value.trim().toUpperCase();
+            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
 
-                    const resultDiv = document.getElementById('result');
-                    if (results.length > 0) {
-                        resultDiv.innerHTML = `<h2>NTTC Status</h2>`;
-                        results.forEach(result => {
-                            resultDiv.innerHTML += `
-                                <div class="result-item">
-                                    <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial} ${result.last_name}</p>
-                                    <p><strong>Birthday:</strong> ${result.birthday}</p>
-                                    <p><strong>Address:</strong> ${result.address}</p>
-                                    <p><strong>Qualification:</strong> ${result.qualification}</p>
-                                    <p><strong>Contact Number:</strong> ${result.contact_number}</p>
-                                    <p><strong>Training Institution:</strong> ${result.training_institution}</p>
-                                    <p><strong>Years of Experience:</strong> ${result.years_of_experience}</p>
-                                    <hr>
-                                </div>
-                            `;
-                        });
-                        resultDiv.style.display = 'block';
-                    } else {
-                        resultDiv.innerHTML = '<p>No matching records found.</p>';
-                        resultDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
+            try {
+                const response = await fetch('../r7nttc/data.json');
+                if (!response.ok) throw new Error('Failed to fetch data.');
+
+                const data = await response.json();
+                const results = data.filter(entry =>
+                    entry.last_name === lastName &&
+                    entry.first_name.includes(firstName) &&
+                    (middleInitial === '' || entry.middle_initial === middleInitial) &&
+                    entry.birthday === dateOfBirth
+                );
+
+                if (results.length > 0) {
+                    resultDiv.innerHTML = `<h2>NTTC Status</h2>`;
+                    results.forEach(result => {
+                        resultDiv.innerHTML += `
+                            <div class="result-item">
+                                <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name}</p>
+                                <p><strong>Birthday:</strong> ${result.birthday}</p>
+                                <p><strong>Qualification:</strong> ${result.qualification}</p>
+                                <p><strong>Contact Number:</strong> ${result.contact_number}</p>
+                                <p><strong>Training Institution:</strong> ${result.training_institution}</p>
+                                <p><strong>Years of Experience:</strong> ${result.years_of_experience}</p>
+                                <hr>
+                            </div>`;
+                    });
+                } else {
+                    resultDiv.innerHTML = '<p>No matching records found.</p>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+                loader.style.display = 'none';
+                resultDiv.style.display = 'block';
+            }
         });
     </script>
 </body>
-</html> 
+</html>
