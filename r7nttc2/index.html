@@ -242,20 +242,6 @@
             modalSlides.innerHTML = ''; // Clear previous results
 
             results.forEach(result => {
-                modalSlides.innerHTML += `
-                    <div class="modal-slide">
-                        <p><strong>Last Name:</strong> ${result.last_name}</p>
-                        <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
-                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
-                        <p><strong>Qualification:</strong> ${result.qualification}</p>
-                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
-                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
-                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
-                    </div>`;
-
                 // Determine status based on validity
                 const validityDate = new Date(result.nttc_validity);
                 const currentDate = new Date();
@@ -272,6 +258,20 @@
                     statusText = 'Expiring Soon';
                     statusColor = 'orange';
                 }
+
+                modalSlides.innerHTML += `
+                    <div class="modal-slide">
+                        <p><strong>Last Name:</strong> ${result.last_name}</p>
+                        <p><strong>First Name:</strong> ${result.first_name}</p>
+                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
+                        <p><strong>Qualification:</strong> ${result.qualification}</p>
+                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
+                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
+                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
+                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
+                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
+                    </div>`;
             });
 
             // Show the modal
