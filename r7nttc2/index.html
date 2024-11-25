@@ -253,7 +253,25 @@
                         <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
                         <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
                         <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
+                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
                     </div>`;
+
+                // Determine status based on validity
+                const validityDate = new Date(result.nttc_validity);
+                const currentDate = new Date();
+                const threeMonthsFromNow = new Date();
+                threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+
+                let statusText = 'Active';
+                let statusColor = 'green';
+
+                if (validityDate < currentDate) {
+                    statusText = 'Expired';
+                    statusColor = 'red';
+                } else if (validityDate <= threeMonthsFromNow) {
+                    statusText = 'Expiring Soon';
+                    statusColor = 'orange';
+                }
             });
 
             // Show the modal
