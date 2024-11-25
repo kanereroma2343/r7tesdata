@@ -277,9 +277,12 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const dateOfBirth = parseDate(document.getElementById('dateOfBirth').value);
+            const firstNameInput = document.getElementById('firstName').value.trim().toUpperCase();
+            const middleInitial = document.getElementById('middleInitial').value.trim().toUpperCase();
+            const dateOfBirthInput = document.getElementById('dateOfBirth').value; // Get raw input
+            const dateOfBirth = parseDate(dateOfBirthInput); // Parse the date
 
-            console.log('Searching for:', { lastName, dateOfBirth });
+            console.log('Searching for:', { lastName, firstNameInput, middleInitial, dateOfBirth });
 
             try {
                 const response = await fetch('/r7nttc/data.json');
@@ -288,21 +291,17 @@
                 const data = await response.json();
                 console.log('Fetched data:', data);
 
-                const firstName = document.getElementById('firstName').value.trim().toUpperCase();
                 // Split the first name input into an array of names
-                const firstNameArray = firstName.split(' ');
+                const firstNameArray = firstNameInput.split(' ');
 
                 const results = data.filter(entry => {
-                    console.log('Comparing:', {
-                        lastName: entry.last_name.toUpperCase(),
-                        firstName: entry.first_name.toUpperCase(),
-                        dateOfBirth: entry.birthday,
-                        inputLastName: lastName,
-                        inputFirstNameArray: firstNameArray
-                    });
+                    const entryFirstName = entry.first_name.toUpperCase();
+                    const entryMiddleInitial = entry.middle_initial ? entry.middle_initial.toUpperCase() : '';
+
                     return (
                         entry.last_name.toUpperCase() === lastName &&
-                        firstNameArray.every(name => entry.first_name.toUpperCase().includes(name)) &&
+                        firstNameArray.every(name => entryFirstName.includes(name)) &&
+                        (middleInitial === '' || entryMiddleInitial === middleInitial) && // Check middle initial if provided
                         entry.birthday === dateOfBirth
                     );
                 });
