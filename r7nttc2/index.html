@@ -301,45 +301,44 @@
         const resultDiv = document.getElementById('result');
 
         form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    e.preventDefault();
 
-            // Show loader
-            loader.style.display = 'block';
-            resultDiv.style.display = 'none';
+    // Show loader
+    loader.style.display = 'block';
+    resultDiv.style.display = 'none';
 
-            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+    const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+    const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toISOString().split('T')[0];
+    
+    console.log('Searching for:', { lastName, dateOfBirth });
 
-            console.log('Searching for:', { lastName, dateOfBirth });
+    try {
+        const response = await fetch('/r7nttc/data.json');
+        if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
-            try {
-                const response = await fetch('/r7nttc/data.json');
-                if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+        const data = await response.json();
+        console.log('Fetched data:', data);
 
-                const data = await response.json();
-                console.log('Fetched data:', data);
+        const results = data.filter(entry =>
+            entry.last_name.toUpperCase() === lastName &&
+            entry.birthday === dateOfBirth
+        );
 
-                const results = data.filter(entry =>
-                    entry.last_name.toUpperCase() === lastName &&
-                    entry.birthday === dateOfBirth
-                );
-
-                if (results.length > 0) {
-                    showModal(results);
-                } else {
-                    resultDiv.innerHTML = '<p>No matching records found.</p>';
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-            } finally {
-                loader.style.display = 'none';
-            }
-        });
+        if (results.length > 0) {
+            console.log('Filtered Results:', results);
+            showModal(results);
+        } else {
+            resultDiv.innerHTML = '<p>No matching records found.</p>';
+            resultDiv.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+        resultDiv.style.display = 'block';
+    } finally {
+        loader.style.display = 'none';
+    }
+});
 
         function showModal(results) {
             const modalSlides = document.getElementById('modalSlides');
