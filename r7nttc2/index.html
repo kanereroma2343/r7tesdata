@@ -241,24 +241,7 @@
             const modalSlides = document.getElementById('modalSlides');
             modalSlides.innerHTML = ''; // Clear previous results
 
-            const currentDate = new Date();
-            const threeMonthsFromNow = new Date();
-            threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
-
             results.forEach(result => {
-                // Parse the validity date
-                const validityDate = new Date(result.validity);
-                let status;
-
-                // Determine the status based on the validity date
-                if (validityDate < currentDate) {
-                    status = "Expired";
-                } else if (validityDate <= threeMonthsFromNow) {
-                    status = "Expiring Soon";
-                } else {
-                    status = "Active";
-                }
-
                 modalSlides.innerHTML += `
                     <div class="modal-slide">
                         <p><strong>Last Name:</strong> ${result.last_name}</p>
@@ -270,7 +253,6 @@
                         <p><strong>Control Number:</strong> ${result.control_number || 'N/A'}</p>
                         <p><strong>Date Issuance:</strong> ${result.date_issuance || 'N/A'}</p>
                         <p><strong>Validity:</strong> ${result.validity || 'N/A'}</p>
-                        <p><strong>Status:</strong> ${status}</p>
                     </div>`;
             });
 
