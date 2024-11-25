@@ -193,7 +193,7 @@
 <body>
     <div class="container">
         <div style="text-align: center;">
-            <img src="/icons/t7logo.png" alt="Logo" style="max-width: 30%; height: auto; margin-bottom: 1rem;">
+            <img src="/icons/t7logo.png" alt="Logo" style="max-width: 30%; height: auto; margin-bottom: .5rem;">
         </div>
         <h1>TESDA Region VII Online NTTC Status System</h1>
         <form id="nttcForm" aria-labelledby="Online NTTC Status System">
@@ -261,8 +261,13 @@
                 const data = await response.json();
                 console.log('Fetched data:', data);
 
+                const firstName = document.getElementById('firstName').value.trim().toUpperCase();
+                // Split the first name input into an array of names
+                const firstNameArray = firstName.split(' ');
+
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
+                    firstNameArray.every(name => entry.first_name.toUpperCase().includes(name)) && // Check if all names are included
                     entry.birthday === dateOfBirth
                 );
 
