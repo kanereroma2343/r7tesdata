@@ -265,11 +265,20 @@
                 // Split the first name input into an array of names
                 const firstNameArray = firstName.split(' ');
 
-                const results = data.filter(entry =>
-                    entry.last_name.toUpperCase() === lastName &&
-                    firstNameArray.every(name => entry.first_name.toUpperCase().includes(name)) && // Check if all names are included
-                    entry.birthday === dateOfBirth
-                );
+                const results = data.filter(entry => {
+                    console.log('Comparing:', {
+                        lastName: entry.last_name.toUpperCase(),
+                        firstName: entry.first_name.toUpperCase(),
+                        dateOfBirth: entry.birthday,
+                        inputLastName: lastName,
+                        inputFirstNameArray: firstNameArray
+                    });
+                    return (
+                        entry.last_name.toUpperCase() === lastName &&
+                        firstNameArray.every(name => entry.first_name.toUpperCase().includes(name)) &&
+                        entry.birthday === dateOfBirth
+                    );
+                });
 
                 if (results.length > 0) {
                     showModal(results);
