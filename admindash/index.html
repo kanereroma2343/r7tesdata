@@ -206,10 +206,10 @@
                 <h1 class="text-2xl font-bold text-center mb-6 text-blue-400 neon-text">TESDA Admin</h1>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-tab="utpras">
+                <button id="utprasButton" class="nav-item active" data-tab="utpras">
                     <i data-lucide="layout-dashboard"></i>
                     <span>UTPRAS</span>
-                </a>
+                </button>
                 <a href="#" class="nav-item" data-tab="scholarships">
                     <i data-lucide="graduation-cap"></i>
                     <span>SCHOLARSHIPS</span>
@@ -227,6 +227,9 @@
                     <span>Accounts Control</span>
                 </a>
             </nav>
+            <div id="utprasContent" class="utpras-content" style="display: none;">
+                <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
         </aside>
         <div class="main-content">
             <header class="header">
@@ -329,12 +332,13 @@
 
             // Add this event listener for the UTPRAS button
             document.getElementById('utprasButton').addEventListener('click', () => {
-                tabContent.innerHTML = `
-                    <div class="card">
-                        <h2>Program Registration</h2>
-                        <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
-                    </div>
-                `;
+                const utprasContent = document.getElementById('utprasContent');
+                // Toggle the display of the iframe
+                if (utprasContent.style.display === 'none') {
+                    utprasContent.style.display = 'block';
+                } else {
+                    utprasContent.style.display = 'none';
+                }
             });
         });
     </script>
