@@ -1,67 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Lucide icons
-    lucide.createIcons();
+// server.js
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
 
-    const tabContent = document.getElementById('tabContent');
-    const navItems = document.querySelectorAll('.nav-item');
+const app = express();
+const PORT = 3306;
 
-    // Tab content
-    const tabData = {
-        utpras: {
-            title: 'UTPRAS',
-            content: 'Unified TVET Program Registration and Accreditation System'
-        },
-        scholarships: {
-            title: 'Scholarships',
-            content: 'TESDA Scholarship Programs'
-        },
-        ptcacs: {
-            title: 'PTCACS',
-            content: 'Post-Training Credit Assistance and Collection System'
-        },
-        settings: {
-            title: 'Settings',
-            content: 'System Settings and Configurations'
-        },
-        accounts: {
-            title: 'Accounts Control',
-            content: 'User Account Management'
-        }
-    };
-
-    function createTabContent(tab) {
-        const data = tabData[tab];
-        return `
-            <div class="card">
-                <h2>${data.title}</h2>
-                <p>${data.content}</p>
-            </div>
-        `;
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'admindash'); // Save to the admindash directory
+    },
+    filename: (req, file, cb) => {
+        cb(null, 'data.json'); // Save as data.json
     }
-
-    function setActiveTab(clickedItem) {
-        navItems.forEach(item => item.classList.remove('active'));
-        clickedItem.classList.add('active');
-    }
-
-    function updateContent(tab) {
-        tabContent.innerHTML = '';
-        for (let i = 0; i < 6; i++) {
-            tabContent.innerHTML += createTabContent(tab);
-        }
-    }
-
-    // Set initial content
-    updateContent('utpras');
-
-    // Add click event listeners to nav items
-    navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const tab = item.getAttribute('data-tab');
-            setActiveTab(item);
-            updateContent(tab);
-        });
-    });
 });
 
+const upload = multer({ storage });
+
+// Serve static files from the admindash directory
+app.use(express.static('admindash'));
+
+// Endpoint to handle file upload
+app.post('/upload', upload.single('file'), (req, res) => {
+    res.send('File uploaded successfully!');
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
