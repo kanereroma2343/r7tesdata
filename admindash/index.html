@@ -301,8 +301,16 @@
 
             function updateContent(tab) {
                 tabContent.innerHTML = '';
-                for (let i = 0; i < 6; i++) {
-                    tabContent.innerHTML += createTabContent(tab);
+                if (tab === 'utpras') {
+                    tabContent.innerHTML = `
+                        <div class="card">
+                            <h2>Program Registration</h2>
+                            <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
+                        </div>
+                    `;
+                } else {
+                    const data = tabData[tab];
+                    tabContent.innerHTML = createTabContent(tab);
                 }
             }
 
