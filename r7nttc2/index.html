@@ -295,13 +295,8 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
 
-            console.log('Searching for:', { lastName, dateOfBirth });
+            console.log('Searching for:', { lastName });
 
             try {
                 const response = await fetch('/r7nttc/data.json');
@@ -309,6 +304,10 @@
 
                 const data = await response.json();
                 console.log('Fetched data:', data);
+
+                // Parse the date of birth from various formats
+                const dobInput = document.getElementById('dateOfBirth').value.trim();
+                const dateOfBirth = parseDate(dobInput); // Use the new parseDate function
 
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
@@ -327,6 +326,22 @@
                 loader.style.display = 'none';
             }
         });
+
+        // New function to parse various date formats
+        function parseDate(input) {
+            const formats = [
+                { regex: /^(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4})$/, parse: (m) => new Date(`${m[1]} ${m[2]}, ${m[3]}`) },
+                { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, parse: (m) => new Date(`${m[3]}-${m[1]}-${m[2]}`) }
+            ];
+
+            for (const format of formats) {
+                const match = input.match(format.regex);
+                if (match) {
+                    return format.parse(match);
+                }
+            }
+            return null; // Return null if no format matches
+        }
 
         function showModal(results) {
             const modalSlides = document.getElementById('modalSlides');
