@@ -267,10 +267,18 @@
             const tabData = {
                 utpras: {
                     title: 'Program Registration',
+                    buttons: [
+                        { label: 'Add Program', action: 'addProgram' },
+                        { label: 'View Programs', action: 'viewPrograms' }
+                    ],
                     content: '<iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>'
                 },
                 scholarships: {
                     title: 'Scholarships',
+                    buttons: [
+                        { label: 'Add Scholarship', action: 'addScholarship' },
+                        { label: 'View Scholarships', action: 'viewScholarships' }
+                    ],
                     content: 'TESDA Scholarship Programs'
                 },
                 ptcacs: {
@@ -286,6 +294,16 @@
                     content: 'User Account Management'
                 }
             };
+
+            function createButton(label, action) {
+                const button = document.createElement('button');
+                button.textContent = label;
+                button.className = 'custom-button'; // Add your custom button class
+                button.onclick = () => {
+                    console.log(action); // Replace with actual action handling
+                };
+                return button;
+            }
 
             function createTabContent(tab) {
                 const data = tabData[tab];
@@ -304,17 +322,19 @@
 
             function updateContent(tab) {
                 tabContent.innerHTML = '';
-                if (tab === 'utpras') {
-                    tabContent.innerHTML = `
-                        <div class="card">
-                            <h2>Program Registration</h2>
-                            <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
-                        </div>
-                    `;
-                } else {
-                    const data = tabData[tab];
-                    tabContent.innerHTML = createTabContent(tab);
-                }
+                const data = tabData[tab];
+                
+                // Create buttons for the tab
+                const buttonContainer = document.createElement('div');
+                data.buttons.forEach(buttonData => {
+                    const button = createButton(buttonData.label, buttonData.action);
+                    buttonContainer.appendChild(button);
+                });
+                
+                tabContent.appendChild(buttonContainer);
+                
+                // Add the main content
+                tabContent.innerHTML += createTabContent(tab);
             }
 
             // Set initial content
