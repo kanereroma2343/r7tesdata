@@ -54,10 +54,11 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         button:hover {
             background-color: #0000CC;
+            transform: scale(1.05);
         }
         .result {
             margin-top: 2rem;
@@ -85,7 +86,7 @@
             margin: 0 5px;
             background: white;
             border-radius: 50%;
-            animation: bounce 1s infinite;
+            animation: bounce 0.6s infinite;
         }
         .loader span:nth-child(2) {
             animation-delay: 0.2s;
@@ -109,7 +110,7 @@
     z-index: 1000;
     inset: 0; /* shorthand for top, right, bottom, left */
     background: rgba(0, 0, 0, 0.8);
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out, slideIn 0.5s ease-in-out;
     overflow: hidden;
 }
 
@@ -119,6 +120,18 @@
         opacity: 0;
     }
     to {
+        opacity: 1;
+    }
+}
+
+/* New Slide-in Animation */
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px); /* Slide from above */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
         opacity: 1;
     }
 }
@@ -171,11 +184,12 @@
     border-radius: 4px;
     padding: 10px 16px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .slide-button:hover {
     background: #0000CC;
+    transform: scale(1.05);
 }
 
 /* Responsiveness */
@@ -193,6 +207,18 @@
     .slide-button {
         padding: 8px 12px;
         font-size: 14px;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    input, button {
+        font-size: 1rem;
     }
 }
 
