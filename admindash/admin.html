@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESDA Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="text-2xl font-bold text-center mb-6 text-blue-400 neon-text">TESDA Admin</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-tab="utpras">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>UTPRAS</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="scholarships">
+                    <i data-lucide="graduation-cap"></i>
+                    <span>SCHOLARSHIPS</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="ptcacs">
+                    <i data-lucide="book-open"></i>
+                    <span>PTCACS</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="settings">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="accounts">
+                    <i data-lucide="users"></i>
+                    <span>Accounts Control</span>
+                </a>
+            </nav>
+        </aside>
+        <div class="main-content">
+            <header class="header">
+                <div class="search-container">
+                    <input type="text" placeholder="Search..." class="search-input">
+                    <i data-lucide="search" class="search-icon"></i>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-button">
+                        <i data-lucide="bell"></i>
+                    </button>
+                    <button class="user-button">
+                        <i data-lucide="user"></i>
+                        <span>Admin</span>
+                    </button>
+                </div>
+            </header>
+            <main class="content">
+                <h1 class="text-3xl font-bold text-white mb-6">Welcome to TESDA Admin Dashboard</h1>
+                <div id="tabContent" class="tab-content">
+                    <!-- Tab content will be dynamically inserted here -->
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
