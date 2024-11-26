@@ -326,6 +326,16 @@
                     updateContent(tab);
                 });
             });
+
+            // Add this event listener for the UTPRAS button
+            document.getElementById('utprasButton').addEventListener('click', () => {
+                tabContent.innerHTML = `
+                    <div class="card">
+                        <h2>Program Registration</h2>
+                        <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                `;
+            });
         });
     </script>
 </body>
