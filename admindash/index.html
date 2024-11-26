@@ -9,20 +9,12 @@
         :root {
             --background: #0f172a;
             --foreground: #f8fafc;
-            --card: #0f172a;
+            --card: #1e293b;
             --card-foreground: #f8fafc;
-            --popover: #0f172a;
-            --popover-foreground: #f8fafc;
             --primary: #3b82f6;
             --primary-foreground: #1e293b;
-            --secondary: #1e293b;
-            --secondary-foreground: #f8fafc;
             --muted: #1e293b;
             --muted-foreground: #94a3b8;
-            --accent: #1e293b;
-            --accent-foreground: #f8fafc;
-            --destructive: #7f1d1d;
-            --destructive-foreground: #f8fafc;
             --border: #1e293b;
             --input: #1e293b;
             --ring: #2563eb;
@@ -74,7 +66,8 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover,
+        .nav-item.active {
             background-color: var(--primary);
             color: var(--primary-foreground);
         }
@@ -87,7 +80,6 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .header {
@@ -126,7 +118,8 @@
             gap: 1rem;
         }
 
-        .icon-button, .user-button {
+        .icon-button,
+        .user-button {
             background: none;
             border: none;
             color: var(--muted-foreground);
@@ -152,7 +145,7 @@
         }
 
         .card {
-            background-color: rgba(30, 41, 59, 0.5);
+            background-color: var(--card);
             border: 1px solid var(--border);
             border-radius: 0.5rem;
             padding: 1.5rem;
@@ -161,7 +154,7 @@
 
         .card:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary), 0 0 15px var(--primary);
+            box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary);
         }
 
         .card h2 {
@@ -171,22 +164,7 @@
         }
 
         .neon-text {
-            text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary), 0 0 15px var(--primary);
-        }
-
-        .custom-button {
-            background-color: var(--primary);
-            color: var(--primary-foreground);
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .custom-button:hover {
-            background-color: var(--primary-foreground);
-            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary);
         }
 
         @media (max-width: 768px) {
@@ -207,10 +185,6 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-
-            .search-container {
-                max-width: 100%;
-            }
         }
     </style>
 </head>
@@ -218,132 +192,52 @@
     <div class="dashboard">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1 class="text-2xl font-bold text-center mb-6 text-blue-400 neon-text">TESDA Admin</h1>
+                <h1 class="neon-text">TESDA Admin</h1>
             </div>
             <nav class="sidebar-nav">
-                <button id="utprasButton" class="nav-item active" data-tab="utpras">
-                    <i data-lucide="layout-dashboard"></i>
-                    <span>UTPRAS</span>
+                <button class="nav-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
                 </button>
-                <a href="#" class="nav-item" data-tab="scholarships">
-                    <i data-lucide="graduation-cap"></i>
-                    <span>SCHOLARSHIPS</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="ptcacs">
-                    <i data-lucide="book-open"></i>
-                    <span>PTCACS</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="settings">
-                    <i data-lucide="settings"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="#" class="nav-item" data-tab="accounts">
-                    <i data-lucide="users"></i>
-                    <span>Accounts Control</span>
-                </a>
+                <button class="nav-item" data-tab="scholarships">
+                    <i data-lucide="graduation-cap"></i> Scholarships
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <i data-lucide="settings"></i> Settings
+                </button>
             </nav>
-            <div id="utprasContent" class="utpras-content" style="display: none;">
-                <iframe src="r7utpras/convert.html" style="width: 100%; height: 100%; border: none;"></iframe>
-            </div>
         </aside>
         <div class="main-content">
             <header class="header">
                 <div class="search-container">
-                    <input type="text" placeholder="Search..." class="search-input">
+                    <input type="text" class="search-input" placeholder="Search...">
                     <i data-lucide="search" class="search-icon"></i>
                 </div>
                 <div class="header-actions">
-                    <button class="icon-button">
-                        <i data-lucide="bell"></i>
-                    </button>
-                    <button class="user-button">
-                        <i data-lucide="user"></i>
-                        <span>Admin</span>
-                    </button>
+                    <button class="icon-button"><i data-lucide="bell"></i></button>
+                    <button class="user-button"><i data-lucide="user"></i> <span>Admin</span></button>
                 </div>
             </header>
             <main class="content">
-                <h1 class="text-3xl font-bold text-white mb-6">Welcome to TESDA Admin Dashboard</h1>
-                <div id="tabContent" class="tab-content">
-                    <!-- Tab content will be dynamically inserted here -->
-                </div>
+                <h1>Welcome to TESDA Admin Dashboard</h1>
+                <div id="tabContent" class="tab-content"></div>
             </main>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Lucide icons
             lucide.createIcons();
-
-            const tabContent = document.getElementById('tabContent');
             const navItems = document.querySelectorAll('.nav-item');
-            function createButton(label, action) {
-                const button = document.createElement('button');
-                button.textContent = label;
-                button.className = 'custom-button'; // Add your custom button class
-                button.onclick = () => {
-                    console.log(action); // Replace with actual action handling
-                };
-                return button;
-            }
+            const tabContent = document.getElementById('tabContent');
 
-            function createTabContent(tab) {
-                const data = tabData[tab];
-                return `
-                    <div class="card">
-                        <h2>${data.title}</h2>
-                        <p>${data.content}</p>
-                    </div>
-                `;
-            }
-
-            function setActiveTab(clickedItem) {
-                navItems.forEach(item => item.classList.remove('active'));
-                clickedItem.classList.add('active');
-            }
-
-            function updateContent(tab) {
-                tabContent.innerHTML = '';
-                const data = tabData[tab];
-                
-                // Create buttons for the tab
-                const buttonContainer = document.createElement('div');
-                data.buttons.forEach(buttonData => {
-                    const button = createButton(buttonData.label, buttonData.action);
-                    buttonContainer.appendChild(button);
-                });
-                
-                tabContent.appendChild(buttonContainer);
-                
-                // Add the main content
-                tabContent.innerHTML += createTabContent(tab);
-            }
-
-            // Set initial content
-            updateContent('utpras');
-
-            // Add click event listeners to nav items
             navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const tab = item.getAttribute('data-tab');
-                    setActiveTab(item);
-                    updateContent(tab);
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    const tab = item.dataset.tab;
+                    tabContent.innerHTML = `<div class="card"><h2>${tab}</h2><p>Content for ${tab}</p></div>`;
                 });
-            });
-
-            // Add this event listener for the UTPRAS button
-            document.getElementById('utprasButton').addEventListener('click', () => {
-                const utprasContent = document.getElementById('utprasContent');
-                // Toggle the display of the iframe
-                if (utprasContent.style.display === 'none') {
-                    utprasContent.style.display = 'block';
-                } else {
-                    utprasContent.style.display = 'none';
-                }
             });
         });
     </script>
 </body>
 </html>
-
