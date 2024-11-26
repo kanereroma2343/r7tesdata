@@ -309,9 +309,14 @@
                 const dobInput = document.getElementById('dateOfBirth').value.trim();
                 const dateOfBirth = parseDate(dobInput); // Use the new parseDate function
 
+                if (!dateOfBirth) {
+                    resultDiv.innerHTML = '<p>Invalid date format. Please use "June 05, 1999" or "06/05/1999".</p>';
+                    return; // Exit if the date is invalid
+                }
+
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
-                    entry.birthday === dateOfBirth
+                    entry.birthday === formatDate(dateOfBirth) // Ensure the format matches
                 );
 
                 if (results.length > 0) {
@@ -341,6 +346,12 @@
                 }
             }
             return null; // Return null if no format matches
+        }
+
+        // Function to format the date back to the expected string format
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
         }
 
         function showModal(results) {
