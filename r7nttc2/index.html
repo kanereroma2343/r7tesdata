@@ -295,8 +295,9 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
 
-            console.log('Searching for:', { lastName });
+            console.log('Searching for:', { lastName, firstName });
 
             try {
                 const response = await fetch('/r7nttc/data.json');
@@ -316,6 +317,7 @@
 
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
+                    entry.first_name.toUpperCase() === firstName &&
                     entry.birthday === formatDate(dateOfBirth) // Ensure the format matches
                 );
 
