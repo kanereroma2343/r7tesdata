@@ -5,16 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online NTTC Status System</title>
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --text-color: #ecf0f1;
+            --background-color: #34495e;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--secondary-color), var(--background-color));
+            color: var(--text-color);
+        }
+        header, footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 1rem;
+        }
+        main {
+            flex: 1;
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #000000, #0000FF);
-            color: white;
+            padding: 2rem;
         }
         .container {
             background-color: rgba(255, 255, 255, 0.1);
@@ -22,55 +41,45 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
         }
         h1 {
             text-align: center;
             margin-bottom: 2rem;
+            color: var(--primary-color);
         }
         form {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            gap: 1rem;
         }
         label {
-            margin-bottom: 0.5rem;
+            font-weight: bold;
         }
         input {
-            padding: 0.5rem;
-            margin-bottom: 1rem;
+            width: 100%;
+            padding: 0.75rem;
             border: none;
             border-radius: 4px;
             background-color: rgba(255, 255, 255, 0.2);
-            color: white;
+            color: var(--text-color);
+            font-size: 1rem;
         }
         input::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
         button {
             padding: 0.75rem;
-            background-color: #0000FF;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
         }
         button:hover {
-            background-color: #0000CC;
-        }
-        .result {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            text-align: center;
-        }
-        .result h2 {
-            margin: 0;
-            color: #0000FF;
-        }
-        .result p {
-            color: white;
+            background-color: #2980b9;
         }
         .loader {
             display: none;
@@ -82,7 +91,7 @@
             width: 10px;
             height: 10px;
             margin: 0 5px;
-            background: white;
+            background: var(--text-color);
             border-radius: 50%;
             animation: bounce 1s infinite;
         }
@@ -93,103 +102,125 @@
             animation-delay: 0.4s;
         }
         @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-        /* Modal Styles */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
+            width: 100%;
+            height: 100%;
+            overflow: auto;
             background-color: rgba(0, 0, 0, 0.8);
         }
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; 
-            padding: 20px;
+            background-color: var(--background-color);
+            margin: 10% auto;
+            padding: 2rem;
             border: 1px solid #888;
-            width: 80%; 
+            width: 90%;
             max-width: 600px;
             border-radius: 10px;
-            color: black;
+            color: var(--text-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .close {
-            color: #aaa;
+            color: var(--text-color);
             float: right;
             font-size: 28px;
             font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
             cursor: pointer;
         }
+        .close:hover {
+            color: var(--accent-color);
+        }
         .modal-slide {
-            display: none; 
+            display: none;
+        }
+        .modal-slide p {
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .modal-slide p:last-child {
+            border-bottom: none;
         }
         .slide-button {
-            background-color: #0000FF;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--text-color);
             border: none;
             border-radius: 4px;
             cursor: pointer;
             padding: 10px;
             margin: 5px;
+            font-size: 1rem;
         }
         .slide-button:hover {
-            background-color: #0000CC;
+            background-color: #2980b9;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Online NTTC Status System</h1>
-        <form id="nttcForm" aria-labelledby="Online NTTC Status System">
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
+    </header>
+    <main>
+        <div class="container">
+            <form id="nttcForm" aria-labelledby="nttcFormTitle">
+                <h2 id="nttcFormTitle">Check Your NTTC Status</h2>
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
 
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
 
-            <label for="extension">Extension:</label>
-            <input type="text" id="extension" name="extension" placeholder="Enter name extension (if any)">
+                <label for="extension">Extension:</label>
+                <input type="text" id="extension" name="extension" placeholder="Enter name extension (if any)">
 
-            <label for="middleInitial">Middle Initial:</label>
-            <input type="text" id="middleInitial" name="middleInitial" maxlength="1" placeholder="Enter middle initial">
+                <label for="middleInitial">Middle Initial:</label>
+                <input type="text" id="middleInitial" name="middleInitial" maxlength="1" placeholder="Enter middle initial">
 
-            <label for="dateOfBirth">Date of Birth:</label>
-            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
 
-            <button type="submit" aria-label="Submit form">Check Status</button>
-        </form>
+                <button type="submit" aria-label="Submit form">Check Status</button>
+            </form>
 
-        <div class="loader" id="loader">
-            <span></span><span></span><span></span>
+            <div class="loader" id="loader">
+                <span></span><span></span><span></span>
+            </div>
+
+            <div id="result" style="display: none;"></div>
         </div>
+    </main>
 
-        <div class="result" id="result" style="display: none;"></div>
-    </div>
-
-    <!-- Modal Structure -->
     <div id="resultModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2>NTTC Status</h2>
-            <div class="modal-slides" id="modalSlides"></div>
-            <button id="prevSlide" class="slide-button">❮</button>
-            <button id="nextSlide" class="slide-button">❯</button>
+            <div id="modalSlides"></div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <button id="prevSlide" class="slide-button">❮ Previous</button>
+                <button id="nextSlide" class="slide-button">Next ❯</button>
+            </div>
         </div>
     </div>
+
+    <footer>
+        &copy; 2023 Online NTTC Status System. All rights reserved.
+    </footer>
 
     <script>
         const form = document.getElementById('nttcForm');
@@ -199,7 +230,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Show loader
             loader.style.display = 'block';
             resultDiv.style.display = 'none';
 
@@ -228,10 +258,12 @@
                     showModal(results);
                 } else {
                     resultDiv.innerHTML = '<p>No matching records found.</p>';
+                    resultDiv.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Fetch error:', error);
                 resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                resultDiv.style.display = 'block';
             } finally {
                 loader.style.display = 'none';
             }
@@ -239,10 +271,9 @@
 
         function showModal(results) {
             const modalSlides = document.getElementById('modalSlides');
-            modalSlides.innerHTML = ''; // Clear previous results
+            modalSlides.innerHTML = '';
 
             results.forEach(result => {
-                // Determine status based on validity
                 const validityDate = new Date(result.nttc_validity);
                 const currentDate = new Date();
                 const threeMonthsFromNow = new Date();
@@ -274,13 +305,11 @@
                     </div>`;
             });
 
-            // Show the modal
             document.getElementById('resultModal').style.display = 'block';
             currentSlide = 0;
             showSlide(currentSlide);
         }
 
-        // Modal slide functionality
         let currentSlide = 0;
 
         function showSlide(index) {
@@ -309,7 +338,6 @@
             document.getElementById('resultModal').style.display = 'none';
         };
 
-        // Close modal when clicking outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('resultModal');
             if (event.target === modal) {
