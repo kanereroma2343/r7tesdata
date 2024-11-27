@@ -50,13 +50,13 @@
     <input type="text" id="firstName" required>
     
     <label for="extension">Extension:</label>
-    <input type="text" id="extension" required>
+    <input type="text" id="extension">
     
     <label for="middleInitial">Middle Initial:</label>
     <input type="text" id="middleInitial">
     
     <label for="dob">Date of Birth:</label>
-    <input type="date" id="dob" required>
+    <input type="text" id="dob" placeholder="e.g., June 5, 1999" required>
     
     <button type="button" id="checkStatus">Check Status</button>
 </form>
@@ -72,21 +72,21 @@
 
 <script>
 document.getElementById('checkStatus').addEventListener('click', function() {
-    const lastName = document.getElementById('lastName').value;
-    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value.toUpperCase();
+    const firstName = document.getElementById('firstName').value.toUpperCase();
     const extension = document.getElementById('extension').value;
-    const middleInitial = document.getElementById('middleInitial').value;
+    const middleInitial = document.getElementById('middleInitial').value.toUpperCase();
     const dob = document.getElementById('dob').value;
 
     fetch('/r7nttc/data.json')
         .then(response => response.json())
         .then(data => {
             const results = data.filter(entry => 
-                entry.lastName === lastName && 
-                entry.firstName === firstName && 
-                entry.extension === extension && 
-                entry.middleInitial === middleInitial && 
-                entry.dob === dob
+                entry.last_name === lastName && 
+                entry.first_name === firstName && 
+                (entry.extension === extension || (entry.extension === null && extension === '')) && 
+                entry.middle_initial === middleInitial && 
+                entry.birthday.toUpperCase() === dob.toUpperCase()
             );
 
             if (results.length > 0) {
@@ -100,17 +100,17 @@ document.getElementById('checkStatus').addEventListener('click', function() {
 function showModal(results) {
     const modal = document.getElementById('resultModal');
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = ''; // Clear previous results
+    resultDiv.innerHTML = '';
 
-    results.forEach((entry, index) => {
-        const statusColor = getStatusColor(entry.validity);
+    results.forEach((entry) => {
+        const statusColor = getStatusColor(entry.nc_validity);
         resultDiv.innerHTML += `
             <div style="color: ${statusColor};">
-                <strong>${entry.firstName} ${entry.middleInitial} ${entry.lastName}</strong><br>
+                <strong>${entry.first_name} ${entry.middle_initial} ${entry.last_name}</strong><br>
                 Qualification: ${entry.qualification}<br>
-                Date of Issuance: ${entry.dateOfIssuance}<br>
-                Validity: ${entry.validity}<br>
-                Status: ${entry.status}
+                Date of Issuance: ${entry.nc_date_issuance}<br>
+                Validity: ${entry.nc_validity}<br>
+                Status: ${entry.status || 'Active'}
             </div>
         `;
     });
@@ -129,11 +129,11 @@ function getStatusColor(validity) {
     threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
 
     if (expiringDate < currentDate) {
-        return 'red'; // Expired
+        return 'red';
     } else if (expiringDate <= threeMonthsFromNow) {
-        return 'orange'; // Expiring soon
+        return 'orange';
     } else {
-        return 'green'; // Active
+        return 'green';
     }
 }
 </script>
