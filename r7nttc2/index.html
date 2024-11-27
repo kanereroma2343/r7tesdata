@@ -7,10 +7,10 @@
     <style>
         :root {
             --primary-color: #3498db;
-            --secondary-color: #2c3e50;
+            --secondary-color: #000000;
             --accent-color: #e74c3c;
             --text-color: #ecf0f1;
-            --background-color: #34495e;
+            --background-color: #1a1a1a;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--secondary-color), var(--background-color));
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: var(--text-color);
         }
         header, footer {
@@ -162,8 +162,22 @@
             background-color: #2980b9;
         }
         @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
             .container {
                 padding: 1rem;
+                width: 100%;
+                box-shadow: none;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            h2 {
+                font-size: 1.25rem;
+            }
+            input, button {
+                font-size: 0.9rem;
             }
             .modal-content {
                 width: 95%;
