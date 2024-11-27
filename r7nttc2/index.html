@@ -6,16 +6,6 @@
     <title>Online NTTC Status System</title>
     <link rel="icon" href="/icons/t7logo.png" type="image/x-icon">
     <style>
-        :root {
-            --primary-color: #00ff00;
-            --secondary-color: #000000;
-            --text-color: #ffffff;
-            --background-gradient: linear-gradient(135deg, #000000, #0a2472, #000000);
-            --input-background: rgba(255, 255, 255, 0.1);
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --neon-color: #00ffff;
-            --button-color: #ffffff;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -23,16 +13,16 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background: var(--background-gradient);
-            color: var(--text-color);
+            background: linear-gradient(135deg, #000000, #0a2472, #000000);
+            color: #ffffff;
             line-height: 1.6;
         }
-       footer {
+        footer {
             background-color: rgba(0, 0, 0, 0.5);
-            color: var(--text-color);
+            color: #ffffff;
             text-align: center;
             padding: 1rem;
-            box-shadow: var(--box-shadow);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         main {
             flex: 1;
@@ -52,7 +42,7 @@
         }
         h1, h2 {
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: #00ff00;
             text-align: center;
             text-shadow: 0 0 10px rgba(81, 255, 0, 0.5);
         }
@@ -64,29 +54,29 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             display: block;
-            color: var(--primary-color);
+            color: #00ff00;
         }
         input {
             width: 95%;
             padding: 0.75rem;
             border: none;
             border-radius: 10px;
-            background-color: var(--input-background);
-            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
         input:focus {
             outline: none;
             background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 2px var(--primary-color);
+            box-shadow: 0 0 0 2px #00ff00;
         }
         input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
         button {
             padding: 0.75rem;
-            background-color: var(--button-color);
+            background-color: #ffffff;
             color: #00ff00;
             border: 2px solid #000000;
             border-radius: 10px;
@@ -106,7 +96,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: var(--neon-color);
+            background: #00ffff;
             z-index: -1;
             filter: blur(10px);
             opacity: 0;
@@ -118,7 +108,7 @@
         button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
-            box-shadow: 0 0 15px var(--neon-color);
+            box-shadow: 0 0 15px #00ffff;
         }
         button:active {
             transform: translateY(0);
@@ -133,7 +123,7 @@
             width: 12px;
             height: 12px;
             margin: 0 5px;
-            background: var(--primary-color);
+            background: #00ff00;
             border-radius: 50%;
             animation: bounce 1s infinite;
         }
@@ -160,18 +150,18 @@
             backdrop-filter: blur(5px);
         }
         .modal-content {
-            background: var(--background-gradient);
+            background: linear-gradient(135deg, #000000, #0a2472, #000000);
             margin: 10% auto;
             padding: 2rem;
-            border: 1px solid var(--primary-color);
+            border: 1px solid #00ff00;
             width: 90%;
             max-width: 600px;
             border-radius: 20px;
-            color: var(--text-color);
+            color: #ffffff;
             box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
         }
         .close {
-            color: var(--text-color);
+            color: #ffffff;
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -179,11 +169,11 @@
             transition: color 0.3s ease;
         }
         .close:hover {
-            color: var(--neon-color);
+            color: #00ffff;
         }
         .slide-button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
+            background-color: #00ff00;
+            color: #ffffff;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -195,7 +185,7 @@
         .slide-button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
-            box-shadow: 0 0 15px var(--neon-color);
+            box-shadow: 0 0 15px #00ffff;
         }
         .slide-button:active {
             transform: translateY(0);
