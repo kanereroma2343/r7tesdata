@@ -2,141 +2,447 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/icons/t7logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Check Form</title>
+    <title>Online NTTC Status System</title>
     <style>
-        /* Basic styles for the modal */
-        #resultModal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000, #0000FF);
+            color: white;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
+            max-width: 400px;
         }
-        #modalContent {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
         }
-        #closeModal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        form {
+            display: flex;
+            flex-direction: column;
         }
-        #closeModal:hover,
-        #closeModal:focus {
-            color: black;
-            text-decoration: none;
+        label {
+            margin-bottom: 0.5rem;
+        }
+        input {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button {
+            padding: 0.75rem;
+            background-color: #0000FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
+        button:hover {
+            background-color: #0000CC;
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .result h2 {
+            margin: 0;
+            color: #0000FF;
+        }
+        .result p {
+            color: white;
+        }
+        .loader {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .loader span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background: white;
+            border-radius: 50%;
+            animation: bounce 0.6s infinite;
+        }
+        .loader span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .loader span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+       /* Modal Styles */
+/* Modal Container */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0; /* shorthand for top, right, bottom, left */
+    background: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.5s ease-in-out, slideIn 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* New Slide-in Animation */
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px); /* Slide from above */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Content */
+.modal-content {
+    background: linear-gradient(135deg, #0000FF, #4c4cff, #ffffff);
+    margin: 0;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    color: white;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000; /* Black stroke effect */
+    border: 2px solid #ffffff; /* Added border for emphasis */
+}
+
+/* New Section Styles */
+.modal-section {
+    background-color: rgba(255, 255, 255, 0.1); /* Light background for sections */
+    padding: 10px;
+    margin: 10px 0; /* Space between sections */
+    border-radius: 8px; /* Rounded corners for sections */
+}
+
+/* Status Text */
+.modal-status {
+    font-weight: bold;
+    font-size: 1.1rem; /* Slightly larger font for status */
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff4c4c;
+}
+
+/* Action Buttons */
+.slide-button {
+    background: linear-gradient(135deg, #0000FF, #4c4cff);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.slide-button:hover {
+    background: #0000CC;
+    transform: scale(1.05);
+}
+
+/* Responsiveness */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        margin: 15% auto;
+        padding: 16px;
+    }
+
+    .close {
+        font-size: 18px;
+    }
+
+    .slide-button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    input, button {
+        font-size: 1rem;
+    }
+}
+
     </style>
 </head>
 <body>
+    <div class="container">
+        <img src="/icons/t7logo.png" alt="Logo" style="max-width: 45%; height: auto; display: block; margin: 0 auto;">
+        <h1>TESDA Region VII Online NTTC Status System</h1>
+        <form id="nttcForm" aria-labelledby="Online NTTC Status System">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
 
-<form id="statusForm">
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" required>
-    
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" required>
-    
-    <label for="extension">Extension:</label>
-    <input type="text" id="extension">
-    
-    <label for="middleInitial">Middle Initial:</label>
-    <input type="text" id="middleInitial">
-    
-    <label for="dob">Date of Birth:</label>
-    <input type="text" id="dob" placeholder="e.g., June 5, 1999" required>
-    
-    <button type="button" id="checkStatus">Check Status</button>
-</form>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
 
-<!-- Modal -->
-<div id="resultModal">
-    <div id="modalContent">
-        <span id="closeModal">&times;</span>
-        <div id="result"></div>
-        <button id="nextEntry" style="display:none;">Next</button>
+            <label for="extension">Extension:</label>
+            <input type="text" id="extension" name="extension" placeholder="Enter name extension (if any)">
+
+            <label for="middleInitial">Middle Initial:</label>
+            <input type="text" id="middleInitial" name="middleInitial" maxlength="1" placeholder="Enter middle initial">
+
+            <label for="dateOfBirth">Date of Birth:</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+
+            <button type="submit" aria-label="Submit form">Check Status</button>
+        </form>
+
+        <div class="loader" id="loader">
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="result" id="result" style="display: none;" aria-live="polite"></div>
     </div>
-</div>
 
-<script>
-document.getElementById('checkStatus').addEventListener('click', function() {
-    const lastName = document.getElementById('lastName').value.toUpperCase();
-    const firstName = document.getElementById('firstName').value.toUpperCase();
-    const extension = document.getElementById('extension').value;
-    const middleInitial = document.getElementById('middleInitial').value.toUpperCase();
-    const dob = document.getElementById('dob').value;
+    <!-- Modal Structure -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>NTTC Status</h2>
+            <div class="modal-slides" id="modalSlides"></div>
+            <button id="prevSlide" class="slide-button">❮</button>
+            <button id="nextSlide" class="slide-button">❯</button>
+        </div>
+    </div>
 
-    fetch('/r7nttc/data.json')
-        .then(response => response.json())
-        .then(data => {
-            const results = data.filter(entry => 
-                entry.last_name === lastName && 
-                entry.first_name === firstName && 
-                (entry.extension === extension || (entry.extension === null && extension === '')) && 
-                entry.middle_initial === middleInitial && 
-                entry.birthday.toUpperCase() === dob.toUpperCase()
-            );
+    <script>
+        const form = document.getElementById('nttcForm');
+        const loader = document.getElementById('loader');
+        const resultDiv = document.getElementById('result');
 
-            if (results.length > 0) {
-                showModal(results);
-            } else {
-                alert('No entries found.');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Show loader
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
+
+            console.log('Searching for:', { lastName, firstName });
+
+            try {
+                const response = await fetch('/r7nttc/data.json');
+                if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+
+                const data = await response.json();
+                console.log('Fetched data:', data);
+
+                // Ensure the date of birth is parsed correctly
+                const dobInput = document.getElementById('dateOfBirth').value.trim();
+                const dateOfBirth = parseDate(dobInput); // Use the new parseDate function
+
+                if (!dateOfBirth) {
+                    resultDiv.innerHTML = '<p>Invalid date format. Please use "June 05, 1999" or "06/05/1999".</p>';
+                    resultDiv.style.display = 'block';
+                    return; // Exit if the date is invalid
+                }
+
+                const results = data.filter(entry =>
+                    entry.last_name.toUpperCase() === lastName &&
+                    entry.first_name.toUpperCase() === firstName &&
+                    entry.birthday === formatDate(dateOfBirth) // Ensure the format matches
+                );
+
+                if (results.length > 0) {
+                    showModal(results);
+                } else {
+                    resultDiv.innerHTML = '<p>No matching records found.</p>';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+                loader.style.display = 'none';
             }
         });
-});
 
-function showModal(results) {
-    const modal = document.getElementById('resultModal');
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = '';
+        // New function to parse various date formats
+        function parseDate(input) {
+            const formats = [
+                { regex: /^(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4})$/, parse: (m) => new Date(`${m[1]} ${m[2]}, ${m[3]}`) },
+                { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, parse: (m) => new Date(`${m[3]}-${m[1]}-${m[2]}`) }
+            ];
 
-    results.forEach((entry) => {
-        const statusColor = getStatusColor(entry.nc_validity);
-        resultDiv.innerHTML += `
-            <div style="color: ${statusColor};">
-                <strong>${entry.first_name} ${entry.middle_initial} ${entry.last_name}</strong><br>
-                Qualification: ${entry.qualification}<br>
-                Date of Issuance: ${entry.nc_date_issuance}<br>
-                Validity: ${entry.nc_validity}<br>
-                Status: ${entry.status || 'Active'}
-            </div>
-        `;
-    });
+            for (const format of formats) {
+                const match = input.match(format.regex);
+                if (match) {
+                    return format.parse(match);
+                }
+            }
+            return null; // Return null if no format matches
+        }
 
-    modal.style.display = 'block';
+        // Function to format the date back to the expected string format
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
 
-    document.getElementById('closeModal').onclick = function() {
-        modal.style.display = 'none';
-    };
-}
+        function showModal(results) {
+            const modalSlides = document.getElementById('modalSlides');
+            modalSlides.innerHTML = ''; // Clear previous results
 
-function getStatusColor(validity) {
-    const currentDate = new Date();
-    const expiringDate = new Date(validity);
-    const threeMonthsFromNow = new Date();
-    threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+            results.forEach(result => {
+                // Determine status based on validity
+                const validityDate = new Date(result.nttc_validity);
+                const currentDate = new Date();
+                const threeMonthsFromNow = new Date();
+                threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
 
-    if (expiringDate < currentDate) {
-        return 'red';
-    } else if (expiringDate <= threeMonthsFromNow) {
-        return 'orange';
-    } else {
-        return 'green';
-    }
-}
-</script>
+                let statusText = 'Active';
+                let statusColor = 'green';
 
+                if (validityDate < currentDate) {
+                    statusText = 'Expired';
+                    statusColor = 'red';
+                } else if (validityDate <= threeMonthsFromNow) {
+                    statusText = 'Expiring Soon';
+                    statusColor = 'orange';
+                }
+
+                modalSlides.innerHTML += `
+                    <div class="modal-slide">
+                        <p><strong>Last Name:</strong> ${result.last_name}</p>
+                        <p><strong>First Name:</strong> ${result.first_name}</p>
+                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
+                        <p><strong>Qualification:</strong> ${result.qualification}</p>
+                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
+                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
+                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
+                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
+                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
+                    </div>`;
+            });
+
+            // Show the modal
+            document.getElementById('resultModal').style.display = 'block';
+            currentSlide = 0;
+            showSlide(currentSlide);
+        }
+
+        // Modal slide functionality
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.modal-slide');
+            slides.forEach((slide, i) => {
+                slide.style.display = (i === index) ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('prevSlide').onclick = function() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        };
+
+        document.getElementById('nextSlide').onclick = function() {
+            const slides = document.querySelectorAll('.modal-slide');
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        };
+
+        document.getElementById('closeModal').onclick = function() {
+            document.getElementById('resultModal').style.display = 'none';
+        };
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        // Close modal with the escape key
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('resultModal').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
