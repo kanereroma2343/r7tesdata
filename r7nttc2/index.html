@@ -306,7 +306,7 @@
                 const data = await response.json();
                 console.log('Fetched data:', data);
 
-                // Parse the date of birth from various formats
+                // Ensure the date of birth is parsed correctly
                 const dobInput = document.getElementById('dateOfBirth').value.trim();
                 const dateOfBirth = parseDate(dobInput); // Use the new parseDate function
 
