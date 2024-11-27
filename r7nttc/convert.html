@@ -131,7 +131,7 @@
         function formatDate(excelDate) {
             const date = new Date((excelDate - (excelDate >= 61 ? 1 : 0)) * 86400000 + Date.UTC(1899, 11, 30));
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
+            return date.toLocaleDateString('en-US', options).replace(/, 0(\d)/, ', $1');
         }
 
         function showToast(message) {
