@@ -130,7 +130,7 @@
     <script>
         function formatDate(excelDate) {
             const adjustedDate = excelDate >= 61 ? excelDate - 1 : excelDate;
-            const date = new Date((adjustedDate) * 86400000 + Date.UTC(1899, 11, 30));
+            const date = new Date((adjustedDate - 25569) * 86400000);
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
         }
