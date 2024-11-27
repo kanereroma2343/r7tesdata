@@ -266,7 +266,7 @@
                 <div>
                     <div class="box" data-box="SCHOLARSHIPS">SCHOLARSHIPS</div>
                     <div class="sub-boxes" id="SCHOLARSHIPS-sub">
-                        <div class="sub-box" id="aljohn-gwapo">Aljohn Gwapo</div>
+                        <div class="sub-box">Aljohn Gwapo</div>
                         <div class="sub-box">Mam Ann Gwapa</div>
                     </div>
                 </div>
@@ -301,31 +301,7 @@
                     }
                 });
             });
-
-            // New code to handle iframe popup
-            const aljohnGwapoButton = document.getElementById('aljohn-gwapo');
-            const iframePopup = document.getElementById('iframe-popup');
-            const popupIframe = document.getElementById('popup-iframe');
-            const closePopupButton = document.getElementById('close-popup');
-
-            aljohnGwapoButton.addEventListener('click', function() {
-                popupIframe.src = 'https://drive.google.com/drive/folders/1tlmDENBzLpMM4y-9tZ5jGqMFZMbK1LKX'; // Set the URL to load
-                iframePopup.style.display = 'block';
-            });
-
-            closePopupButton.addEventListener('click', function() {
-                iframePopup.style.display = 'none';
-                popupIframe.src = ''; // Clear the iframe source
-            });
         });
     </script>
-
-    <!-- Add this div for the iframe popup -->
-    <div id="iframe-popup" style="display: none;">
-        <div class="popup-content">
-            <button id="close-popup">Close</button>
-            <iframe id="popup-iframe" src="" width="600" height="400"></iframe>
-        </div>
-    </div>
 </body>
 </html>
