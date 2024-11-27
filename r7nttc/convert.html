@@ -126,16 +126,15 @@
         <pre id="jsonOutput"></pre>
     </div>
     <div class="toast" id="toast"></div>
-
     <script>
         function formatDate(excelDate) {
             const date = new Date((excelDate - (excelDate >= 61 ? 1 : 0)) * 86400000 + Date.UTC(1899, 11, 30));
-            const month = date.toLocaleString('default', { month: 'long' });
+            const month = date.getMonth() + 1; // getMonth() is 0-based
             const day = date.getDate();
             const year = date.getFullYear();
-            return `${month} ${day}, ${year}`;
+            return `${month}/${day}/${year}`;
         }
-
+    
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -144,20 +143,20 @@
                 toast.style.display = 'none';
             }, 3000);
         }
-
+    
         function handleFile(file) {
             if (!file) {
                 showToast('Please upload an Excel file.');
                 return;
             }
-
+    
             const reader = new FileReader();
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-
+    
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 });
                 const filteredData = jsonData.map((row, index) => ({
                     id: index + 1,
@@ -192,11 +191,11 @@
                     nttc_date_issuance: typeof row[30] === 'number' ? formatDate(row[30]) : row[30] || null,
                     nttc_validity: typeof row[31] === 'number' ? formatDate(row[31]) : row[31] || null
                 }));
-
+    
                 const jsonOutput = JSON.stringify(filteredData, null, 2);
                 document.getElementById('jsonOutput').textContent = jsonOutput;
                 document.getElementById('jsonOutput').style.display = 'block';
-
+    
                 // Simulate progress
                 let progress = 0;
                 const interval = setInterval(() => {
@@ -209,11 +208,11 @@
                     }
                 }, 50);
             };
-
+    
             document.getElementById('progressContainer').style.display = 'block';
             reader.readAsArrayBuffer(file);
         }
-
+    
         function downloadJson(jsonData) {
             const blob = new Blob([jsonData], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -224,33 +223,34 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-
+    
             showToast('Your JSON file has been downloaded.');
         }
-
+    
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('fileInput');
-
+    
         dropzone.addEventListener('click', () => fileInput.click());
-
+    
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropzone.style.backgroundColor = '#f7fafc';
         });
-
+    
         dropzone.addEventListener('dragleave', () => {
             dropzone.style.backgroundColor = '';
         });
-
+    
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropzone.style.backgroundColor = '';
             handleFile(e.dataTransfer.files[0]);
         });
-
+    
         fileInput.addEventListener('change', (e) => {
             handleFile(e.target.files[0]);
         });
     </script>
+    
 </body>
 </html>
