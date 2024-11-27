@@ -128,12 +128,20 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        function formatDate(excelDate) {
-            const adjustedDate = excelDate >= 61 ? excelDate - 1 : excelDate;
-            const date = new Date((adjustedDate - 25569) * 86400000);
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
+       function formatDate(excelDate) {
+    if (typeof excelDate !== 'number' || isNaN(excelDate)) {
+        return 'Invalid Date'; // Handles non-numeric or invalid inputs
+    }
+
+    // Correct for Excel's leap year bug (if date >= 61, subtract 1 day)
+    const excelEpoch = Date.UTC(1899, 11, 30); // Excel's epoch (Dec 30, 1899)
+    const dayInMillis = 86400000; // Milliseconds in a day
+    const adjustedDate = new Date((excelDate - (excelDate >= 61 ? 1 : 0)) * dayInMillis + excelEpoch);
+
+    // Format the date in 'MMMM DD, YYYY' format
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return adjustedDate.toLocaleDateString('en-US', options);
+}
 
         function showToast(message) {
             const toast = document.getElementById('toast');
