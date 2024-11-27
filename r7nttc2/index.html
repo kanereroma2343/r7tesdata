@@ -283,159 +283,100 @@
     </div>
 
     <script>
-        const form = document.getElementById('nttcForm');
-        const loader = document.getElementById('loader');
-        const resultDiv = document.getElementById('result');
+       const form = document.getElementById('nttcForm');
+const loader = document.getElementById('loader');
+const resultDiv = document.getElementById('result');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-            // Show loader
-            loader.style.display = 'block';
-            resultDiv.style.display = 'none';
+    // Show loader
+    loader.style.display = 'block';
+    resultDiv.style.display = 'none';
 
-            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const firstName = document.getElementById('firstName').value.trim().toUpperCase();
+    const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+    const firstName = document.getElementById('firstName').value.trim().toUpperCase();
+    const extension = document.getElementById('extension').value.trim().toUpperCase();
+    const middleInitial = document.getElementById('middleInitial').value.trim().toUpperCase();
+    const dobInput = document.getElementById('dateOfBirth').value.trim();
 
-            console.log('Searching for:', { lastName, firstName });
+    console.log('Searching for:', { lastName, firstName, extension, middleInitial, dobInput });
 
-            try {
-                const response = await fetch('/r7nttc/data.json');
-                if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+    try {
+        const response = await fetch('/r7nttc/data.json');
+        if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
-                const data = await response.json();
-                console.log('Fetched data:', data);
+        const data = await response.json();
+        console.log('Fetched data:', data);
 
-                // Ensure the date of birth is parsed correctly
-                const dobInput = document.getElementById('dateOfBirth').value.trim();
-                const dateOfBirth = parseDate(dobInput); // Use the new parseDate function
-
-                if (!dateOfBirth) {
-                    resultDiv.innerHTML = '<p>Invalid date format. Please use "June 05, 1999" or "06/05/1999".</p>';
-                    resultDiv.style.display = 'block';
-                    return; // Exit if the date is invalid
-                }
-
-                const results = data.filter(entry =>
-                    entry.last_name.toUpperCase() === lastName &&
-                    entry.first_name.toUpperCase() === firstName &&
-                    entry.birthday === formatDate(dateOfBirth) // Ensure the format matches
-                );
-
-                if (results.length > 0) {
-                    showModal(results);
-                } else {
-                    resultDiv.innerHTML = '<p>No matching records found.</p>';
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
-            } finally {
-                loader.style.display = 'none';
-            }
-        });
-
-        // New function to parse various date formats
-        function parseDate(input) {
-            const formats = [
-                { regex: /^(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4})$/, parse: (m) => new Date(`${m[1]} ${m[2]}, ${m[3]}`) },
-                { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, parse: (m) => new Date(`${m[3]}-${m[1]}-${m[2]}`) }
-            ];
-
-            for (const format of formats) {
-                const match = input.match(format.regex);
-                if (match) {
-                    return format.parse(match);
-                }
-            }
-            return null; // Return null if no format matches
+        const parsedDOB = parseDate(dobInput);
+        if (!parsedDOB) {
+            resultDiv.innerHTML = '<p>Invalid date format. Please use "MM/DD/YYYY".</p>';
+            resultDiv.style.display = 'block';
+            return;
         }
 
-        // Function to format the date back to the expected string format
-        function formatDate(date) {
-            const options = { year: 'numeric', month: 'long', day: '2-digit' };
-            return date.toLocaleDateString('en-US', options);
+        const results = data.filter(entry =>
+            entry.last_name.toUpperCase() === lastName &&
+            entry.first_name.toUpperCase() === firstName &&
+            (!extension || entry.extension?.toUpperCase() === extension) &&
+            (!middleInitial || entry.middle_initial?.toUpperCase() === middleInitial) &&
+            entry.birthday === formatDate(parsedDOB)
+        );
+
+        if (results.length > 0) {
+            showModal(results);
+        } else {
+            resultDiv.innerHTML = '<p>No matching records found.</p>';
+            resultDiv.style.display = 'block';
         }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+        resultDiv.style.display = 'block';
+    } finally {
+        loader.style.display = 'none';
+    }
+});
 
-        function showModal(results) {
-            const modalSlides = document.getElementById('modalSlides');
-            modalSlides.innerHTML = ''; // Clear previous results
+function parseDate(input) {
+    const [month, day, year] = input.split('/').map(part => parseInt(part, 10));
+    if (!month || !day || !year) return null;
+    return new Date(year, month - 1, day);
+}
 
-            results.forEach(result => {
-                // Determine status based on validity
-                const validityDate = new Date(result.nttc_validity);
-                const currentDate = new Date();
-                const threeMonthsFromNow = new Date();
-                threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
+function formatDate(date) {
+    return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+}
 
-                let statusText = 'Active';
-                let statusColor = 'green';
+function showModal(results) {
+    const modal = document.getElementById('resultModal');
+    const modalSlides = document.getElementById('modalSlides');
+    modalSlides.innerHTML = ''; // Clear previous results
 
-                if (validityDate < currentDate) {
-                    statusText = 'Expired';
-                    statusColor = 'red';
-                } else if (validityDate <= threeMonthsFromNow) {
-                    statusText = 'Expiring Soon';
-                    statusColor = 'orange';
-                }
+    results.forEach(result => {
+        const validityDate = new Date(result.nttc_validity);
+        const currentDate = new Date();
+        const status = validityDate >= currentDate ? 'VALID' : 'EXPIRED';
+        const slide = document.createElement('div');
+        slide.classList.add('modal-section');
+        slide.innerHTML = `
+            <p><strong>NTTC No:</strong> ${result.nttc_number}</p>
+            <p><strong>Name:</strong> ${result.first_name} ${result.middle_initial || ''} ${result.last_name} ${result.extension || ''}</p>
+            <p><strong>Birthday:</strong> ${result.birthday}</p>
+            <p><strong>Status:</strong> <span class="modal-status" style="color:${status === 'VALID' ? 'green' : 'red'};">${status}</span></p>
+        `;
+        modalSlides.appendChild(slide);
+    });
 
-                modalSlides.innerHTML += `
-                    <div class="modal-slide">
-                        <p><strong>Last Name:</strong> ${result.last_name}</p>
-                        <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
-                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
-                        <p><strong>Qualification:</strong> ${result.qualification}</p>
-                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${result.nttc_date_issuance || 'N/A'}</p>
-                        <p><strong>Validity:</strong> ${result.nttc_validity || 'N/A'}</p>
-                        <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
-                    </div>`;
-            });
+    modal.style.display = 'block';
 
-            // Show the modal
-            document.getElementById('resultModal').style.display = 'block';
-            currentSlide = 0;
-            showSlide(currentSlide);
-        }
+    const closeModal = document.getElementById('closeModal');
+    closeModal.onclick = () => {
+        modal.style.display = 'none';
+    };
+}
 
-        // Modal slide functionality
-        let currentSlide = 0;
-
-        function showSlide(index) {
-            const slides = document.querySelectorAll('.modal-slide');
-            slides.forEach((slide, i) => {
-                slide.style.display = (i === index) ? 'block' : 'none';
-            });
-        }
-
-        document.getElementById('prevSlide').onclick = function() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                showSlide(currentSlide);
-            }
-        };
-
-        document.getElementById('nextSlide').onclick = function() {
-            const slides = document.querySelectorAll('.modal-slide');
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            document.getElementById('resultModal').style.display = 'none';
-        };
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('resultModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
 
         // Close modal with the escape key
         window.addEventListener('keydown', function(event) {
