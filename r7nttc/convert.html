@@ -129,7 +129,7 @@
     <script>
         // Function to format Excel date (serial number) to a readable format
         function formatDate(excelDate) {
-            const date = new Date((excelDate - 1) * 86400000 + Date.UTC(1899, 0, 1));
+            const date = new Date((excelDate - 0) * 86400000 + Date.UTC(1899, 0, 1));
             const month = date.getMonth() + 1; // getMonth() is 0-based
             const day = date.getDate();
             const year = date.getFullYear();
