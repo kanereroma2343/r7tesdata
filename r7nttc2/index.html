@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online NTTC Status System</title>
-    <link rel="icon" href="/icons/t7logo.png" type="image/x-icon">
+    <link rel="icon" href="../icons/t7logo.png" type="image/x-icon">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,16 +13,16 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background: linear-gradient(135deg, #000000, #0a2472, #000000);
-            color: #ffffff;
+            background: linear-gradient(to right, #ffffff, #e0e0e0);
+            color: #333333;
             line-height: 1.6;
         }
-        footer {
+       footer {
             background-color: rgba(0, 0, 0, 0.5);
             color: #ffffff;
             text-align: center;
             padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         main {
             flex: 1;
@@ -32,25 +32,20 @@
             padding: 2rem;
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 2rem;
+            background-color: rgb(0, 0, 0);
+            padding: 3rem;
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
-            width: 35%;
-            max-width: 450px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 800px;
             backdrop-filter: blur(10px);
         }
-        h1{
+        h1, h2 {
             margin-bottom: 1.5rem;
-            color: #00ff00;
+            color: #007bff;
             text-align: center;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        h2 {
-            margin-bottom: 1.5rem;
-            color: #2bff00;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 0 10px rgba(81, 255, 0, 0.5);
         }
         form {
             display: grid;
@@ -60,30 +55,30 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             display: block;
-            color: #ffffff;
+            color: #007bff;
         }
         input {
-            width: 95%;
+            width: 100%;
             padding: 0.75rem;
             border: none;
             border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background-color: #f0f0f0;
+            color: #333333;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
         input:focus {
             outline: none;
             background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 2px #00ff00;
+            box-shadow: 0 0 0 2px #007bff;
         }
         input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
         button {
             padding: 0.75rem;
-            background-color: #004cff;
-            color: #000000;
+            background-color: #007bff;
+            color: #00ff00;
             border: 2px solid #000000;
             border-radius: 10px;
             cursor: pointer;
@@ -102,7 +97,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: #00ffff;
+            background: #ff00ff;
             z-index: -1;
             filter: blur(10px);
             opacity: 0;
@@ -114,7 +109,7 @@
         button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
-            box-shadow: 0 0 15px #00ffff;
+            box-shadow: 0 0 15px #007bff;
         }
         button:active {
             transform: translateY(0);
@@ -129,7 +124,7 @@
             width: 12px;
             height: 12px;
             margin: 0 5px;
-            background: #00ff00;
+            background: #007bff;
             border-radius: 50%;
             animation: bounce 1s infinite;
         }
@@ -156,18 +151,18 @@
             backdrop-filter: blur(5px);
         }
         .modal-content {
-            background: linear-gradient(135deg, #000000, #0a2472, #000000);
+            background: linear-gradient(to right, #ffffff, #e0e0e0);
             margin: 10% auto;
             padding: 2rem;
-            border: 1px solid #00ff00;
+            border: 1px solid #007bff;
             width: 90%;
             max-width: 600px;
             border-radius: 20px;
-            color: #ffffff;
+            color: #333333;
             box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
         }
         .close {
-            color: #ffffff;
+            color: #333333;
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -175,11 +170,11 @@
             transition: color 0.3s ease;
         }
         .close:hover {
-            color: #00ffff;
+            color: #ff00ff;
         }
         .slide-button {
-            background-color: #00ff00;
-            color: #ffffff;
+            background-color: #007bff;
+            color: #333333;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -191,29 +186,26 @@
         .slide-button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
-            box-shadow: 0 0 15px #00ffff;
+            box-shadow: 0 0 15px #007bff;
         }
         .slide-button:active {
             transform: translateY(0);
         }
         @media (max-width: 768px) {
             body {
-                font-size: 16px;
+                font-size: 14px;
             }
             .container {
                 padding: 1.5rem;
-                width: 90%;
-                max-width: 400px;
             }
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.75rem;
             }
             h2 {
                 font-size: 1.5rem;
             }
             input, button {
-                font-size: 1rem;
-                padding: 0.5rem;
+                font-size: 0.9rem;
             }
             .modal-content {
                 width: 80%;
@@ -227,8 +219,6 @@
             }
             .container {
                 padding: 1rem;
-                width: 90%;
-                max-width: 350px;
             }
             h1 {
                 font-size: 1.5rem;
@@ -237,8 +227,7 @@
                 font-size: 1.25rem;
             }
             input, button {
-                font-size: 0.9rem;
-                padding: 0.5rem;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -247,7 +236,7 @@
     <main>
         <div class="container">
             <form id="nttcForm" aria-labelledby="nttcFormTitle">
-                <img src="/icons/t7ilogo.png" alt="Logo" style="display: block; margin: 0 auto; max-width: 25%; height: auto;">
+                <img src="../icons/t7logo.png" alt="Logo" style="display: block; margin: 0 auto; max-width: 25%; height: auto;">
                 <h2 id="nttcFormTitle">Check Your NTTC Status</h2>
                 <div>
                     <label for="lastName">Last Name:</label>
@@ -267,7 +256,7 @@
                 </div>
                 <div>
                     <label for="dateOfBirth">Date of Birth:</label>
-                    <input type="text" id="dateOfBirth" name="dateOfBirth" required placeholder="MM/DD/YYYY" pattern="\d{2}/\d{2}/\d{4}" title="Please enter a date in MM/DD/YYYY format">
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
                 </div>
                 <button type="submit" aria-label="Submit form">Check Status</button>
             </form>
