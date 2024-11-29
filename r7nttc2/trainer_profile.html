@@ -97,10 +97,15 @@
     </style>
 </head>
 <body>
-    <div class="form-container">
+    <div class="form-container" style="position: relative;">
         <h1>TESDA NMIS FORM-01A</h1>
         <h2>(For TPIS and CACS)</h2>
         <h3>TRAINER'S/ASSESSOR'S PROFILE</h3>
+
+        <div class="photo-upload" style="position: absolute; top: 30px; right: 30px;">
+            <label for="id-photo">ID Picture (2"x2" size)</label>
+            <input type="file" id="id-photo" name="id-photo" accept="image/*">
+        </div>
 
         <form>
             <div class="section">
@@ -322,11 +327,6 @@
                 <div class="form-group">
                     <label for="aptitude-exam-time">Time:</label>
                     <input type="time" id="aptitude-exam-time" name="aptitude-exam-time">
-                </div>
-
-                <div class="photo-upload">
-                    <label for="id-photo">ID Picture (2"x2" size)</label>
-                    <input type="file" id="id-photo" name="id-photo" accept="image/*">
                 </div>
             </div>
 
