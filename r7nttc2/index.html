@@ -308,10 +308,13 @@
             resultDiv.style.display = 'none';
 
             const lastName = document.getElementById('lastName').value.trim().toUpperCase();
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value);
-            const formattedDateOfBirth = `${String(dateOfBirth.getMonth() + 1).padStart(2, '0')}/${String(dateOfBirth.getDate()).padStart(2, '0')}/${dateOfBirth.getFullYear()}`;
+            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
 
-            console.log('Searching for:', { lastName, formattedDateOfBirth });
+            console.log('Searching for:', { lastName, dateOfBirth });
 
             try {
                 const response = await fetch('/r7nttc/data.json');
@@ -322,7 +325,7 @@
 
                 const results = data.filter(entry =>
                     entry.last_name.toUpperCase() === lastName &&
-                    entry.birthday === formattedDateOfBirth
+                    entry.birthday === dateOfBirth
                 );
 
                 if (results.length > 0) {
