@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESDA NMIS FORM-01A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="date"], input[type="number"], input[type="email"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .inline-group {
+            display: flex;
+            gap: 10px;
+        }
+        .inline-group input[type="text"], .inline-group select {
+            flex: 1;
+        }
+        .photo-upload {
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>TESDA NMIS FORM-01A</h1>
+        <h2>(For TPIS and CACS)</h2>
+        <h3>TRAINER'S/ASSESSOR'S PROFILE</h3>
+
+        <form>
+            <h2>1. To be accomplished by TESDA</h2>
+            <div class="form-group">
+                <label for="nmis-code">1.1. NMIS Manpower Code:</label>
+                <input type="text" id="nmis-code" name="nmis-code">
+            </div>
+            <div class="form-group">
+                <label for="nmis-date">1.2. NMIS Entry Date:</label>
+                <input type="date" id="nmis-date" name="nmis-date">
+            </div>
+
+            <h2>2. Manpower Profile</h2>
+            <div class="form-group inline-group">
+                <div>
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" name="last-name">
+                </div>
+                <div>
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first-name" name="first-name">
+                </div>
+                <div>
+                    <label for="middle-name">Middle Name:</label>
+                    <input type="text" id="middle-name" name="middle-name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">2.2. Mailing Address:</label>
+                <input type="text" id="address" name="address" placeholder="Number, Street, Barangay, District">
+            </div>
+            <div class="form-group inline-group">
+                <div>
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city">
+                </div>
+                <div>
+                    <label for="province">Province:</label>
+                    <input type="text" id="province" name="province">
+                </div>
+                <div>
+                    <label for="region">Region:</label>
+                    <input type="text" id="region" name="region">
+                </div>
+            </div>
+            <div class="form-group inline-group">
+                <div>
+                    <label for="zip-code">Zip Code:</label>
+                    <input type="text" id="zip-code" name="zip-code">
+                </div>
+                <div>
+                    <label for="po-box">P.O. Box No.:</label>
+                    <input type="text" id="po-box" name="po-box">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sex">2.3. Sex:</label>
+                <select id="sex" name="sex">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="civil-status">2.4. Civil Status:</label>
+                <select id="civil-status" name="civil-status">
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                    <option value="widowed">Widowed</option>
+                    <option value="separated">Separated</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">2.5. Contact Number(s):</label>
+                <input type="text" id="contact" name="contact" placeholder="Telephone, Cellular, Email, Fax">
+            </div>
+
+            <div class="form-group">
+                <label for="employment-type">2.6. Employment Type:</label>
+                <select id="employment-type" name="employment-type">
+                    <option value="employed">Employed</option>
+                    <option value="self-employed">Self-employed</option>
+                    <option value="unemployed">Unemployed</option>
+                    <option value="other">Other than above</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="employment-status">2.7. Employment Status:</label>
+                <select id="employment-status" name="employment-status">
+                    <option value="casual">Casual</option>
+                    <option value="contractual">Contractual</option>
+                    <option value="job-order">Job Order</option>
+                    <option value="temporary">Temporary</option>
+                    <option value="probationary">Probationary</option>
+                    <option value="regular">Regular</option>
+                    <option value="permanent">Permanent</option>
+                    <option value="student">Student</option>
+                    <option value="trainee">Trainee/OJT</option>
+                </select>
+            </div>
+
+            <h2>3. Personal Information</h2>
+            <div class="form-group">
+                <label for="birthdate">3.1. Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate">
+            </div>
+            <div class="form-group">
+                <label for="birthplace">3.2. Birth Place:</label>
+                <input type="text" id="birthplace" name="birthplace">
+            </div>
+            <div class="form-group">
+                <label for="citizenship">3.3. Citizenship:</label>
+                <input type="text" id="citizenship" name="citizenship">
+            </div>
+            <div class="form-group">
+                <label for="religion">3.4. Religion:</label>
+                <input type="text" id="religion" name="religion">
+            </div>
+            <div class="form-group">
+                <label for="height">3.5. Height:</label>
+                <input type="text" id="height" name="height">
+            </div>
+            <div class="form-group">
+                <label for="weight">3.6. Weight:</label>
+                <input type="text" id="weight" name="weight">
+            </div>
+            <div class="form-group">
+                <label for="blood-type">3.7. Blood Type:</label>
+                <input type="text" id="blood-type" name="blood-type">
+            </div>
+            <div class="form-group">
+                <label for="sss">3.8. SSS No.:</label>
+                <input type="text" id="sss" name="sss">
+            </div>
+            <div class="form-group">
+                <label for="gsis">3.9. GSIS No.:</label>
+                <input type="text" id="gsis" name="gsis">
+            </div>
+            <div class="form-group">
+                <label for="tin">3.10. TIN No.:</label>
+                <input type="text" id="tin" name="tin">
+            </div>
+            <div class="form-group">
+                <label for="distinguishing-marks">3.11. Distinguishing Marks:</label>
+                <input type="text" id="distinguishing-marks" name="distinguishing-marks">
+            </div>
+
+            <h2>4. Educational Background</h2>
+            <table>
+                <tr>
+                    <th>School</th>
+                    <th>Educational Level</th>
+                    <th>School Year</th>
+                    <th>Degree</th>
+                    <th>Major</th>
+                    <th>Minor</th>
+                    <th>Units Earned</th>
+                    <th>Honors Received</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="school[]"></td>
+                    <td><input type="text" name="educational-level[]"></td>
+                    <td><input type="text" name="school-year[]"></td>
+                    <td><input type="text" name="degree[]"></td>
+                    <td><input type="text" name="major[]"></td>
+                    <td><input type="text" name="minor[]"></td>
+                    <td><input type="text" name="units-earned[]"></td>
+                    <td><input type="text" name="honors[]"></td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </table>
+
+            <h2>5. Course Title (for TPIS, CACs)</h2>
+            <div class="form-group">
+                <label for="course-title">5.1. Course Title:</label>
+                <input type="text" id="course-title" name="course-title">
+            </div>
+            <div class="form-group">
+                <label for="training-duration">Training Duration (No. of Hrs.):</label>
+                <input type="number" id="training-duration" name="training-duration">
+            </div>
+            <div class="form-group inline-group">
+                <div>
+                    <label for="schedule-from">From:</label>
+                    <input type="date" id="schedule-from" name="schedule-from">
+                </div>
+                <div>
+                    <label for="schedule-to">To:</label>
+                    <input type="date" id="schedule-to" name="schedule-to">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="aptitude-exam-date">5.3. Aptitude Exam Schedule Date:</label>
+                <input type="date" id="aptitude-exam-date" name="aptitude-exam-date">
+            </div>
+            <div class="form-group">
+                <label for="aptitude-exam-time">Time:</label>
+                <input type="time" id="aptitude-exam-time" name="aptitude-exam-time">
+            </div>
+
+            <div class="photo-upload">
+                <label for="id-photo">ID Picture (2"x2" size)</label>
+                <input type="file" id="id-photo" name="id-photo" accept="image/*">
+            </div>
+
+            <!-- Add more sections as needed -->
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
