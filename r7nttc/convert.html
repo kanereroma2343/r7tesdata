@@ -189,6 +189,7 @@
                 const jsonOutput = JSON.stringify(filteredData, null, 2);
                 document.getElementById('jsonOutput').textContent = jsonOutput;
                 document.getElementById('jsonOutput').style.display = 'block';
+                showPreview(jsonOutput);
 
                 // Simulate progress
                 let progress = 0;
@@ -201,6 +202,10 @@
                         downloadJson(jsonOutput);
                     }
                 }, 50);
+            };
+
+            reader.onerror = function() {
+                showToast('Error reading file. Please try again.');
             };
 
             document.getElementById('progressContainer').style.display = 'block';
@@ -244,6 +249,22 @@
         fileInput.addEventListener('change', (e) => {
             handleFile(e.target.files[0]);
         });
+
+        function showPreview(jsonData) {
+            const previewContainer = document.createElement('div');
+            previewContainer.style.marginTop = '1rem';
+            previewContainer.style.backgroundColor = '#f7fafc';
+            previewContainer.style.borderRadius = '4px';
+            previewContainer.style.padding = '1rem';
+            previewContainer.style.whiteSpace = 'pre-wrap';
+            previewContainer.style.wordBreak = 'break-all';
+            previewContainer.style.maxHeight = '200px';
+            previewContainer.style.overflowY = 'auto';
+            previewContainer.textContent = jsonData;
+
+            const card = document.querySelector('.card');
+            card.appendChild(previewContainer);
+        }
     </script>
 </body>
 </html>
