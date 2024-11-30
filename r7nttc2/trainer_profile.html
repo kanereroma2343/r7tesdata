@@ -5,93 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TESDA NMIS FORM-01A</title>
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 0;
+            background: linear-gradient(to right, #005a87, #ffffff);
+            color: #333;
         }
+
         .form-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
         h1, h2, h3 {
             color: #005a87;
             border-bottom: 2px solid #005a87;
-            padding-bottom: 10px;
-        }
-        .form-group {
             margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
+
+        .form-group {
+            margin-bottom: 15px;
         }
-        input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], select, textarea {
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        input[type="text"], input[type="date"], input[type="file"], select, textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
+
+        .photo-upload {
+            border: 2px dashed #005a87;
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        input[type="submit"] {
+            background: #005a87;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #00476e;
+        }
+
         .inline-group {
             display: flex;
-            gap: 15px;
             flex-wrap: wrap;
+            gap: 15px;
         }
+
         .inline-group > div {
             flex: 1;
             min-width: 200px;
         }
-        .photo-upload {
-            width: 150px;
-            height: 150px;
-            border: 2px dashed #005a87;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        input[type="submit"] {
-            background-color: #005a87;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        input[type="submit"]:hover {
-            background-color: #004a6e;
-        }
+
         .section {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
             margin-bottom: 30px;
         }
     </style>
