@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TESDA NMIS FORM-01A</title>
+    <link rel="icon" href="../icons/t7logo.png" type="image/x-icon">
     <style>
         :root {
             --primary-color: #005a87;
@@ -27,7 +28,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -143,12 +144,52 @@
                 padding: 10px;
             }
 
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
             .form-container {
-                padding: 20px;
+                padding: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                padding: 12px 18px;
+                font-size: 16px;
             }
 
             .grid {
                 grid-template-columns: 1fr;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="number"],
+            input[type="email"],
+            input[type="time"],
+            select,
+            textarea {
+                font-size: 14px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            #photo-upload {
+                width: 100%;
+                padding: 10px;
             }
         }
 
@@ -188,12 +229,21 @@
             font-size: 16px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>TESDA NMIS FORM-01A</h1>
-        <h2>(For TPIS and CACS)</h2>
-        <h3>TRAINER'S/ASSESSOR'S PROFILE</h3>
+        <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>TESDA NMIS FORM-01A</h1>
+                <h2>(For TPIS and CACS)</h2>
+                <h3>TRAINER'S/ASSESSOR'S PROFILE</h3>
+            </div>
+            <div style="border: 2px solid var(--primary-color); padding: 10px; border-radius: 8px; display: flex; flex-direction: column; align-items: center;">
+                <label for="photo-upload">Upload 2x2 Picture:</label>
+                <input type="file" id="photo-upload" name="photo-upload" accept="image/*" required>
+            </div>
+        </div>
 
         <form id="tesdaForm">
             <div id="page1" class="form-container">
@@ -417,61 +467,64 @@
             <div id="page2" class="form-container">
                 <div class="form-section">
                     <h2>6. Competency Assessment to Take</h2>
-                    <div class="form-group">
-                        <label for="application-date">6.1. Date of Application:</label>
-                        <input type="date" id="application-date" name="application-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="sector-component">6.2. Sector Component:</label>
-                        <input type="text" id="sector-component" name="sector-component" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="trade-area">6.3. Trade Area:</label>
-                        <input type="text" id="trade-area" name="trade-area" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="occupation">6.4. Occupation:</label>
-                        <input type="text" id="occupation" name="occupation" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="classification">6.5. Classification:</label>
-                        <input type="text" id="classification" name="classification" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="competency">6.6. Competency:</label>
-                        <input type="text" id="competency" name="competency" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="training-program">6.7. Training Program:</label>
-                        <select id="training-program" name="training-program" required>
-                            <option value="">Select</option>
-                            <option value="formal">Formal</option>
-                            <option value="non-formal">Non-Formal</option>
-                            <option value="informal">Informal (prior learning)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="program-sector">6.8. Program Sector:</label>
-                        <select id="program-sector" name="program-sector" required>
-                            <option value="">Select</option>
-                            <option value="public">Public</option>
-                            <option value="industry">Industry</option>
-                            <option value="ofw">OFW</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="client-type">6.9. Client Type:</label>
-                        <select id="client-type" name="client-type" multiple required>
-                            <option value="tesda-grad">TESDA Grad.</option>
-                            <option value="pwd">Person with Disability</option>
-                            <option value="scep">SCEP</option>
-                            <option value="non-tesda-grad">Non-TESDA Grad.</option>
-                            <option value="ofw">OFW</option>
-                            <option value="farmers-fisherfolks">Farmers; Fisherfolks</option>
-                            <option value="osy">OSY</option>
-                            <option value="other">Others</option>
-                        </select>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="application-date">6.1. Date of Application:</label>
+                            <input type="date" id="application-date" name="application-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sector-component">6.2. Sector Component:</label>
+                            <input type="text" id="sector-component" name="sector-component" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-area">6.3. Trade Area:</label>
+                            <input type="text" id="trade-area" name="trade-area" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="occupation">6.4. Occupation:</label>
+                            <input type="text" id="occupation" name="occupation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="classification">6.5. Classification:</label>
+                            <input type="text" id="classification" name="classification" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="competency">6.6. Competency:</label>
+                            <input type="text" id="competency" name="competency" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="training-program">6.7. Training Program:</label>
+                            <select id="training-program" name="training-program" required>
+                                <option value="">Select</option>
+                                <option value="formal">Formal</option>
+                                <option value="non-formal">Non-Formal</option>
+                                <option value="informal">Informal (prior learning)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="program-sector">6.8. Program Sector:</label>
+                            <select id="program-sector" name="program-sector" required>
+                                <option value="">Select</option>
+                                <option value="public">Public</option>
+                                <option value="industry">Industry</option>
+                                <option value="ofw">OFW</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="client-type">6.9. Client Type:</label>
+                            <select id="client-type" name="client-type" required>
+                                <option value="">Select</option>
+                                <option value="tesda-grad">TESDA Grad.</option>
+                                <option value="pwd">Person with Disability</option>
+                                <option value="scep">SCEP</option>
+                                <option value="non-tesda-grad">Non-TESDA Grad.</option>
+                                <option value="ofw">OFW</option>
+                                <option value="farmers-fisherfolks">Farmers; Fisherfolks</option>
+                                <option value="osy">OSY</option>
+                                <option value="other">Others</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -484,6 +537,7 @@
                                 <th>Position</th>
                                 <th>Dates</th>
                                 <th>Salary</th>
+                                <th>Years of Experience</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -492,12 +546,14 @@
                                 <td><input type="text" name="position[]"></td>
                                 <td><input type="text" name="dates[]"></td>
                                 <td><input type="number" name="salary[]"></td>
+                                <td><input type="number" name="years-of-experience[]"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="company[]"></td>
                                 <td><input type="text" name="position[]"></td>
                                 <td><input type="text" name="dates[]"></td>
                                 <td><input type="number" name="salary[]"></td>
+                                <td><input type="number" name="years-of-experience[]"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -567,7 +623,9 @@
                                 <th>Sector</th>
                                 <th>Trade Area</th>
                                 <th>Occupation</th>
-                                <th>Level</th>
+                                <th>Classification Level</th>
+                                <th>Competency</th>
+                                <th>Specialization Description</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -575,20 +633,24 @@
                                 <td><input type="text" name="competency-sector[]"></td>
                                 <td><input type="text" name="competency-trade[]"></td>
                                 <td><input type="text" name="competency-occupation[]"></td>
-                                <td><input type="text" name="competency-level[]"></td>
+                                <td><input type="text" name="classification-level[]"></td>
+                                <td><input type="text" name="competency[]"></td>
+                                <td><input type="text" name="specialization-description[]"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="competency-sector[]"></td>
                                 <td><input type="text" name="competency-trade[]"></td>
                                 <td><input type="text" name="competency-occupation[]"></td>
-                                <td><input type="text" name="competency-level[]"></td>
+                                <td><input type="text" name="classification-level[]"></td>
+                                <td><input type="text" name="competency[]"></td>
+                                <td><input type="text" name="specialization-description[]"></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="form-section family-background">
                     <h2>11. Family Background</h2>
-                    <div class="form-section family-background">
+                    <div class="grid">
                         <div class="form-group">
                             <label for="spouse-name">11.1. Spouse’s Name:</label>
                             <input type="text" id="spouse-name" name="spouse-name">
@@ -663,11 +725,221 @@
                         </div>
                     </div>
                 </div>
-        
+                <button type="button" class="btn" onclick="showPage(1)">Previous</button>
+                <button type="button" class="btn" onclick="downloadAllData()">Download NMIS</button>
+                <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
+            </div>
+        </form>
+    </div>
+
     <script>
         function showPage(pageNumber) {
             document.getElementById('page1').style.display = pageNumber === 1 ? 'block' : 'none';
             document.getElementById('page2').style.display = pageNumber === 2 ? 'block' : 'none';
+        }
+
+        function downloadExcel() {
+            // Collect data from both pages
+            const data = {
+                page1: {
+                    nmisCode: document.getElementById('nmis-code').value,
+                    nmisDate: document.getElementById('nmis-date').value,
+                    lastName: document.getElementById('last-name').value,
+                    firstName: document.getElementById('first-name').value,
+                    middleName: document.getElementById('middle-name').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    province: document.getElementById('province').value,
+                    region: document.getElementById('region').value,
+                    zipCode: document.getElementById('zip-code').value,
+                    poBox: document.getElementById('po-box').value,
+                    sex: document.getElementById('sex').value,
+                    civilStatus: document.getElementById('civil-status').value,
+                    contact: document.getElementById('contact').value,
+                    employmentType: document.getElementById('employment-type').value,
+                    employmentStatus: document.getElementById('employment-status').value,
+                    birthdate: document.getElementById('birthdate').value,
+                    birthplace: document.getElementById('birthplace').value,
+                    citizenship: document.getElementById('citizenship').value,
+                    religion: document.getElementById('religion').value,
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    bloodType: document.getElementById('blood-type').value,
+                    sss: document.getElementById('sss').value,
+                    gsis: document.getElementById('gsis').value,
+                    tin: document.getElementById('tin').value,
+                    distinguishingMarks: document.getElementById('distinguishing-marks').value,
+                    schools: Array.from(document.querySelectorAll('input[name="school[]"]')).map(input => input.value),
+                    educationalLevels: Array.from(document.querySelectorAll('input[name="educational-level[]"]')).map(input => input.value),
+                    schoolYears: Array.from(document.querySelectorAll('input[name="school-year[]"]')).map(input => input.value),
+                    degrees: Array.from(document.querySelectorAll('input[name="degree[]"]')).map(input => input.value),
+                    courseTitle: document.getElementById('course-title').value,
+                    trainingDuration: document.getElementById('training-duration').value,
+                    scheduleFrom: document.getElementById('schedule-from').value,
+                    scheduleTo: document.getElementById('schedule-to').value,
+                    aptitudeExamDate: document.getElementById('aptitude-exam-date').value,
+                    aptitudeExamTime: document.getElementById('aptitude-exam-time').value,
+                },
+                page2: {
+                    applicationDate: document.getElementById('application-date').value,
+                    sectorComponent: document.getElementById('sector-component').value,
+                    tradeArea: document.getElementById('trade-area').value,
+                    occupation: document.getElementById('occupation').value,
+                    classification: document.getElementById('classification').value,
+                    competency: document.getElementById('competency').value,
+                    trainingProgram: document.getElementById('training-program').value,
+                    programSector: document.getElementById('program-sector').value,
+                    clientType: document.getElementById('client-type').value,
+                    companies: Array.from(document.querySelectorAll('input[name="company[]"]')).map(input => input.value),
+                    positions: Array.from(document.querySelectorAll('input[name="position[]"]')).map(input => input.value),
+                    experienceDates: Array.from(document.querySelectorAll('input[name="dates[]"]')).map(input => input.value),
+                    salaries: Array.from(document.querySelectorAll('input[name="salary[]"]')).map(input => input.value),
+                    yearsOfExperience: Array.from(document.querySelectorAll('input[name="years-of-experience[]"]')).map(input => input.value),
+                    trainingTitles: Array.from(document.querySelectorAll('input[name="training-title[]"]')).map(input => input.value),
+                    trainingVenues: Array.from(document.querySelectorAll('input[name="training-venue[]"]')).map(input => input.value),
+                    trainingDates: Array.from(document.querySelectorAll('input[name="training-dates[]"]')).map(input => input.value),
+                    trainingHours: Array.from(document.querySelectorAll('input[name="training-hours[]"]')).map(input => input.value),
+                    licenseTitles: Array.from(document.querySelectorAll('input[name="license-title[]"]')).map(input => input.value),
+                    licenseYears: Array.from(document.querySelectorAll('input[name="license-year[]"]')).map(input => input.value),
+                    licenseRatings: Array.from(document.querySelectorAll('input[name="license-rating[]"]')).map(input => input.value),
+                    licenseExpiries: Array.from(document.querySelectorAll('input[name="license-expiry[]"]')).map(input => input.value),
+                    competencySectors: Array.from(document.querySelectorAll('input[name="competency-sector[]"]')).map(input => input.value),
+                    competencyTrades: Array.from(document.querySelectorAll('input[name="competency-trade[]"]')).map(input => input.value),
+                    competencyOccupations: Array.from(document.querySelectorAll('input[name="competency-occupation[]"]')).map(input => input.value),
+                    competencyLevels: Array.from(document.querySelectorAll('input[name="competency-level[]"]')).map(input => input.value),
+                    spouseName: document.getElementById('spouse-name').value,
+                    spouseEducation: document.getElementById('spouse-education').value,
+                    spouseOccupation: document.getElementById('spouse-occupation').value,
+                    spouseIncome: document.getElementById('spouse-income').value,
+                    fatherName: document.getElementById('father-name').value,
+                    fatherEducation: document.getElementById('father-education').value,
+                    fatherOccupation: document.getElementById('father-occupation').value,
+                    fatherIncome: document.getElementById('father-income').value,
+                    motherName: document.getElementById('mother-name').value,
+                    motherEducation: document.getElementById('mother-education').value,
+                    motherOccupation: document.getElementById('mother-occupation').value,
+                    motherIncome: document.getElementById('mother-income').value,
+                    guardianName: document.getElementById('guardian-name').value,
+                    guardianEducation: document.getElementById('guardian-education').value,
+                    guardianOccupation: document.getElementById('guardian-occupation').value,
+                    guardianIncome: document.getElementById('guardian-income').value,
+                    dependents: document.getElementById('dependents').value,
+                    dependentAge: document.getElementById('dependent-age').value,
+                }
+            };
+
+            // Convert data to a worksheet
+            const worksheet = XLSX.utils.json_to_sheet([data.page1, data.page2]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Form Data");
+
+            // Export to Excel
+            XLSX.writeFile(workbook, "TESDA_NMIS_Form_Data.xlsx");
+        }
+
+        function downloadAllData() {
+            // Collect data from both pages
+            const data = {
+                page1: {
+                    nmisCode: document.getElementById('nmis-code').value,
+                    nmisDate: document.getElementById('nmis-date').value,
+                    lastName: document.getElementById('last-name').value,
+                    firstName: document.getElementById('first-name').value,
+                    middleName: document.getElementById('middle-name').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    province: document.getElementById('province').value,
+                    region: document.getElementById('region').value,
+                    zipCode: document.getElementById('zip-code').value,
+                    poBox: document.getElementById('po-box').value,
+                    sex: document.getElementById('sex').value,
+                    civilStatus: document.getElementById('civil-status').value,
+                    contact: document.getElementById('contact').value,
+                    employmentType: document.getElementById('employment-type').value,
+                    employmentStatus: document.getElementById('employment-status').value,
+                    birthdate: document.getElementById('birthdate').value,
+                    birthplace: document.getElementById('birthplace').value,
+                    citizenship: document.getElementById('citizenship').value,
+                    religion: document.getElementById('religion').value,
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    bloodType: document.getElementById('blood-type').value,
+                    sss: document.getElementById('sss').value,
+                    gsis: document.getElementById('gsis').value,
+                    tin: document.getElementById('tin').value,
+                    distinguishingMarks: document.getElementById('distinguishing-marks').value,
+                    schools: Array.from(document.querySelectorAll('input[name="school[]"]')).map(input => input.value),
+                    educationalLevels: Array.from(document.querySelectorAll('input[name="educational-level[]"]')).map(input => input.value),
+                    schoolYears: Array.from(document.querySelectorAll('input[name="school-year[]"]')).map(input => input.value),
+                    degrees: Array.from(document.querySelectorAll('input[name="degree[]"]')).map(input => input.value),
+                    courseTitle: document.getElementById('course-title').value,
+                    trainingDuration: document.getElementById('training-duration').value,
+                    scheduleFrom: document.getElementById('schedule-from').value,
+                    scheduleTo: document.getElementById('schedule-to').value,
+                    aptitudeExamDate: document.getElementById('aptitude-exam-date').value,
+                    aptitudeExamTime: document.getElementById('aptitude-exam-time').value,
+                },
+                page2: {
+                    applicationDate: document.getElementById('application-date').value,
+                    sectorComponent: document.getElementById('sector-component').value,
+                    tradeArea: document.getElementById('trade-area').value,
+                    occupation: document.getElementById('occupation').value,
+                    classification: document.getElementById('classification').value,
+                    competency: document.getElementById('competency').value,
+                    trainingProgram: document.getElementById('training-program').value,
+                    programSector: document.getElementById('program-sector').value,
+                    clientType: document.getElementById('client-type').value,
+                    companies: Array.from(document.querySelectorAll('input[name="company[]"]')).map(input => input.value),
+                    positions: Array.from(document.querySelectorAll('input[name="position[]"]')).map(input => input.value),
+                    experienceDates: Array.from(document.querySelectorAll('input[name="dates[]"]')).map(input => input.value),
+                    salaries: Array.from(document.querySelectorAll('input[name="salary[]"]')).map(input => input.value),
+                    yearsOfExperience: Array.from(document.querySelectorAll('input[name="years-of-experience[]"]')).map(input => input.value),
+                    trainingTitles: Array.from(document.querySelectorAll('input[name="training-title[]"]')).map(input => input.value),
+                    trainingVenues: Array.from(document.querySelectorAll('input[name="training-venue[]"]')).map(input => input.value),
+                    trainingDates: Array.from(document.querySelectorAll('input[name="training-dates[]"]')).map(input => input.value),
+                    trainingHours: Array.from(document.querySelectorAll('input[name="training-hours[]"]')).map(input => input.value),
+                    licenseTitles: Array.from(document.querySelectorAll('input[name="license-title[]"]')).map(input => input.value),
+                    licenseYears: Array.from(document.querySelectorAll('input[name="license-year[]"]')).map(input => input.value),
+                    licenseRatings: Array.from(document.querySelectorAll('input[name="license-rating[]"]')).map(input => input.value),
+                    licenseExpiries: Array.from(document.querySelectorAll('input[name="license-expiry[]"]')).map(input => input.value),
+                    competencySectors: Array.from(document.querySelectorAll('input[name="competency-sector[]"]')).map(input => input.value),
+                    competencyTrades: Array.from(document.querySelectorAll('input[name="competency-trade[]"]')).map(input => input.value),
+                    competencyOccupations: Array.from(document.querySelectorAll('input[name="competency-occupation[]"]')).map(input => input.value),
+                    competencyLevels: Array.from(document.querySelectorAll('input[name="competency-level[]"]')).map(input => input.value),
+                    spouseName: document.getElementById('spouse-name').value,
+                    spouseEducation: document.getElementById('spouse-education').value,
+                    spouseOccupation: document.getElementById('spouse-occupation').value,
+                    spouseIncome: document.getElementById('spouse-income').value,
+                    fatherName: document.getElementById('father-name').value,
+                    fatherEducation: document.getElementById('father-education').value,
+                    fatherOccupation: document.getElementById('father-occupation').value,
+                    fatherIncome: document.getElementById('father-income').value,
+                    motherName: document.getElementById('mother-name').value,
+                    motherEducation: document.getElementById('mother-education').value,
+                    motherOccupation: document.getElementById('mother-occupation').value,
+                    motherIncome: document.getElementById('mother-income').value,
+                    guardianName: document.getElementById('guardian-name').value,
+                    guardianEducation: document.getElementById('guardian-education').value,
+                    guardianOccupation: document.getElementById('guardian-occupation').value,
+                    guardianIncome: document.getElementById('guardian-income').value,
+                    dependents: document.getElementById('dependents').value,
+                    dependentAge: document.getElementById('dependent-age').value,
+                }
+            };
+
+            // Convert data to JSON
+            const json = JSON.stringify(data, null, 2);
+
+            // Create a blob and trigger download
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
