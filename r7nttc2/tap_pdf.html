@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview - TESDA NMIS FORM-01A</title>
+    <link rel="icon" href="../icons/t7logo.png" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --secondary-color: #f0f4f8;
+            --accent-color: #ffa500;
+            --text-color: #333;
+            --border-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container" style="position: relative;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <h1>Technical Education and Skills Development Authority</h1>
+                <img src="../icons/tlogo.png" alt="Logo" style="width: 70px; height: auto; margin-right: 10px;">
+            </div>
+            <div style="position: absolute; top: 40px; right: 80px; width: 3.5in; height: 3.5in; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
+                <img src="../icons/your_logo.png" alt="2x2 Picture" style="width: 50px; height: 50px;">
+            </div>
+        </div>
+        <h2>Trainor's/Assessor's Profile</h2>
+        <h3>TESDA NMIS FORM-01A</h3>
+        <h3>(For TPI'S and CAC'S)</h3>
+
+        <div id="formData"></div>
+    </div>
+    <script>
+        // Retrieve data from localStorage
+        const data = JSON.parse(localStorage.getItem('formData'));
+
+        // Function to display the data
+        function displayData() {
+            const formDataDiv = document.getElementById('formData');
+            if (data) {
+                formDataDiv.innerHTML = `
+                
+                    <div class="form-section">                   
+                        <div class="form-group" style="text-align: center;">
+                            <div style="border-bottom: 1px solid #fff; width: 100%;">__________________________________________</div>
+                            <label>Applicant's Signature:</label>
+                        </div>
+                        <h2>1. To be accomplished by TESDA</h2>
+                        <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div class="form-group">
+                                <label>1.1. NMIS Manpower Code:</label>
+                                <div style="border: 1px solid #ccc; padding: 15px; border-radius: 4px; width: 100%;">${data.page1.nmisCode}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>1.2. NMIS Entry Date:</label>
+                                <div style="border: 1px solid #ccc; padding: 15px; border-radius: 4px; width: 100%;">${data.page1.nmisDate}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h2>2. Manpower Profile</h2>
+                        <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                            <div class="form-group">
+                                <label>Last Name:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.lastName}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>First Name:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.firstName}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.middleName || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Extension:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.extension || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.2. Mailing Address:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.address}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>City:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.city}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Province:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.province}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Region:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.region || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Zip Code:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.zipCode || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>P.O. Box No.:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.poBox || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.3. Sex:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.sex || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.4. Civil Status:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.civilStatus || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact">2.5. Contact Number(s):</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.contact || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="telephone">Telephone:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.telephone || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="celular">Celular:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.celular || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.email || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fax">Fax:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.fax || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="others">Others:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.others || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.6. Employment Type:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.employmentType || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.7. Employment Status:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.employmentStatus || 'N/A'}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>2.8. Years of Experience:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.yearsOfExperience || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h2>3. Personal Information</h2>
+                        <fieldset>
+                            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                <div>
+                                    <strong>Birthdate:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.birthdate || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Birth Place:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.birthplace || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Citizenship:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.citizenship || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Religion:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.religion || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Height:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.height || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Weight:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.weight || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Blood Type:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.bloodType || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>SSS No.:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.sss || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>GSIS No.:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.gsis || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>TIN No.:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.tin || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Distinguishing Marks:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 100%;">${data.page1.distinguishingMarks || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="form-section">
+                        <h2>4. Educational Background</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Schools</th>
+                                    <th>Educational Levels</th>
+                                    <th>School Years</th>
+                                    <th>Degrees</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${data.page1.schools.join(', ')}</td>
+                                    <td>${data.page1.educationalLevels.join(', ')}</td>
+                                    <td>${data.page1.schoolYears.join(', ')}</td>
+                                    <td>${data.page1.degrees.join(', ')}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page1.schools[1] || 'N/A'}</td>
+                                    <td>${data.page1.educationalLevels[1] || 'N/A'}</td>
+                                    <td>${data.page1.schoolYears[1] || 'N/A'}</td>
+                                    <td>${data.page1.degrees[1] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page1.schools[2] || 'N/A'}</td>
+                                    <td>${data.page1.educationalLevels[2] || 'N/A'}</td>
+                                    <td>${data.page1.schoolYears[2] || 'N/A'}</td>
+                                    <td>${data.page1.degrees[2] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page1.schools[3] || 'N/A'}</td>
+                                    <td>${data.page1.educationalLevels[3] || 'N/A'}</td>
+                                    <td>${data.page1.schoolYears[3] || 'N/A'}</td>
+                                    <td>${data.page1.degrees[3] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page1.schools[4] || 'N/A'}</td>
+                                    <td>${data.page1.educationalLevels[4] || 'N/A'}</td>
+                                    <td>${data.page1.schoolYears[4] || 'N/A'}</td>
+                                    <td>${data.page1.degrees[4] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page1.schools[4] || 'N/A'}</td>
+                                    <td>${data.page1.educationalLevels[4] || 'N/A'}</td>
+                                    <td>${data.page1.schoolYears[4] || 'N/A'}</td>
+                                    <td>${data.page1.degrees[4] || 'N/A'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-section">
+                        <h2>5. Course Title (for TPIS, CACs)</h2>
+                        <fieldset>
+                            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                <div>
+                                    <strong>Course Title:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.courseTitle || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Training Duration (No. of Hrs.):</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.trainingDuration || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Schedule From:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.scheduleFrom || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Schedule To:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.scheduleTo || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Aptitude Exam Schedule Date:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.aptitudeExamDate || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Time:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.aptitudeExamTime || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="form-section">
+                        <h2>6. Competency Assessment to Take</h2>
+                        <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px;">
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.1. Date of Application:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.applicationDate || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.2. Sector Component:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.sectorComponent || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.3. Trade Area:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.tradeArea || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.4. Occupation:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.occupation || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.5. Classification:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.classification || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.6. Competency:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.competency || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.7. Training Program:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.trainingProgram || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.8. Program Sector:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.programSector || 'N/A'}
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 10px;">
+                                <label>6.9. Client Type:</label>
+                                <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                                    ${data.page2.clientType || 'N/A'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h2>7. Working Experience</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Companies</th>
+                                    <th>Positions</th>
+                                    <th>Experience Dates</th>
+                                    <th>Salaries</th>
+                                    <th>Years of Experience</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${data.page2.companies.join(', ')}</td>
+                                    <td>${data.page2.positions.join(', ')}</td>
+                                    <td>${data.page2.experienceDates.join(', ')}</td>
+                                    <td>${data.page2.salaries.join(', ')}</td>
+                                    <td>${data.page2.yearsOfExperience.join(', ')}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.companies[1] || 'N/A'}</td>
+                                    <td>${data.page2.positions[1] || 'N/A'}</td>
+                                    <td>${data.page2.experienceDates[1] || 'N/A'}</td>
+                                    <td>${data.page2.salaries[1] || 'N/A'}</td>
+                                    <td>${data.page2.yearsOfExperience[1] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.companies[2] || 'N/A'}</td>
+                                    <td>${data.page2.positions[2] || 'N/A'}</td>
+                                    <td>${data.page2.experienceDates[2] || 'N/A'}</td>
+                                    <td>${data.page2.salaries[2] || 'N/A'}</td>
+                                    <td>${data.page2.yearsOfExperience[2] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.companies[3] || 'N/A'}</td>
+                                    <td>${data.page2.positions[3] || 'N/A'}</td>
+                                    <td>${data.page2.experienceDates[3] || 'N/A'}</td>
+                                    <td>${data.page2.salaries[3] || 'N/A'}</td>
+                                    <td>${data.page2.yearsOfExperience[3] || 'N/A'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-section">
+                        <h2>8. Other Training/Seminars Attended</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Training Titles</th>
+                                    <th>Training Venues</th>
+                                    <th>Training Dates</th>
+                                    <th>Training Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${data.page2.trainingTitles.join(', ')}</td>
+                                    <td>${data.page2.trainingVenues.join(', ')}</td>
+                                    <td>${data.page2.trainingDates.join(', ')}</td>
+                                    <td>${data.page2.trainingHours.join(', ')}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.trainingTitles[1] || 'N/A'}</td>
+                                    <td>${data.page2.trainingVenues[1] || 'N/A'}</td>
+                                    <td>${data.page2.trainingDates[1] || 'N/A'}</td>
+                                    <td>${data.page2.trainingHours[1] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.trainingTitles[2] || 'N/A'}</td>
+                                    <td>${data.page2.trainingVenues[2] || 'N/A'}</td>
+                                    <td>${data.page2.trainingDates[2] || 'N/A'}</td>
+                                    <td>${data.page2.trainingHours[2] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.trainingTitles[3] || 'N/A'}</td>
+                                    <td>${data.page2.trainingVenues[3] || 'N/A'}</td>
+                                    <td>${data.page2.trainingDates[3] || 'N/A'}</td>
+                                    <td>${data.page2.trainingHours[3] || 'N/A'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-section">
+                        <h2>9. Licenses/Examinations Passed</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>License Titles</th>
+                                    <th>License Years</th>
+                                    <th>License Ratings</th>
+                                    <th>License Expiries</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${data.page2.licenseTitles.join(', ')}</td>
+                                    <td>${data.page2.licenseYears.join(', ')}</td>
+                                    <td>${data.page2.licenseRatings.join(', ')}</td>
+                                    <td>${data.page2.licenseExpiries.join(', ')}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.licenseTitles[1] || 'N/A'}</td>
+                                    <td>${data.page2.licenseYears[1] || 'N/A'}</td>
+                                    <td>${data.page2.licenseRatings[1] || 'N/A'}</td>
+                                    <td>${data.page2.licenseExpiries[1] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.licenseTitles[2] || 'N/A'}</td>
+                                    <td>${data.page2.licenseYears[2] || 'N/A'}</td>
+                                    <td>${data.page2.licenseRatings[2] || 'N/A'}</td>
+                                    <td>${data.page2.licenseExpiries[2] || 'N/A'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-section">
+                        <h2>10. Competency Assessment Passed</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Competency Sectors</th>
+                                    <th>Competency Trades</th>
+                                    <th>Competency Occupations</th>
+                                    <th>Competency Levels</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${data.page2.competencySectors.join(', ')}</td>
+                                    <td>${data.page2.competencyTrades.join(', ')}</td>
+                                    <td>${data.page2.competencyOccupations.join(', ')}</td>
+                                    <td>${data.page2.competencyLevels.join(', ')}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.competencySectors[1] || 'N/A'}</td>
+                                    <td>${data.page2.competencyTrades[1] || 'N/A'}</td>
+                                    <td>${data.page2.competencyOccupations[1] || 'N/A'}</td>
+                                    <td>${data.page2.competencyLevels[1] || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td>${data.page2.competencySectors[2] || 'N/A'}</td>
+                                    <td>${data.page2.competencyTrades[2] || 'N/A'}</td>
+                                    <td>${data.page2.competencyOccupations[2] || 'N/A'}</td>
+                                    <td>${data.page2.competencyLevels[2] || 'N/A'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-section">
+                        <h2>11. Family Background</h2>
+                        <fieldset>
+                            <div class="grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+                                <div>
+                                    <strong>Spouse’s Name:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.spouseName || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Father’s Name:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.fatherName || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Mother’s Name:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.motherName || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Guardian’s Name:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.guardianName || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Dependents:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.dependents || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Spouse’s Educational Attainment:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.spouseEducation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Father’s Educational Attainment:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.fatherEducation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Mother’s Educational Attainment:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.motherEducation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Guardian’s Educational Attainment:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.guardianEducation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Age of Dependents:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.dependentAge || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Spouse’s Occupation:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.spouseOccupation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Father’s Occupation:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.fatherOccupation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Mother’s Occupation:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.motherOccupation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Guardian’s Occupation:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.guardianOccupation || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Spouse’s Average Monthly Income:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.spouseIncome || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Father’s Average Monthly Income:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.fatherIncome || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Mother’s Average Monthly Income:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.motherIncome || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <strong>Guardian’s Average Monthly Income:</strong>
+                                    <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page2.guardianIncome || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                `;
+            } else {
+                formDataDiv.innerHTML = '<p>No data available.</p>';
+            }
+        }
+
+        // Call the function to display data
+        displayData();
+    </script>
+</body>
+</html>

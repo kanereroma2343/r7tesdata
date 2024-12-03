@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TESDA NMIS FORM-01A</title>
     <link rel="icon" href="../icons/t7logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="print.css" media="print">
     <style>
         :root {
-            --primary-color: #005a87;
+            --primary-color: #ff0000;
             --secondary-color: #f0f4f8;
             --accent-color: #ffa500;
             --text-color: #333;
-            --border-color: #ccc;
+            --border-color: #000000;
         }
 
         * {
@@ -28,12 +29,12 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1700px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        h1, h2, h3 {
+        h2, h3 {
             color: var(--primary-color);
             margin-bottom: 20px;
         }
@@ -61,7 +62,7 @@
         }
 
         .form-section {
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         .form-group {
@@ -135,10 +136,9 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
         }
-
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -196,66 +196,61 @@
         #page2 {
             display: none;
         }
+        @media print {
+            .grid {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            }
 
-        /* Family Background Section Styles */
-        .family-background {
-            margin-bottom: 30px;
-        }
+            body {
+                background-color: white !important;
+                color: black !important;
+            }
 
-        .family-background .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
+            .btn {
+                display: none;
+            }
 
-        .family-background .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-
-        .family-background label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .family-background input[type="text"],
-        .family-background input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 16px;
+            #photo-upload {
+                display: none;
+            }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h1>TESDA NMIS FORM-01A</h1>
-                <h2>(For TPIS and CACS)</h2>
-                <h3>TRAINER'S/ASSESSOR'S PROFILE</h3>
+        <div id="page1" class="form-container">
+            <div class="form-group" style="display: flex; justify-content: space-between; align-items: left;">
+                
+                <div>
+                <h1 style="margin-bottom: -2px; font-size: 2.5rem;">Technical Education and Skills Development Authority</h1>
+                    <h2 style="margin-bottom: -10px; text-align: left;">Trainor's/Assessor's Profile</h2>
+                    <h3 style="margin-bottom: -10px; text-align: left;">TESDA NMIS FORM-01A</h3>
+                    <h3 style="margin-bottom: -10px; text-align: left;">(For TPI'S and CAC'S)</h3>
+                </div>
+                
+                <div style="border: 2px solid var(--primary-color); padding: 15px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 270px; min-height: 270px; background-color: var(--secondary-color); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+                    <label for="photo-upload" style="margin-bottom: 12px; font-weight: bold; color: var(--primary-color);">Upload File:</label>
+                    <input type="file" id="photo-upload" name="photo-upload" accept="image/*" required style="border: 1px solid var(--border-color); padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; background-color: #fff;">
+                </div>
             </div>
-            <div style="border: 2px solid var(--primary-color); padding: 10px; border-radius: 8px; display: flex; flex-direction: column; align-items: center;">
-                <label for="photo-upload">Upload 2x2 Picture:</label>
-                <input type="file" id="photo-upload" name="photo-upload" accept="image/*" required>
-            </div>
-        </div>
 
-        <form id="tesdaForm">
-            <div id="page1" class="form-container">
+            <form id="tesdaForm">
                 <div class="form-section">
                     <h2>1. To be accomplished by TESDA</h2>
-                    <div class="form-group">
-                        <label for="nmis-code">1.1. NMIS Manpower Code:</label>
-                        <input type="text" id="nmis-code" name="nmis-code" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nmis-date">1.2. NMIS Entry Date:</label>
-                        <input type="date" id="nmis-date" name="nmis-date" required>
+                    <div class="form-section">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="nmis-code">1.1. NMIS Manpower Code:</label>
+                                <input type="text" id="nmis-code" name="nmis-code" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nmis-date">1.2. NMIS Entry Date:</label>
+                                <input type="date" id="nmis-date" name="nmis-date" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -264,15 +259,19 @@
                     <div class="grid">
                         <div class="form-group">
                             <label for="last-name">Last Name:</label>
-                            <input type="text" id="last-name" name="last-name" required>
+                            <input type="text" id="last-name" name="last-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                         <div class="form-group">
                             <label for="first-name">First Name:</label>
-                            <input type="text" id="first-name" name="first-name" required>
+                            <input type="text" id="first-name" name="first-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                         <div class="form-group">
                             <label for="middle-name">Middle Name:</label>
-                            <input type="text" id="middle-name" name="middle-name">
+                            <input type="text" id="middle-name" name="middle-name" oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
+                        </div>
+                        <div class="form-group">
+                            <label for="extension">Extension:</label>
+                            <input type="text" id="extension" name="extension" oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                     </div>
                     <div class="form-group">
@@ -303,53 +302,77 @@
                             <input type="text" id="po-box" name="po-box">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="sex">2.3. Sex:</label>
-                        <select id="sex" name="sex" required>
-                            <option value="">Select</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="civil-status">2.4. Civil Status:</label>
-                        <select id="civil-status" name="civil-status" required>
-                            <option value="">Select</option>
-                            <option value="single">Single</option>
-                            <option value="married">Married</option>
-                            <option value="widowed">Widowed</option>
-                            <option value="separated">Separated</option>
-                            <option value="others">Others</option>
-                        </select>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="sex">2.3. Sex:</label>
+                            <select id="sex" name="sex" required>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="civil-status">2.4. Civil Status:</label>
+                            <select id="civil-status" name="civil-status" required>
+                                <option value="">Select</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="widowed">Widowed</option>
+                                <option value="separated">Separated</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="contact">2.5. Contact Number(s):</label>
                         <input type="text" id="contact" name="contact" required>
                     </div>
                     <div class="form-group">
-                        <label for="employment-type">2.6. Employment Type:</label>
-                        <select id="employment-type" name="employment-type" required>
-                            <option value="">Select</option>
-                            <option value="employed">Employed</option>
-                            <option value="self-employed">Self-employed</option>
-                            <option value="unemployed">Unemployed</option>
-                            <option value="other">Other than above</option>
-                        </select>
+                        <label for="telephone">Telephone:</label>
+                        <input type="text" id="telephone" name="telephone">
                     </div>
                     <div class="form-group">
-                        <label for="employment-status">2.7. Employment Status:</label>
-                        <select id="employment-status" name="employment-status" required>
-                            <option value="">Select</option>
-                            <option value="casual">Casual</option>
-                            <option value="contractual">Contractual</option>
-                            <option value="job-order">Job Order</option>
-                            <option value="temporary">Temporary</option>
-                            <option value="probationary">Probationary</option>
-                            <option value="regular">Regular</option>
-                            <option value="permanent">Permanent</option>
-                            <option value="student">Student</option>
-                            <option value="trainee">Trainee/OJT</option>
-                        </select>
+                        <label for="celular">Celular:</label>
+                        <input type="text" id="celular" name="celular">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="fax">Fax:</label>
+                        <input type="text" id="fax" name="fax">
+                    </div>
+                    <div class="form-group">
+                        <label for="others">Others:</label>
+                        <input type="text" id="others" name="others">
+                    </div>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="employment-type">2.6. Employment Type:</label>
+                            <select id="employment-type" name="employment-type" required>
+                                <option value="">Select</option>
+                                <option value="employed">Employed</option>
+                                <option value="self-employed">Self-employed</option>
+                                <option value="unemployed">Unemployed</option>
+                                <option value="other">Other than above</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employment-status">2.7. Employment Status:</label>
+                            <select id="employment-status" name="employment-status" required>
+                                <option value="">Select</option>
+                                <option value="casual">Casual</option>
+                                <option value="contractual">Contractual</option>
+                                <option value="job-order">Job Order</option>
+                                <option value="temporary">Temporary</option>
+                                <option value="probationary">Probationary</option>
+                                <option value="regular">Regular</option>
+                                <option value="permanent">Permanent</option>
+                                <option value="student">Student</option>
+                                <option value="trainee">Trainee/OJT</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -433,13 +456,15 @@
 
                 <div class="form-section">
                     <h2>5. Course Title (for TPIS, CACs)</h2>
-                    <div class="form-group">
-                        <label for="course-title">5.1. Course Title:</label>
-                        <input type="text" id="course-title" name="course-title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="training-duration">Training Duration (No. of Hrs.):</label>
-                        <input type="number" id="training-duration" name="training-duration" required>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="course-title">5.1. Course Title:</label>
+                            <input type="text" id="course-title" name="course-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="training-duration">Training Duration (No. of Hrs.):</label>
+                            <input type="number" id="training-duration" name="training-duration" required>
+                        </div>
                     </div>
                     <div class="grid">
                         <div class="form-group">
@@ -451,285 +476,303 @@
                             <input type="date" id="schedule-to" name="schedule-to" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="aptitude-exam-date">5.3. Aptitude Exam Schedule Date:</label>
-                        <input type="date" id="aptitude-exam-date" name="aptitude-exam-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="aptitude-exam-time">Time:</label>
-                        <input type="time" id="aptitude-exam-time" name="aptitude-exam-time" required>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="aptitude-exam-date">5.3. Aptitude Exam Schedule Date:</label>
+                            <input type="date" id="aptitude-exam-date" name="aptitude-exam-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aptitude-exam-time">Time:</label>
+                            <input type="time" id="aptitude-exam-time" name="aptitude-exam-time" required>
+                        </div>
                     </div>
                 </div>
 
                 <button type="button" class="btn" onclick="showPage(2)">Next</button>
-            </div>
+            </form>
+        </div>
 
-            <div id="page2" class="form-container">
-                <div class="form-section">
-                    <h2>6. Competency Assessment to Take</h2>
-                    <div class="grid">
-                        <div class="form-group">
-                            <label for="application-date">6.1. Date of Application:</label>
-                            <input type="date" id="application-date" name="application-date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="sector-component">6.2. Sector Component:</label>
-                            <input type="text" id="sector-component" name="sector-component" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="trade-area">6.3. Trade Area:</label>
-                            <input type="text" id="trade-area" name="trade-area" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="occupation">6.4. Occupation:</label>
-                            <input type="text" id="occupation" name="occupation" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="classification">6.5. Classification:</label>
-                            <input type="text" id="classification" name="classification" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="competency">6.6. Competency:</label>
-                            <input type="text" id="competency" name="competency" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="training-program">6.7. Training Program:</label>
-                            <select id="training-program" name="training-program" required>
-                                <option value="">Select</option>
-                                <option value="formal">Formal</option>
-                                <option value="non-formal">Non-Formal</option>
-                                <option value="informal">Informal (prior learning)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="program-sector">6.8. Program Sector:</label>
-                            <select id="program-sector" name="program-sector" required>
-                                <option value="">Select</option>
-                                <option value="public">Public</option>
-                                <option value="industry">Industry</option>
-                                <option value="ofw">OFW</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="client-type">6.9. Client Type:</label>
-                            <select id="client-type" name="client-type" required>
-                                <option value="">Select</option>
-                                <option value="tesda-grad">TESDA Grad.</option>
-                                <option value="pwd">Person with Disability</option>
-                                <option value="scep">SCEP</option>
-                                <option value="non-tesda-grad">Non-TESDA Grad.</option>
-                                <option value="ofw">OFW</option>
-                                <option value="farmers-fisherfolks">Farmers; Fisherfolks</option>
-                                <option value="osy">OSY</option>
-                                <option value="other">Others</option>
-                            </select>
-                        </div>
+        <div id="page2" class="form-container">
+            <div class="form-section">
+                <h2>6. Competency Assessment to Take</h2>
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="application-date">6.1. Date of Application:</label>
+                        <input type="date" id="application-date" name="application-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sector-component">6.2. Sector Component:</label>
+                        <input type="text" id="sector-component" name="sector-component" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trade-area">6.3. Trade Area:</label>
+                        <input type="text" id="trade-area" name="trade-area" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation">6.4. Occupation:</label>
+                        <input type="text" id="occupation" name="occupation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="classification">6.5. Classification:</label>
+                        <input type="text" id="classification" name="classification" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="competency">6.6. Competency:</label>
+                        <input type="text" id="competency" name="competency" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="training-program">6.7. Training Program:</label>
+                        <select id="training-program" name="training-program" required>
+                            <option value="">Select</option>
+                            <option value="formal">Formal</option>
+                            <option value="non-formal">Non-Formal</option>
+                            <option value="informal">Informal (prior learning)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="program-sector">6.8. Program Sector:</label>
+                        <select id="program-sector" name="program-sector" required>
+                            <option value="">Select</option>
+                            <option value="public">Public</option>
+                            <option value="industry">Industry</option>
+                            <option value="ofw">OFW</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-type">6.9. Client Type:</label>
+                        <select id="client-type" name="client-type" required>
+                            <option value="">Select</option>
+                            <option value="tesda-grad">TESDA Grad.</option>
+                            <option value="pwd">Person with Disability</option>
+                            <option value="scep">SCEP</option>
+                            <option value="non-tesda-grad">Non-TESDA Grad.</option>
+                            <option value="ofw">OFW</option>
+                            <option value="farmers-fisherfolks">Farmers; Fisherfolks</option>
+                            <option value="osy">OSY</option>
+                            <option value="other">Others</option>
+                        </select>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-section">
-                    <h2>7. Working Experience</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Company</th>
-                                <th>Position</th>
-                                <th>Dates</th>
-                                <th>Salary</th>
-                                <th>Years of Experience</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="company[]"></td>
-                                <td><input type="text" name="position[]"></td>
-                                <td><input type="text" name="dates[]"></td>
-                                <td><input type="number" name="salary[]"></td>
-                                <td><input type="number" name="years-of-experience[]"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="company[]"></td>
-                                <td><input type="text" name="position[]"></td>
-                                <td><input type="text" name="dates[]"></td>
-                                <td><input type="number" name="salary[]"></td>
-                                <td><input type="number" name="years-of-experience[]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="form-section">
+                <h2>7. Working Experience</h2>
+                <button type="button" class="btn" onclick="addExperience()">Add Experience</button>
+                <table id="experience-table">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Position</th>
+                            <th>Dates</th>
+                            <th>Salary</th>
+                            <th>Years of Experience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="company[]"></td>
+                            <td><input type="text" name="position[]"></td>
+                            <td><input type="text" name="dates[]"></td>
+                            <td><input type="number" name="salary[]"></td>
+                            <td><input type="number" name="years-of-experience[]"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="company[]"></td>
+                            <td><input type="text" name="position[]"></td>
+                            <td><input type="text" name="dates[]"></td>
+                            <td><input type="number" name="salary[]"></td>
+                            <td><input type="number" name="years-of-experience[]"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <script>
+                    function addExperience() {
+                        const tableBody = document.querySelector('#experience-table tbody');
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td><input type="text" name="company[]"></td>
+                            <td><input type="text" name="position[]"></td>
+                            <td><input type="text" name="dates[]"></td>
+                            <td><input type="number" name="salary[]"></td>
+                            <td><input type="number" name="years-of-experience[]"></td>
+                        `;
+                        tableBody.appendChild(newRow);
+                    }
+                </script>
+            </div>
 
-                <div class="form-section">
-                    <h2>8. Other Training/Seminars Attended</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Venue</th>
-                                <th>Dates</th>
-                                <th>Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="training-title[]"></td>
-                                <td><input type="text" name="training-venue[]"></td>
-                                <td><input type="text" name="training-dates[]"></td>
-                                <td><input type="number" name="training-hours[]"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="training-title[]"></td>
-                                <td><input type="text" name="training-venue[]"></td>
-                                <td><input type="text" name="training-dates[]"></td>
-                                <td><input type="number" name="training-hours[]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="form-section">
+                <h2>8. Other Training/Seminars Attended</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Venue</th>
+                            <th>Dates</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="training-title[]"></td>
+                            <td><input type="text" name="training-venue[]"></td>
+                            <td><input type="text" name="training-dates[]"></td>
+                            <td><input type="number" name="training-hours[]"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="training-title[]"></td>
+                            <td><input type="text" name="training-venue[]"></td>
+                            <td><input type="text" name="training-dates[]"></td>
+                            <td><input type="number" name="training-hours[]"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="form-section">
-                    <h2>9. Licenses/Examinations Passed</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Year</th>
-                                <th>Rating</th>
-                                <th>Expiry</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="license-title[]"></td>
-                                <td><input type="number" name="license-year[]"></td>
-                                <td><input type="text" name="license-rating[]"></td>
-                                <td><input type="date" name="license-expiry[]"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="license-title[]"></td>
-                                <td><input type="number" name="license-year[]"></td>
-                                <td><input type="text" name="license-rating[]"></td>
-                                <td><input type="date" name="license-expiry[]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="form-section">
+                <h2>9. Licenses/Examinations Passed</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Year</th>
+                            <th>Rating</th>
+                            <th>Expiry</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="license-title[]"></td>
+                            <td><input type="number" name="license-year[]"></td>
+                            <td><input type="text" name="license-rating[]"></td>
+                            <td><input type="date" name="license-expiry[]"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="license-title[]"></td>
+                            <td><input type="number" name="license-year[]"></td>
+                            <td><input type="text" name="license-rating[]"></td>
+                            <td><input type="date" name="license-expiry[]"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="form-section">
-                    <h2>10. Competency Assessment Passed</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sector</th>
-                                <th>Trade Area</th>
-                                <th>Occupation</th>
-                                <th>Classification Level</th>
-                                <th>Competency</th>
-                                <th>Specialization Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="competency-sector[]"></td>
-                                <td><input type="text" name="competency-trade[]"></td>
-                                <td><input type="text" name="competency-occupation[]"></td>
-                                <td><input type="text" name="classification-level[]"></td>
-                                <td><input type="text" name="competency[]"></td>
-                                <td><input type="text" name="specialization-description[]"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="competency-sector[]"></td>
-                                <td><input type="text" name="competency-trade[]"></td>
-                                <td><input type="text" name="competency-occupation[]"></td>
-                                <td><input type="text" name="classification-level[]"></td>
-                                <td><input type="text" name="competency[]"></td>
-                                <td><input type="text" name="specialization-description[]"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="form-section family-background">
-                    <h2>11. Family Background</h2>
-                    <div class="grid">
-                        <div class="form-group">
-                            <label for="spouse-name">11.1. Spouse’s Name:</label>
-                            <input type="text" id="spouse-name" name="spouse-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="spouse-education">11.2. Educational Attainment:</label>
-                            <input type="text" id="spouse-education" name="spouse-education">
-                        </div>
-                        <div class="form-group">
-                            <label for="spouse-occupation">11.3. Occupation:</label>
-                            <input type="text" id="spouse-occupation" name="spouse-occupation">
-                        </div>
-                        <div class="form-group">
-                            <label for="spouse-income">11.4. Ave. Monthly Income:</label>
-                            <input type="text" id="spouse-income" name="spouse-income">
-                        </div>
-                        <div class="form-group">
-                            <label for="father-name">11.5. Father’s Name:</label>
-                            <input type="text" id="father-name" name="father-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="father-education">11.6. Educational Attainment:</label>
-                            <input type="text" id="father-education" name="father-education">
-                        </div>
-                        <div class="form-group">
-                            <label for="father-occupation">11.7. Occupation:</label>
-                            <input type="text" id="father-occupation" name="father-occupation">
-                        </div>
-                        <div class="form-group">
-                            <label for="father-income">11.8. Ave. Monthly Income:</label>
-                            <input type="text" id="father-income" name="father-income">
-                        </div>
-                        <div class="form-group">
-                            <label for="mother-name">11.9. Mother’s Name:</label>
-                            <input type="text" id="mother-name" name="mother-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="mother-education">11.10. Educational Attainment:</label>
-                            <input type="text" id="mother-education" name="mother-education">
-                        </div>
-                        <div class="form-group">
-                            <label for="mother-occupation">11.11. Occupation:</label>
-                            <input type="text" id="mother-occupation" name="mother-occupation">
-                        </div>
-                        <div class="form-group">
-                            <label for="mother-income">11.12. Ave. Monthly Income:</label>
-                            <input type="text" id="mother-income" name="mother-income">
-                        </div>
-                        <div class="form-group">
-                            <label for="guardian-name">11.13. Name of Guardian:</label>
-                            <input type="text" id="guardian-name" name="guardian-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="guardian-education">11.14. Educational Attainment:</label>
-                            <input type="text" id="guardian-education" name="guardian-education">
-                        </div>
-                        <div class="form-group">
-                            <label for="guardian-occupation">11.15. Occupation:</label>
-                            <input type="text" id="guardian-occupation" name="guardian-occupation">
-                        </div>
-                        <div class="form-group">
-                            <label for="guardian-income">11.16. Ave. Monthly Income:</label>
-                            <input type="text" id="guardian-income" name="guardian-income">
-                        </div>
-                        <div class="form-group">
-                            <label for="dependents">11.17. Dependents:</label>
-                            <input type="text" id="dependents" name="dependents">
-                        </div>
-                        <div class="form-group">
-                            <label for="dependent-age">11.18. Age Dependent:</label>
-                            <input type="text" id="dependent-age" name="dependent-age">
-                        </div>
+            <div class="form-section">
+                <h2>10. Competency Assessment Passed</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sector</th>
+                            <th>Trade Area</th>
+                            <th>Occupation</th>
+                            <th>Classification Level</th>
+                            <th>Competency</th>
+                            <th>Specialization Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="competency-sector[]"></td>
+                            <td><input type="text" name="competency-trade[]"></td>
+                            <td><input type="text" name="competency-occupation[]"></td>
+                            <td><input type="text" name="classification-level[]"></td>
+                            <td><input type="text" name="competency[]"></td>
+                            <td><input type="text" name="specialization-description[]"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="competency-sector[]"></td>
+                            <td><input type="text" name="competency-trade[]"></td>
+                            <td><input type="text" name="competency-occupation[]"></td>
+                            <td><input type="text" name="classification-level[]"></td>
+                            <td><input type="text" name="competency[]"></td>
+                            <td><input type="text" name="specialization-description[]"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-section family-background">
+                <h2>11. Family Background</h2>
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="spouse-name">11.1. Spouse's Name:</label>
+                        <input type="text" id="spouse-name" name="spouse-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="spouse-education">11.2. Educational Attainment:</label>
+                        <input type="text" id="spouse-education" name="spouse-education">
+                    </div>
+                    <div class="form-group">
+                        <label for="spouse-occupation">11.3. Occupation:</label>
+                        <input type="text" id="spouse-occupation" name="spouse-occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="spouse-income">11.4. Ave. Monthly Income:</label>
+                        <input type="text" id="spouse-income" name="spouse-income">
+                    </div>
+                    <div class="form-group">
+                        <label for="father-name">11.5. Father's Name:</label>
+                        <input type="text" id="father-name" name="father-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="father-education">11.6. Educational Attainment:</label>
+                        <input type="text" id="father-education" name="father-education">
+                    </div>
+                    <div class="form-group">
+                        <label for="father-occupation">11.7. Occupation:</label>
+                        <input type="text" id="father-occupation" name="father-occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="father-income">11.8. Ave. Monthly Income:</label>
+                        <input type="text" id="father-income" name="father-income">
+                    </div>
+                    <div class="form-group">
+                        <label for="mother-name">11.9. Mother's Name:</label>
+                        <input type="text" id="mother-name" name="mother-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="mother-education">11.10. Educational Attainment:</label>
+                        <input type="text" id="mother-education" name="mother-education">
+                    </div>
+                    <div class="form-group">
+                        <label for="mother-occupation">11.11. Occupation:</label>
+                        <input type="text" id="mother-occupation" name="mother-occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="mother-income">11.12. Ave. Monthly Income:</label>
+                        <input type="text" id="mother-income" name="mother-income">
+                    </div>
+                    <div class="form-group">
+                        <label for="guardian-name">11.13. Name of Guardian:</label>
+                        <input type="text" id="guardian-name" name="guardian-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="guardian-education">11.14. Educational Attainment:</label>
+                        <input type="text" id="guardian-education" name="guardian-education">
+                    </div>
+                    <div class="form-group">
+                        <label for="guardian-occupation">11.15. Occupation:</label>
+                        <input type="text" id="guardian-occupation" name="guardian-occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="guardian-income">11.16. Ave. Monthly Income:</label>
+                        <input type="text" id="guardian-income" name="guardian-income">
+                    </div>
+                    <div class="form-group">
+                        <label for="dependents">11.17. Dependents:</label>
+                        <input type="text" id="dependents" name="dependents">
+                    </div>
+                    <div class="form-group">
+                        <label for="dependent-age">11.18. Age Dependent:</label>
+                        <input type="text" id="dependent-age" name="dependent-age">
                     </div>
                 </div>
-                <button type="button" class="btn" onclick="showPage(1)">Previous</button>
-                <button type="button" class="btn" onclick="downloadAllData()">Download NMIS</button>
-                <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
             </div>
-        </form>
+            <button type="button" class="btn" onclick="showPage(1)">Previous</button>
+            <button type="button" class="btn" onclick="downloadAllData()">Download NMIS</button>
+            <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
+            <button type="button" class="btn" onclick="redirectToPDF()">Save PDF</button>
+        </div>
     </div>
 
     <script>
@@ -744,9 +787,10 @@
                 page1: {
                     nmisCode: document.getElementById('nmis-code').value,
                     nmisDate: document.getElementById('nmis-date').value,
-                    lastName: document.getElementById('last-name').value,
-                    firstName: document.getElementById('first-name').value,
-                    middleName: document.getElementById('middle-name').value,
+                    lastName: document.getElementById('last-name').value.toUpperCase(),
+                    firstName: document.getElementById('first-name').value.toUpperCase(),
+                    middleName: document.getElementById('middle-name').value.toUpperCase(),
+                    extension: document.getElementById('extension').value.toUpperCase(),
                     address: document.getElementById('address').value,
                     city: document.getElementById('city').value,
                     province: document.getElementById('province').value,
@@ -843,9 +887,10 @@
                 page1: {
                     nmisCode: document.getElementById('nmis-code').value,
                     nmisDate: document.getElementById('nmis-date').value,
-                    lastName: document.getElementById('last-name').value,
-                    firstName: document.getElementById('first-name').value,
-                    middleName: document.getElementById('middle-name').value,
+                    lastName: document.getElementById('last-name').value.toUpperCase(),
+                    firstName: document.getElementById('first-name').value.toUpperCase(),
+                    middleName: document.getElementById('middle-name').value.toUpperCase(),
+                    extension: document.getElementById('extension').value.toUpperCase(),
                     address: document.getElementById('address').value,
                     city: document.getElementById('city').value,
                     province: document.getElementById('province').value,
@@ -941,6 +986,105 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+
+        function redirectToPDF() {
+            // Collect data from both pages
+            const data = {
+                page1: {
+                    nmisCode: document.getElementById('nmis-code').value,
+                    nmisDate: document.getElementById('nmis-date').value,
+                    lastName: document.getElementById('last-name').value.toUpperCase(),
+                    firstName: document.getElementById('first-name').value.toUpperCase(),
+                    middleName: document.getElementById('middle-name').value.toUpperCase(),
+                    extension: document.getElementById('extension').value.toUpperCase(),
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    province: document.getElementById('province').value,
+                    region: document.getElementById('region').value,
+                    zipCode: document.getElementById('zip-code').value,
+                    poBox: document.getElementById('po-box').value,
+                    sex: document.getElementById('sex').value,
+                    civilStatus: document.getElementById('civil-status').value,
+                    contact: document.getElementById('contact').value,
+                    employmentType: document.getElementById('employment-type').value,
+                    employmentStatus: document.getElementById('employment-status').value,
+                    birthdate: document.getElementById('birthdate').value,
+                    birthplace: document.getElementById('birthplace').value,
+                    citizenship: document.getElementById('citizenship').value,
+                    religion: document.getElementById('religion').value,
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    bloodType: document.getElementById('blood-type').value,
+                    sss: document.getElementById('sss').value,
+                    gsis: document.getElementById('gsis').value,
+                    tin: document.getElementById('tin').value,
+                    distinguishingMarks: document.getElementById('distinguishing-marks').value,
+                    schools: Array.from(document.querySelectorAll('input[name="school[]"]')).map(input => input.value),
+                    educationalLevels: Array.from(document.querySelectorAll('input[name="educational-level[]"]')).map(input => input.value),
+                    schoolYears: Array.from(document.querySelectorAll('input[name="school-year[]"]')).map(input => input.value),
+                    degrees: Array.from(document.querySelectorAll('input[name="degree[]"]')).map(input => input.value),
+                    courseTitle: document.getElementById('course-title').value,
+                    trainingDuration: document.getElementById('training-duration').value,
+                    scheduleFrom: document.getElementById('schedule-from').value,
+                    scheduleTo: document.getElementById('schedule-to').value,
+                    aptitudeExamDate: document.getElementById('aptitude-exam-date').value,
+                    aptitudeExamTime: document.getElementById('aptitude-exam-time').value,
+                },
+                page2: {
+                    applicationDate: document.getElementById('application-date').value,
+                    sectorComponent: document.getElementById('sector-component').value,
+                    tradeArea: document.getElementById('trade-area').value,
+                    occupation: document.getElementById('occupation').value,
+                    classification: document.getElementById('classification').value,
+                    competency: document.getElementById('competency').value,
+                    trainingProgram: document.getElementById('training-program').value,
+                    programSector: document.getElementById('program-sector').value,
+                    clientType: document.getElementById('client-type').value,
+                    companies: Array.from(document.querySelectorAll('input[name="company[]"]')).map(input => input.value),
+                    positions: Array.from(document.querySelectorAll('input[name="position[]"]')).map(input => input.value),
+                    experienceDates: Array.from(document.querySelectorAll('input[name="dates[]"]')).map(input => input.value),
+                    salaries: Array.from(document.querySelectorAll('input[name="salary[]"]')).map(input => input.value),
+                    yearsOfExperience: Array.from(document.querySelectorAll('input[name="years-of-experience[]"]')).map(input => input.value),
+                    trainingTitles: Array.from(document.querySelectorAll('input[name="training-title[]"]')).map(input => input.value),
+                    trainingVenues: Array.from(document.querySelectorAll('input[name="training-venue[]"]')).map(input => input.value),
+                    trainingDates: Array.from(document.querySelectorAll('input[name="training-dates[]"]')).map(input => input.value),
+                    trainingHours: Array.from(document.querySelectorAll('input[name="training-hours[]"]')).map(input => input.value),
+                    licenseTitles: Array.from(document.querySelectorAll('input[name="license-title[]"]')).map(input => input.value),
+                    licenseYears: Array.from(document.querySelectorAll('input[name="license-year[]"]')).map(input => input.value),
+                    licenseRatings: Array.from(document.querySelectorAll('input[name="license-rating[]"]')).map(input => input.value),
+                    licenseExpiries: Array.from(document.querySelectorAll('input[name="license-expiry[]"]')).map(input => input.value),
+                    competencySectors: Array.from(document.querySelectorAll('input[name="competency-sector[]"]')).map(input => input.value),
+                    competencyTrades: Array.from(document.querySelectorAll('input[name="competency-trade[]"]')).map(input => input.value),
+                    competencyOccupations: Array.from(document.querySelectorAll('input[name="competency-occupation[]"]')).map(input => input.value),
+                    competencyLevels: Array.from(document.querySelectorAll('input[name="competency-level[]"]')).map(input => input.value),
+                    spouseName: document.getElementById('spouse-name').value,
+                    spouseEducation: document.getElementById('spouse-education').value,
+                    spouseOccupation: document.getElementById('spouse-occupation').value,
+                    spouseIncome: document.getElementById('spouse-income').value,
+                    fatherName: document.getElementById('father-name').value,
+                    fatherEducation: document.getElementById('father-education').value,
+                    fatherOccupation: document.getElementById('father-occupation').value,
+                    fatherIncome: document.getElementById('father-income').value,
+                    motherName: document.getElementById('mother-name').value,
+                    motherEducation: document.getElementById('mother-education').value,
+                    motherOccupation: document.getElementById('mother-occupation').value,
+                    motherIncome: document.getElementById('mother-income').value,
+                    guardianName: document.getElementById('guardian-name').value,
+                    guardianEducation: document.getElementById('guardian-education').value,
+                    guardianOccupation: document.getElementById('guardian-occupation').value,
+                    guardianIncome: document.getElementById('guardian-income').value,
+                    dependents: document.getElementById('dependents').value,
+                    dependentAge: document.getElementById('dependent-age').value,
+                }
+            };
+
+            // Store data in localStorage or sessionStorage
+            localStorage.setItem('formData', JSON.stringify(data));
+
+            // Redirect to tap_pdf.html
+            window.location.href = 'tap_pdf.html';
+        }
+
     </script>
 </body>
 </html>
