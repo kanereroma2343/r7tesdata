@@ -131,12 +131,9 @@
        function formatDate(excelDate) {
     // Convert the Excel date to a JavaScript Date object
     const date = new Date((excelDate - 25569) * 86400 * 1000);
-    // Format the date as "MMMM D, YYYY"
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    
-    // Remove leading zero from the day
-    return formattedDate.replace(/, 0(\d)/, ', $1'); // Adjusting the format to remove leading zero
+    // Format the date as MM/DD/YYYY
+    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+    return formattedDate; // Return the formatted date value
 }
 
         function showToast(message) {
