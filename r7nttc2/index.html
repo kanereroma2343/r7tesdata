@@ -307,7 +307,13 @@
             loader.style.display = 'block';
             resultDiv.style.display = 'none';
 
-            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+            const lastName = document.getElementById('lastName').value.trim();
+            if (!lastName) {
+                resultDiv.innerHTML = '<p>Please enter your last name.</p>';
+                resultDiv.style.display = 'block';
+                loader.style.display = 'none';
+                return;
+            }
             const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
