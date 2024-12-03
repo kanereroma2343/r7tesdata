@@ -343,10 +343,7 @@
                     resultDiv.innerHTML = '<p>No matching records found.</p>';
                     resultDiv.style.display = 'block';
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
-                resultDiv.style.display = 'block';
+         
             } finally {
                 loader.style.display = 'none';
             }
