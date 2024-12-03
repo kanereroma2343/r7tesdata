@@ -307,7 +307,16 @@
             loader.style.display = 'block';
             resultDiv.style.display = 'none';
 
-            const lastName = document.getElementById('lastName').value.trim().toUpperCase();
+            const lastNameInput = document.getElementById('lastName');
+            const lastName = lastNameInput ? lastNameInput.value.trim().toUpperCase() : '';
+
+            if (!lastName) {
+                resultDiv.innerHTML = '<p>Please enter a last name.</p>';
+                resultDiv.style.display = 'block';
+                loader.style.display = 'none';
+                return; // Exit the function if last name is empty
+            }
+
             const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
