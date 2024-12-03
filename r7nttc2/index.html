@@ -318,6 +318,7 @@
 
             try {
                 const response = await fetch('/r7nttc/data.json');
+                console.log('Fetching data from:', '/r7nttc/data.json');
                 if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
                 const data = await response.json();
@@ -327,6 +328,7 @@
                     entry.last_name.toUpperCase() === lastName &&
                     entry.birthday === dateOfBirth
                 );
+                console.log('Filtered results:', results);
 
                 if (results.length > 0) {
                     showModal(results);
