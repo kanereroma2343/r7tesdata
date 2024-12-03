@@ -134,7 +134,9 @@
     // Format the date as "MMMM D, YYYY"
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate; // Return the formatted date value
+    
+    // Remove leading zero from the day
+    return formattedDate.replace(/, 0(\d)/, ', $1'); // Adjusting the format to remove leading zero
 }
 
         function showToast(message) {
