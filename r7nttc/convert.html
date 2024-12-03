@@ -131,8 +131,9 @@
        function formatDate(excelDate) {
     // Convert the Excel date to a JavaScript Date object
     const date = new Date((excelDate - 25569) * 86400 * 1000);
-    // Format the date as MM/DD/YYYY
-    const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+    // Format the date as "MMMM D, YYYY"
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
     return formattedDate; // Return the formatted date value
 }
 
