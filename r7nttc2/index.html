@@ -326,7 +326,7 @@
             console.log('Searching for:', { lastName, dateOfBirth });
 
             try {
-                const response = await fetch('/r7nttc/data.json');
+                const response = await fetch('r7nttc/data.json');
                 if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
                 const data = await response.json();
@@ -343,7 +343,10 @@
                     resultDiv.innerHTML = '<p>No matching records found.</p>';
                     resultDiv.style.display = 'block';
                 }
-         
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
+                resultDiv.style.display = 'block';
             } finally {
                 loader.style.display = 'none';
             }
