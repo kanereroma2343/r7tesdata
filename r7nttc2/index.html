@@ -317,7 +317,7 @@
             console.log('Searching for:', { lastName, dateOfBirth });
 
             try {
-                const response = await fetch('/r7nttc/data.json');
+                const response = await fetch('../r7nttc/data.json');
                 console.log('Fetching data from:', '/r7nttc/data.json');
                 if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
