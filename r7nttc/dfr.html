@@ -34,10 +34,10 @@
 
     <!-- New Buttons for Regions -->
     <div class="region-buttons">
-        <button class="region-button">CEBU</button>
-        <button class="region-button">BOHOL</button>
-        <button class="region-button">NEGROS ORIENTAL</button>
-        <button class="region-button">SIQUIJOR</button>
+        <button class="region-button" onclick="filterByRegion('CEBU')">CEBU</button>
+        <button class="region-button" onclick="filterByRegion('BOHOL')">BOHOL</button>
+        <button class="region-button" onclick="filterByRegion('NEGROS ORIENTAL')">NEGROS ORIENTAL</button>
+        <button class="region-button" onclick="filterByRegion('SIQUIJOR')">SIQUIJOR</button>
     </div>
 
     <!-- Search Input Field -->
@@ -194,6 +194,12 @@
     //     currentPage = 1; 
     //     renderTable();
     // }
+
+    function filterByRegion(region) {
+        filteredData = originalData.filter(row => row.province === region);
+        currentPage = 1; // Reset to the first page
+        renderTable();
+    }
 
     loadData();
 
