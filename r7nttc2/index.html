@@ -297,76 +297,61 @@
     </footer>
 
     <script>
-        const form = document.getElementById('nttcForm');
-        const loader = document.getElementById('loader');
-        const resultDiv = document.getElementById('result');
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('nttcForm');
+            const loader = document.getElementById('loader');
+            const resultDiv = document.getElementById('result');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            loader.style.display = 'block';
-            resultDiv.style.display = 'none';
+                loader.style.display = 'block';
+                resultDiv.style.display = 'none';
 
-            const lastNameInput = document.getElementById('lastName');
-            const lastName = lastNameInput ? lastNameInput.value.trim().toUpperCase() : '';
+                const lastNameInput = document.getElementById('lastName');
+                const lastName = lastNameInput ? lastNameInput.value.trim() : '';
 
-            if (!lastName) {
-                resultDiv.innerHTML = '<p>Please enter a last name.</p>';
-                resultDiv.style.display = 'block';
-                loader.style.display = 'none';
-                return; // Exit the function if last name is empty
-            }
-
-            const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        });
-
-        console.log('Searching for:', { lastName, dateOfBirth });
-
-        // Ensure this code runs within an `async` function or context
-        async function fetchData(lastName, dateOfBirth) {
-            const resultDiv = document.getElementById('resultDiv'); // Replace with your actual element
-            const loader = document.getElementById('loader'); // Replace with your actual element
-            loader.style.display = 'block'; // Show loader during the fetch
-
-            try {
-                const response = await fetch('/r7nttc/data.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log('Fetched data:', data);
-
-                // Ensure lastName is uppercase for comparison
-                const results = data.filter(entry =>
-                    entry.last_name.toUpperCase() === lastName.toUpperCase() &&
-                    entry.birthday === dateOfBirth
-                );
-
-                if (results.length > 0) {
-                    showModal(results); // Ensure `showModal` is defined elsewhere
-                } else {
-                    resultDiv.innerHTML = '<p>No matching records found.</p>';
+                if (!lastName) {
+                    resultDiv.innerHTML = '<p>Please enter a last name.</p>';
                     resultDiv.style.display = 'block';
+                    loader.style.display = 'none';
+                    return; // Exit the function if last name is empty
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
-                resultDiv.style.display = 'block';
-            } finally {
-                loader.style.display = 'none'; // Hide loader
-            }
-        }
 
-        // Example usage
-        document.getElementById('fetchButton').addEventListener('click', () => {
-            const lastName = document.getElementById('lastNameInput').value.trim();
-            const dateOfBirth = document.getElementById('dobInput').value.trim();
-            fetchData(lastName, dateOfBirth);
+                const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                console.log('Searching for:', { lastName, dateOfBirth });
+
+                try {
+                    const response = await fetch('data.json');
+                    if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+
+                    const data = await response.json();
+                    console.log('Fetched data:', data);
+
+                    const results = data.filter(entry =>
+                        entry.last_name === lastName &&
+                        entry.birthday === dateOfBirth
+                    );
+
+                    if (results.length > 0) {
+                        showModal(results);
+                    } else {
+                        resultDiv.innerHTML = '<p>No matching records found.</p>';
+                        resultDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
+                    resultDiv.style.display = 'block';
+                } finally {
+                    loader.style.display = 'none';
+                }
+            });
         });
 
         function showModal(results) {
@@ -451,10 +436,6 @@
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
-
-        // Call fetchData with the lastName and dateOfBirth
-        await fetchData(lastName, dateOfBirth);
-    
     </script>
 </body>
 </html>
