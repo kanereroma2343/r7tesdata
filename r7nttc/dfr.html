@@ -33,14 +33,15 @@
     </div>
 
     <!-- Search Input Field -->
-    <div class="search-container">
+    <!-- Removed search container and input field -->
+    <!-- <div class="search-container">
         <div class="search-wrapper">
             <input type="text" id="searchInput" placeholder="Search records..." oninput="searchTable()">
             <button id="searchButton" onclick="searchTable()">
                 <i class="fas fa-search"></i>
             </button>
         </div>
-    </div>
+    </div> -->
 
     <table>
         <thead>
@@ -174,16 +175,17 @@
         renderTable();
     }
 
-    function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-        filteredData = originalData.filter(row => {
-            return Object.values(row).some(value => 
-                value && value.toString().toLowerCase().includes(searchTerm)
-            );
-        });
-        currentPage = 1; 
-        renderTable();
-    }
+    // Removed the searchTable function
+    // function searchTable() {
+    //     const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+    //     filteredData = originalData.filter(row => {
+    //         return Object.values(row).some(value => 
+    //             value && value.toString().toLowerCase().includes(searchTerm)
+    //         );
+    //     });
+    //     currentPage = 1; 
+    //     renderTable();
+    // }
 
     loadData();
 
