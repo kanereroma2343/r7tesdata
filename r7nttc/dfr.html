@@ -175,14 +175,12 @@
     }
 
     function searchTable() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        filteredData = originalData.filter(row =>
-            [row.province, row.last_name, row.first_name, row.middle_initial, 
-             row.extension, row.qualification, row.nttc_cert_number, 
-             row.nttc_serial_number, row.nttc_date_issuance, 
-             row.nttc_validity, row.email, row.contact_number]
-            .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-        );
+        const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+        filteredData = originalData.filter(row => {
+            return Object.values(row).some(value => 
+                value && value.toString().toLowerCase().includes(searchTerm)
+            );
+        });
         currentPage = 1; 
         renderTable();
     }
