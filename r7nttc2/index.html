@@ -322,52 +322,52 @@
                 month: 'long',
                 day: 'numeric'
             });
+        });
 
-            console.log('Searching for:', { lastName, dateOfBirth });
+        console.log('Searching for:', { lastName, dateOfBirth });
 
-           // Ensure this code runs within an `async` function or context
-async function fetchData(lastName, dateOfBirth) {
-    const resultDiv = document.getElementById('resultDiv'); // Replace with your actual element
-    const loader = document.getElementById('loader'); // Replace with your actual element
-    loader.style.display = 'block'; // Show loader during the fetch
+        // Ensure this code runs within an `async` function or context
+        async function fetchData(lastName, dateOfBirth) {
+            const resultDiv = document.getElementById('resultDiv'); // Replace with your actual element
+            const loader = document.getElementById('loader'); // Replace with your actual element
+            loader.style.display = 'block'; // Show loader during the fetch
 
-    try {
-        const response = await fetch('/r7nttc/data.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+            try {
+                const response = await fetch('/r7nttc/data.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data:', data);
+
+                // Ensure lastName is uppercase for comparison
+                const results = data.filter(entry =>
+                    entry.last_name.toUpperCase() === lastName.toUpperCase() &&
+                    entry.birthday === dateOfBirth
+                );
+
+                if (results.length > 0) {
+                    showModal(results); // Ensure `showModal` is defined elsewhere
+                } else {
+                    resultDiv.innerHTML = '<p>No matching records found.</p>';
+                    resultDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
+                resultDiv.style.display = 'block';
+            } finally {
+                loader.style.display = 'none'; // Hide loader
+            }
         }
 
-        const data = await response.json();
-        console.log('Fetched data:', data);
-
-        // Ensure lastName is uppercase for comparison
-        const results = data.filter(entry =>
-            entry.last_name.toUpperCase() === lastName.toUpperCase() &&
-            entry.birthday === dateOfBirth
-        );
-
-        if (results.length > 0) {
-            showModal(results); // Ensure `showModal` is defined elsewhere
-        } else {
-            resultDiv.innerHTML = '<p>No matching records found.</p>';
-            resultDiv.style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
-        resultDiv.style.display = 'block';
-    } finally {
-        loader.style.display = 'none'; // Hide loader
-    }
-}
-
-// Example usage
-document.getElementById('fetchButton').addEventListener('click', () => {
-    const lastName = document.getElementById('lastNameInput').value.trim();
-    const dateOfBirth = document.getElementById('dobInput').value.trim();
-    fetchData(lastName, dateOfBirth);
-});
-
+        // Example usage
+        document.getElementById('fetchButton').addEventListener('click', () => {
+            const lastName = document.getElementById('lastNameInput').value.trim();
+            const dateOfBirth = document.getElementById('dobInput').value.trim();
+            fetchData(lastName, dateOfBirth);
+        });
 
         function showModal(results) {
             const modalSlides = document.getElementById('modalSlides');
@@ -454,6 +454,7 @@ document.getElementById('fetchButton').addEventListener('click', () => {
 
         // Call fetchData with the lastName and dateOfBirth
         await fetchData(lastName, dateOfBirth);
+    
     </script>
 </body>
 </html>
