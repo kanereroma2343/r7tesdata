@@ -105,17 +105,44 @@
         <h3>(For TPI'S and CAC'S)</h3>
 
         <div id="formData"></div>
-    </div>
+       
     <script>
-        // Retrieve data from localStorage
-        const data = JSON.parse(localStorage.getItem('formData'));
+        // Remove localStorage data retrieval
+        // const data = JSON.parse(localStorage.getItem('formData')) || {}; // Ensure data is initialized
+        const data = {}; // Initialize data as an empty object
 
         // Function to display the data
         function displayData() {
             const formDataDiv = document.getElementById('formData');
+            
+            // Remove URL parameter checks and data extraction
+            // const urlParams = new URLSearchParams(window.location.search);
+            // if (urlParams.has('nc_certificate_number')) {
+            //     // Extract data from URL parameters
+            //     data.page3Data = {
+            //         ...data.page3Data, // Preserve existing data
+            //         sector: urlParams.get('sector'), // New field
+            //         qualification: urlParams.get('qualification'), // New field
+            //         nmisCode: urlParams.get('nc_certificate_number'), // New field
+            //         tmCertificateNumber: `TMC-${urlParams.get('tm_certificate_digits')}`, // New field
+            //         tmDateOfIssuance: urlParams.get('tm_date_of_issuance'), // New field
+            //         tmValidity: urlParams.get('tm_validity'), // New field
+            //         assessor1: urlParams.get('assessor1'), // New field
+            //         assessor2: urlParams.get('assessor2'), // New field
+            //         assessor3: urlParams.get('assessor3'), // New field
+            //     };
+            // }
+            // Remove the code that sources data from page 3
+            // const page3Data = JSON.parse(localStorage.getItem('page3Data')) || {};
+            // if (page3Data) {
+            //     Object.assign(data.page1, page3Data); // Merge page 3 data into page1
+            // }
+
             if (data) {
                 formDataDiv.innerHTML = `
-                
+                    <div class="form-section">
+                       
+                    </div>
                     <div class="form-section">                   
                         <div class="form-group" style="text-align: center;">
                             <div style="border-bottom: 1px solid #fff; width: 100%;">__________________________________________</div>
@@ -564,7 +591,7 @@
                         </table>
                     </div>
                     <div class="form-section">
-                        <h2>11. Family Background</h2>
+                       <h2>11. Family Background</h2>
                         <fieldset>
                             <div class="grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
                                 <div>
@@ -641,6 +668,45 @@
                                 </div>
                             </div>
                         </fieldset>
+                    </div>
+                    <div class="form-section">
+                        <h2>NTTC Information</h2>
+                        <div class="form-group">
+                            <label>Sector:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.sector || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Qualification:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.qualification || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>NC Certificate Number:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.nmisCode|| 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>TM Certificate Number:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.tmCertificateNumber || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>TM Date of Issuance:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.tmDateOfIssuance || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>TM Validity:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.tmValidity || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Assessor 1:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.assessor1}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Assessor 2:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.assessor2 || 'N/A'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Assessor 3:</label>
+                            <div style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">${data.page1.assessor3 || 'N/A'}</div>
+                        </div>
                     </div>
                 `;
             } else {
