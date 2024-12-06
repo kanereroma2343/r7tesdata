@@ -114,29 +114,7 @@
         // Function to display the data
         function displayData() {
             const formDataDiv = document.getElementById('formData');
-            
-            // Remove URL parameter checks and data extraction
-            // const urlParams = new URLSearchParams(window.location.search);
-            // if (urlParams.has('nc_certificate_number')) {
-            //     // Extract data from URL parameters
-            //     data.page3Data = {
-            //         ...data.page3Data, // Preserve existing data
-            //         sector: urlParams.get('sector'), // New field
-            //         qualification: urlParams.get('qualification'), // New field
-            //         nmisCode: urlParams.get('nc_certificate_number'), // New field
-            //         tmCertificateNumber: `TMC-${urlParams.get('tm_certificate_digits')}`, // New field
-            //         tmDateOfIssuance: urlParams.get('tm_date_of_issuance'), // New field
-            //         tmValidity: urlParams.get('tm_validity'), // New field
-            //         assessor1: urlParams.get('assessor1'), // New field
-            //         assessor2: urlParams.get('assessor2'), // New field
-            //         assessor3: urlParams.get('assessor3'), // New field
-            //     };
-            // }
-            // Remove the code that sources data from page 3
-            // const page3Data = JSON.parse(localStorage.getItem('page3Data')) || {};
-            // if (page3Data) {
-            //     Object.assign(data.page1, page3Data); // Merge page 3 data into page1
-            // }
+        
 
             if (data) {
                 formDataDiv.innerHTML = `

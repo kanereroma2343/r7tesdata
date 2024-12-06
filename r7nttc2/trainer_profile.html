@@ -902,13 +902,11 @@
                 nttc_validity: document.getElementById('nttc_validity').value // Assuming an input for NTTC validity
             };
 
-            // Convert data to a worksheet
-            const worksheet = XLSX.utils.json_to_sheet([data.page1, data.page2]);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Form Data");
+            // Store data in localStorage
+            localStorage.setItem('nttcData', JSON.stringify(data));
 
-            // Export to Excel
-            XLSX.writeFile(workbook, "TESDA_NMIS_Form_Data.xlsx");
+            // Redirect to nttcregistry.html
+            window.location.href = 'nttcregistry.html';
         }
 
         function downloadAllData() {
