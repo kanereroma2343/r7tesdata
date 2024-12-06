@@ -39,6 +39,45 @@
         // Retrieve data from localStorage
         const data = JSON.parse(localStorage.getItem('nttcData'));
 
+        // New script to handle DOMContentLoaded event
+        document.addEventListener('DOMContentLoaded', () => {
+            // Retrieve the data from localStorage
+            const storedData = localStorage.getItem('nttcData');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+
+                // Display the data in the appropriate elements
+                document.getElementById('display-last-name').textContent = data.last_name;
+                document.getElementById('display-first-name').textContent = data.first_name;
+                document.getElementById('display-middle-initial').textContent = data.middle_initial;
+                document.getElementById('display-extension').textContent = data.extension;
+                document.getElementById('display-birthday').textContent = data.birthday;
+                document.getElementById('display-sex').textContent = data.sex;
+                document.getElementById('display-address').textContent = data.address;
+                document.getElementById('display-training-institution').textContent = data.training_institution;
+                document.getElementById('display-type-training-institution').textContent = data.type_training_institution;
+                document.getElementById('display-contact-number').textContent = data.contact_number;
+                document.getElementById('display-educational-attainment').textContent = data.educational_attainment;
+                document.getElementById('display-training-hours').textContent = data.training_hours;
+                document.getElementById('display-years-of-experience').textContent = data.years_of_experience;
+                document.getElementById('display-sector').textContent = data.sector;
+                document.getElementById('display-qualification').textContent = data.qualification;
+                document.getElementById('display-nc-cert-number').textContent = data.nc_cert_number;
+                document.getElementById('display-nc-date-issuance').textContent = data.nc_date_issuance;
+                document.getElementById('display-nc-validity').textContent = data.nc_validity;
+                document.getElementById('display-tm-cert-number').textContent = data.tm_cert_number;
+                document.getElementById('display-tm-date-issuance').textContent = data.tm_date_issuance;
+                document.getElementById('display-tm-validity').textContent = data.tm_validity;
+                document.getElementById('display-assessor1').textContent = data.assessor1;
+                document.getElementById('display-assessor2').textContent = data.assessor2;
+                document.getElementById('display-assessor3').textContent = data.assessor3;
+                document.getElementById('display-nttc-serial-number').textContent = data.nttc_serial_number;
+                document.getElementById('display-nttc-cert-number').textContent = data.nttc_cert_number;
+                document.getElementById('display-nttc-date-issuance').textContent = data.nttc_date_issuance;
+                document.getElementById('display-nttc-validity').textContent = data.nttc_validity;
+            }
+        });
+
         // Check if data exists
         if (data) {
             const displayDiv = document.getElementById('data-display');
