@@ -3,131 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NTTC Issuance Table</title>
+    <title>NTTC Registry</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional: Link to your CSS file -->
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: #f0f4f8;
+            color: #333;
         }
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        h1 {
+            color: #ff0000;
         }
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
-            padding: 12px 15px;
+            border: 1px solid #000;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #e9ecef;
         }
         th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #495057;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-        @media (max-width: 768px) {
-            th, td {
-                padding: 8px;
-                font-size: 14px;
-            }
+            background-color: #f0f4f8;
         }
     </style>
 </head>
 <body>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Region</th>
-                    <th>Province</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>M.I.</th>
-                    <th>Ext'n.</th>
-                    <th>Birthday</th>
-                    <th>Sex</th>
-                    <th>Complete Address</th>
-                    <th>Contact Number</th>
-                    <th>Email Address</th>
-                    <th>School/Training Center</th>
-                    <th>Qualification (NC Title)</th>
-                    <th>NC Certificate No.</th>
-                    <th>NC Date Issued</th>
-                    <th>NC Expiry Date</th>
-                    <th>TM Certificate No.</th>
-                    <th>TM Date Issued</th>
-                    <th>TM Expiry Date</th>
-                    <th>Assessor 1</th>
-                    <th>Assessor 2</th>
-                    <th>Assessor 3</th>
-                </tr>
-            </thead>
-            <tbody id="data-body">
-                <!-- Data will be populated here -->
-            </tbody>
-        </table>
-    </div>
+    <h1>NTTC Registry</h1>
+    <div id="data-display"></div>
 
     <script>
         // Retrieve data from localStorage
-        const nttcData = JSON.parse(localStorage.getItem('nttcData'));
+        const data = JSON.parse(localStorage.getItem('nttcData'));
 
         // Check if data exists
-        if (nttcData) {
-            // Create a new row
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>1</td> <!-- You can increment this number if you have multiple entries -->
-                <td>Region VII</td> <!-- Replace with actual region if available -->
-                <td>Province Name</td> <!-- Replace with actual province if available -->
-                <td>${nttcData.last_name}</td>
-                <td>${nttcData.first_name}</td>
-                <td>${nttcData.middle_initial}</td>
-                <td>${nttcData.extension}</td>
-                <td>${nttcData.birthday}</td>
-                <td>${nttcData.sex}</td>
-                <td>${nttcData.address}</td>
-                <td>${nttcData.contact_number}</td>
-                <td>${nttcData.email || 'N/A'}</td> <!-- Assuming email is not collected, default to 'N/A' -->
-                <td>${nttcData.training_institution}</td>
-                <td>${nttcData.qualification}</td>
-                <td>${nttcData.nc_cert_number}</td>
-                <td>${nttcData.nc_date_issuance}</td>
-                <td>${nttcData.nc_validity}</td>
-                <td>${nttcData.tm_cert_number}</td>
-                <td>${nttcData.tm_date_issuance}</td>
-                <td>${nttcData.tm_validity}</td>
-                <td>${nttcData.assessor1}</td>
-                <td>${nttcData.assessor2}</td>
-                <td>${nttcData.assessor3}</td>
-            `;
-            // Append the row to the table body
-            document.getElementById('data-body').appendChild(row);
+        if (data) {
+            const displayDiv = document.getElementById('data-display');
+            let htmlContent = '<table><tr><th>Field</th><th>Value</th></tr>';
+
+            // Loop through the data and create table rows
+            for (const [key, value] of Object.entries(data)) {
+                htmlContent += `<tr><td>${key.replace(/_/g, ' ').toUpperCase()}</td><td>${value}</td></tr>`;
+            }
+
+            htmlContent += '</table>';
+            displayDiv.innerHTML = htmlContent;
         } else {
-            // Handle case where no data is found
-            const row = document.createElement('tr');
-            row.innerHTML = `<td colspan="22">No data available</td>`;
-            document.getElementById('data-body').appendChild(row);
+            document.getElementById('data-display').innerHTML = '<p>No data available.</p>';
         }
     </script>
 </body>
