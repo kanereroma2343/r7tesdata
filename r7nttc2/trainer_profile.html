@@ -857,7 +857,7 @@
                     <input type="text" id="assessor3" name="assessor3" placeholder="Enter assessor 3 name">
                 </div>
                 <button type="button" class="btn" onclick="redirectToPDF()">Print Preview</button>
-                <button type="button" class="btn" onclick="transferData(); window.location.href='nttcregistry.html'">Submit NTTC</button>
+                <button type="button" onclick="handleSubmit()">Submit</button>
             </form>
         </div>
     </div>
@@ -869,45 +869,17 @@
             document.getElementById('page3').style.display = pageNumber === 3 ? 'block' : 'none';
         }
 
-        function transferData() {
-    // Collect data from the form
-    const data = {
-        last_name: document.getElementById('last-name').value.toUpperCase(),
-        first_name: document.getElementById('first-name').value.toUpperCase(),
-        middle_initial: document.getElementById('middle-name').value.toUpperCase(),
-        extension: document.getElementById('extension').value.toUpperCase(),
-        birthday: document.getElementById('birthdate').value,
-        sex: document.getElementById('sex').value,
-        address: document.getElementById('address').value,
-        training_institution: document.getElementById('school').value,
-        type_training_institution: document.getElementById('educational-level').value,
-        contact_number: document.getElementById('contact').value,
-        educational_attainment: document.getElementById('degree').value,
-        training_hours: document.getElementById('training-hours').value,
-        years_of_experience: document.getElementById('years-of-experience').value,
-        sector: document.getElementById('sector').value,
-        qualification: document.getElementById('qualification').value,
-        nc_cert_number: document.getElementById('nc_cert_number').value,
-        nc_date_issuance: document.getElementById('nc_date_issuance').value,
-        nc_validity: document.getElementById('nc_validity').value,
-        tm_cert_number: `TMC-${document.getElementById('tm_cert_number').value}`,
-        tm_date_issuance: document.getElementById('tm_date_issuance').value,
-        tm_validity: document.getElementById('tm_validity').value,
-        assessor1: document.getElementById('assessor1').value,
-        assessor2: document.getElementById('assessor2').value,
-        assessor3: document.getElementById('assessor3').value,
-        nttc_serial_number: document.getElementById('nttc_serial_number').value,
-        nttc_cert_number: document.getElementById('nttc_cert_number').value,
-        nttc_date_issuance: document.getElementById('nttc_date_of_issuance').value,
-        nttc_validity: document.getElementById('nttc_validity').value,
-    };
+        function handleSubmit() {
+            // Collect form data
+            const form = document.getElementById('clientForm');
+            const formData = new FormData(form);
 
-    // Store the data in localStorage
-    localStorage.setItem('nttcData', JSON.stringify(data));
+            // Convert form data to a query string
+            const queryString = new URLSearchParams(formData).toString();
 
-    // Redirect to nttcregistry.html
-    window.location.href = 'nttcregistry.html';
-}
+            // Redirect to preview page with query parameters
+            window.location.href = `preview.html?${queryString}`;
+        }
 
         function downloadAllData() {
             // Collect data from both pages
