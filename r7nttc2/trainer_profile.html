@@ -857,6 +857,7 @@
                     <input type="text" id="assessor3" name="assessor3" placeholder="Enter assessor 3 name">
                 </div>
                 <button type="button" class="btn" onclick="redirectToPDF()">Submit</button>
+                <button type="button" class="btn" onclick="transferData()">Download Excel</button>
             </form>
         </div>
     </div>
@@ -866,6 +867,45 @@
             document.getElementById('page1').style.display = pageNumber === 1 ? 'block' : 'none';
             document.getElementById('page2').style.display = pageNumber === 2 ? 'block' : 'none';
             document.getElementById('page3').style.display = pageNumber === 3 ? 'block' : 'none';
+        }
+
+        function transferData() {
+            const data = {
+                last_name: document.getElementById('last-name').value.toUpperCase(),
+                first_name: document.getElementById('first-name').value.toUpperCase(),
+                middle_initial: document.getElementById('middle-name').value.toUpperCase(),
+                extension: document.getElementById('extension').value.toUpperCase(),
+                birthday: document.getElementById('birthdate').value,
+                sex: document.getElementById('sex').value,
+                address: document.getElementById('address').value,
+                training_institution: document.getElementById('school').value, // Assuming a single input for training institution
+                type_training_institution: document.getElementById('educational-level').value, // Assuming a single input for type
+                contact_number: document.getElementById('contact').value,
+                educational_attainment: document.getElementById('degree').value, // Assuming a single input for educational attainment
+                training_hours: document.getElementById('training-hours').value, // Assuming a single input for training hours
+                years_of_experience: document.getElementById('years-of-experience').value, // Assuming a single input for years of experience
+                sector: document.getElementById('sector').value,
+                qualification: document.getElementById('qualification').value,
+                nc_cert_number: document.getElementById('nc_certificate_number').value,
+                nc_date_issuance: document.getElementById('nc_date_of_issuance').value,
+                nc_validity: document.getElementById('nc_validity').value,
+                tm_cert_number: `TMC-${document.getElementById('tm_certificate_digits').value}`,
+                tm_date_issuance: document.getElementById('tm_date_of_issuance').value,
+                tm_validity: document.getElementById('tm_validity').value,
+                assessor1: document.getElementById('assessor1').value,
+                assessor2: document.getElementById('assessor2').value,
+                assessor3: document.getElementById('assessor3').value,
+                nttc_serial_number: document.getElementById('nttc_serial_number').value, // Assuming an input for NTTC serial number
+                nttc_cert_number: document.getElementById('nttc_cert_number').value, // Assuming an input for NTTC cert number
+                nttc_date_issuance: document.getElementById('nttc_date_of_issuance').value, // Assuming an input for NTTC date of issuance
+                nttc_validity: document.getElementById('nttc_validity').value // Assuming an input for NTTC validity
+            };
+
+            // Store data in localStorage
+            localStorage.setItem('nttcData', JSON.stringify(data));
+
+            // Redirect to nttcregistry.html
+            window.location.href = 'nttcregistry.html';
         }
 
         function downloadExcel() {

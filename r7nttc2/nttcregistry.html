@@ -82,35 +82,53 @@
                     <th>Assessor 3</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Region VII</td>
-                    <td>Cebu</td>
-                    <td>Doe</td>
-                    <td>John</td>
-                    <td>J</td>
-                    <td>Jr</td>
-                    <td>01/01/1990</td>
-                    <td>Male</td>
-                    <td>123 Example Street</td>
-                    <td>09123456789</td>
-                    <td>john.doe@example.com</td>
-                    <td>Example School</td>
-                    <td>NC II</td>
-                    <td>123456</td>
-                    <td>01/01/2020</td>
-                    <td>01/01/2025</td>
-                    <td>654321</td>
-                    <td>01/01/2021</td>
-                    <td>01/01/2026</td>
-                    <td>Assessor 1</td>
-                    <td>Assessor 2</td>
-                    <td>Assessor 3</td>
-                </tr>
-                <!-- Add more rows as needed -->
+            <tbody id="data-body">
+                <!-- Data will be populated here -->
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Retrieve data from localStorage
+        const nttcData = JSON.parse(localStorage.getItem('nttcData'));
+
+        // Check if data exists
+        if (nttcData) {
+            // Create a new row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>1</td> <!-- You can increment this number if you have multiple entries -->
+                <td>Region VII</td> <!-- Replace with actual region if available -->
+                <td>Province Name</td> <!-- Replace with actual province if available -->
+                <td>${nttcData.last_name}</td>
+                <td>${nttcData.first_name}</td>
+                <td>${nttcData.middle_initial}</td>
+                <td>${nttcData.extension}</td>
+                <td>${nttcData.birthday}</td>
+                <td>${nttcData.sex}</td>
+                <td>${nttcData.address}</td>
+                <td>${nttcData.contact_number}</td>
+                <td>${nttcData.email || 'N/A'}</td> <!-- Assuming email is not collected, default to 'N/A' -->
+                <td>${nttcData.training_institution}</td>
+                <td>${nttcData.qualification}</td>
+                <td>${nttcData.nc_cert_number}</td>
+                <td>${nttcData.nc_date_issuance}</td>
+                <td>${nttcData.nc_validity}</td>
+                <td>${nttcData.tm_cert_number}</td>
+                <td>${nttcData.tm_date_issuance}</td>
+                <td>${nttcData.tm_validity}</td>
+                <td>${nttcData.assessor1}</td>
+                <td>${nttcData.assessor2}</td>
+                <td>${nttcData.assessor3}</td>
+            `;
+            // Append the row to the table body
+            document.getElementById('data-body').appendChild(row);
+        } else {
+            // Handle case where no data is found
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="22">No data available</td>`;
+            document.getElementById('data-body').appendChild(row);
+        }
+    </script>
 </body>
 </html>
