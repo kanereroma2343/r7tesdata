@@ -35,8 +35,6 @@
             // Collect form data
             const form = document.getElementById('clientForm');
             const formData = new FormData(form);
-
-            // Convert form data to a query string
             const queryString = new URLSearchParams(formData).toString();
 
             // Redirect to preview page with query parameters
