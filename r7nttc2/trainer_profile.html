@@ -259,15 +259,15 @@
                     <div class="grid">
                         <div class="form-group">
                             <label for="last-name">Last Name:</label>
-                            <input type="text" id="last-name" name="last-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
+                            <input type="text" id="last_name" name="last-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                         <div class="form-group">
                             <label for="first-name">First Name:</label>
-                            <input type="text" id="first-name" name="first-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
+                            <input type="text" id="first_name" name="first-name" required oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                         <div class="form-group">
                             <label for="middle-name">Middle Name:</label>
-                            <input type="text" id="middle-name" name="middle-name" oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
+                            <input type="text" id="middle_initial" name="middle-name" oninput="this.value = this.value.toUpperCase();"> <!-- Capitalize on input -->
                         </div>
                         <div class="form-group">
                             <label for="extension">Extension:</label>
@@ -808,14 +808,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="nc_certificate_number">NC Certificate Number</label>
-                    <input type="text" id="nc_certificate_number" name="nc_certificate_number" placeholder="Enter NC certificate number" required maxlength="14">
+                    <label for="nc_cert_number">NC Certificate Number</label>
+                    <input type="text" id="nc_cert_number" name="nc_cert_number" placeholder="Enter NC certificate number" required maxlength="14">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nc_date_of_issuance">NC Date of Issuance</label>
-                        <input type="date" id="nc_date_of_issuance" name="nc_date_of_issuance" required onchange="setNCValidity()">
+                        <label for="nc_date_issuance">NC Date of Issuance</label>
+                        <input type="date" id="nc_date_issuance" name="nc_date_issuance" required onchange="setNCValidity()">
                     </div>
                     <div class="form-group">
                         <label for="nc_validity">NC Validity</label>
@@ -824,17 +824,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="tm_certificate_number">TM Certificate Number</label>
+                    <label for="tm_cert_number">TM Certificate Number</label>
                     <div style="display: flex; align-items: center;">
                         <input type="text" value="TMC-" readonly style="width: 60px; margin-right: 5px;">
-                        <input type="text" id="tm_certificate_digits" name="tm_certificate_digits" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14">
+                        <input type="text" id="tm_cert_number" name="tm_cert_number" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="tm_date_of_issuance">TM Date of Issuance</label>
-                        <input type="date" id="tm_date_of_issuance" name="tm_date_of_issuance" required onchange="setTMValidity()">
+                        <label for="tm_date_issuance">TM Date of Issuance</label>
+                        <input type="date" id="tm_date_issuance" name="tm_date_issuance" required onchange="setTMValidity()">
                     </div>
                     <div class="form-group">
                         <label for="tm_validity">TM Validity</label>
@@ -887,11 +887,11 @@
                 years_of_experience: document.getElementById('years-of-experience').value, // Assuming a single input for years of experience
                 sector: document.getElementById('sector').value,
                 qualification: document.getElementById('qualification').value,
-                nc_cert_number: document.getElementById('nc_certificate_number').value,
-                nc_date_issuance: document.getElementById('nc_date_of_issuance').value,
+                nc_cert_number: document.getElementById('nc_cert_number').value,
+                nc_date_issuance: document.getElementById('nc_date_issuance').value,
                 nc_validity: document.getElementById('nc_validity').value,
-                tm_cert_number: `TMC-${document.getElementById('tm_certificate_digits').value}`,
-                tm_date_issuance: document.getElementById('tm_date_of_issuance').value,
+                tm_cert_number: `TMC-${document.getElementById('tm_cert_number').value}`,
+                tm_date_issuance: document.getElementById('tm_date_issuance').value,
                 tm_validity: document.getElementById('tm_validity').value,
                 assessor1: document.getElementById('assessor1').value,
                 assessor2: document.getElementById('assessor2').value,
@@ -927,11 +927,11 @@
         years_of_experience: document.getElementById('years-of-experience').value,
         sector: document.getElementById('sector').value,
         qualification: document.getElementById('qualification').value,
-        nc_cert_number: document.getElementById('nc_certificate_number').value,
-        nc_date_issuance: document.getElementById('nc_date_of_issuance').value,
+        nc_cert_number: document.getElementById('nc_cert_number').value,
+        nc_date_issuance: document.getElementById('nc_date_issuance').value,
         nc_validity: document.getElementById('nc_validity').value,
-        tm_cert_number: `TMC-${document.getElementById('tm_certificate_digits').value}`,
-        tm_date_issuance: document.getElementById('tm_date_of_issuance').value,
+        tm_cert_number: `TMC-${document.getElementById('tm_cert_number').value}`,
+        tm_date_issuance: document.getElementById('tm_date_issuance').value,
         tm_validity: document.getElementById('tm_validity').value,
         assessor1: document.getElementById('assessor1').value,
         assessor2: document.getElementById('assessor2').value,
@@ -976,11 +976,11 @@
                 page3: {
                     sector: document.getElementById('sector').value,
                     qualification: document.getElementById('qualification').value,
-                    nc_cert_number: document.getElementById('nc_certificate_number').value,
-                    nc_date_issuance: document.getElementById('nc_date_of_issuance').value,
+                    nc_cert_number: document.getElementById('nc_cert_number').value,
+                    nc_date_issuance: document.getElementById('nc_date_issuance').value,
                     nc_validity: document.getElementById('nc_validity').value,
-                    tm_cert_number: `TMC-${document.getElementById('tm_certificate_digits').value}`,
-                    tm_date_issuance: document.getElementById('tm_date_of_issuance').value,
+                    tm_cert_number: `TMC-${document.getElementById('tm_cert_number').value}`,
+                    tm_date_issuance: document.getElementById('tm_date_issuance').value,
                     tm_validity: document.getElementById('tm_validity').value,
                     assessor1: document.getElementById('assessor1').value,
                     assessor2: document.getElementById('assessor2').value,
@@ -1388,7 +1388,7 @@
         });
 
         function setNCValidity() {
-            const issuanceDate = document.getElementById('nc_date_of_issuance').value;
+            const issuanceDate = document.getElementById('nc_date_issuance').value;
             const validityInput = document.getElementById('nc_validity');
 
             if (issuanceDate) {
@@ -1402,7 +1402,7 @@
         }
 
         function setTMValidity() {
-            const issuanceDate = document.getElementById('tm_date_of_issuance').value;
+            const issuanceDate = document.getElementById('tm_date_issuance').value;
             const validityInput = document.getElementById('tm_validity');
 
             if (issuanceDate) {
