@@ -827,20 +827,6 @@
             </div>
         </form>
     </div>
-    <div id="emailModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Send Application Email</h2>
-            <form id="emailForm" onsubmit="sendEmail(event)">
-                <div class="form-group">
-                    <label for="emailSubject">Subject:</label>
-                    <input type="text" id="emailSubject" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="emailBody">Message:</label>
-                    <textarea id="emailBody" rows="10" readonly></textarea>
-                </div>
-                <button type="submit" class="btn">Send Email</button>
             </form>
         </div>
     </div>
@@ -849,36 +835,6 @@
 function savePDF() {
     window.print();
 }
-       function openEmailModal() {
-            const modal = document.getElementById('emailModal');
-            const formData = new FormData(document.getElementById('tesdaForm'));
-            
-            // Populate email subject
-            const subject = `NTTC Application - ${formData.get('first-name')} ${formData.get('last-name')}`;
-            document.getElementById('emailSubject').value = subject;
-            
-            // Populate email body
-            const body = `
-NTTC Application Details:
-
-Name: ${formData.get('first-name')} ${formData.get('last-name')}
-Sector: ${formData.get('sector')}
-Qualification: ${formData.get('qualification')}
-NC Certificate Number: ${formData.get('nc_cert_number')}
-TM Certificate Number: ${formData.get('tm_cert_number')}
-
-Application Date: ${formData.get('application-date')}
-Contact: ${formData.get('contact')}
-Email: ${formData.get('email')}
-            `;
-            document.getElementById('emailBody').value = body;
-            
-            modal.style.display = "block";
-            // Add slight delay before adding show class to trigger animation
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
 
         // Update the close functions as well
         function closeModal() {
