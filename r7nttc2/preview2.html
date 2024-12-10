@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../icons/t7logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -221,59 +220,6 @@
             margin: 0 auto;
             overflow: hidden;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .modal.show {
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        @media print {
-    .grid {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
-    }
-
-    body {
-        background-color: white !important;
-        color: black !important;
-    }
-
-    .btn {
-        display: none;
-    }
-
-    #photo-upload {
-        display: none;
-    }
-}
     </style>
 </head>
 <body>
@@ -762,8 +708,7 @@
                     <div class="form-row grid">
                         <div class="form-group">
                             <label for="sector" style="text-transform: uppercase;">Sector</label>
-                            <input type="text" id="sector" name="sector" placeholder="Enter sector" required readonly style="text-transform: uppercase;" 
-                                   oninput="this.value = this.value.replace(/_/g, ' ')">
+                            <input type="text" id="sector" name="sector" placeholder="Enter sector" required readonly style="text-transform: uppercase;">
                         </div>
                         <div class="form-group">
                             <label for="qualification" style="text-transform: uppercase;">Qualification</label>
@@ -821,82 +766,12 @@
                         <input type="text" id="assessor3" name="assessor3" placeholder="Enter assessor 3 name" readonly>
                     </div>
                 </div>
-                <button type="button" class="btn" onclick="openEmailModal()">Submit</button>
-                <button type="button" class="btn btn-secondary" onclick="savePDF()">Save as PDF</button>
             </div>
         </form>
     </div>
-    <div id="emailModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Send Application Email</h2>
-            <form id="emailForm" onsubmit="sendEmail(event)">
-                <div class="form-group">
-                    <label for="emailSubject">Subject:</label>
-                    <input type="text" id="emailSubject" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="emailBody">Message:</label>
-                    <textarea id="emailBody" rows="10" readonly></textarea>
-                </div>
-                <button type="submit" class="btn">Send Email</button>
-            </form>
-        </div>
-    </div>
+    
 
     <script>
-function savePDF() {
-    window.print();
-}
-       function openEmailModal() {
-            const modal = document.getElementById('emailModal');
-            const formData = new FormData(document.getElementById('tesdaForm'));
-            
-            // Populate email subject
-            const subject = `NTTC Application - ${formData.get('first-name')} ${formData.get('last-name')}`;
-            document.getElementById('emailSubject').value = subject;
-            
-            // Populate email body
-            const body = `
-NTTC Application Details:
-
-Name: ${formData.get('first-name')} ${formData.get('last-name')}
-Sector: ${formData.get('sector')}
-Qualification: ${formData.get('qualification')}
-NC Certificate Number: ${formData.get('nc_cert_number')}
-TM Certificate Number: ${formData.get('tm_cert_number')}
-
-Application Date: ${formData.get('application-date')}
-Contact: ${formData.get('contact')}
-Email: ${formData.get('email')}
-            `;
-            document.getElementById('emailBody').value = body;
-            
-            modal.style.display = "block";
-            // Add slight delay before adding show class to trigger animation
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
-
-        // Update the close functions as well
-        function closeModal() {
-            const modal = document.getElementById('emailModal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 300); // Match the transition duration
-        }
-
-        // Update existing close handlers
-        document.querySelector('.close').onclick = closeModal;
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('emailModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
     // Function to get query parameters and populate the form
     function populateForm() {
         const params = new URLSearchParams(window.location.search);
@@ -1049,11 +924,7 @@ Email: ${formData.get('email')}
         document.getElementById('dependent-age').value = params.get('dependent-age') || 'N/A';
     
         // 12. NTTC Application Form
-        // ... existing populateForm function ...
-        // 12. NTTC Application Form
-        const sectorValue = params.get('sector') || 'N/A';
-        document.getElementById('sector').value = sectorValue.replace(/_/g, ' ');
-// ... rest of the function ...
+        document.getElementById('sector').value = params.get('sector') || 'N/A';
         document.getElementById('qualification').value = params.get('qualification') || 'N/A';
         document.getElementById('nc_cert_number').value = params.get('nc_cert_number') || 'N/A';
         document.getElementById('nc_date_issuance').value = params.get('nc_date_issuance') || 'N/A';
@@ -1069,6 +940,5 @@ Email: ${formData.get('email')}
     // Call the function when the page loads
     window.onload = populateForm;
     </script>
-    
 </body>
 </html>
