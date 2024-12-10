@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalistic Horizontal Table</title>
+    <title>NTTC Registry Issuances</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,11 +11,31 @@
             margin: 0;
             padding: 20px;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #000000, #1a237e);
+            color: white;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
         .table-container {
             overflow-x: auto;
         }
         table {
             border-collapse: collapse;
+            border: 2px solid #000;
             background: linear-gradient(135deg, #000000, #1a237e, #ffffff);
             color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -37,6 +57,11 @@
     </style>
 </head>
 <body>
+    <header class="header">
+        <img src="/placeholder.svg?height=100&width=100" alt="Left Logo" class="logo">
+        <h1>NTTC Registry Issuances</h1>
+        <img src="/placeholder.svg?height=100&width=100" alt="Right Logo" class="logo">
+    </header>
     <div class="table-container">
         <table>
             <tr>
