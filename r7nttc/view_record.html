@@ -232,6 +232,11 @@
             `;
         }
 
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
         function renderTrainerProfile(trainer) {
             const app = document.getElementById('app');
             app.innerHTML = `
@@ -256,7 +261,7 @@
                     <div id="personal" class="tab-content active">
                         <div class="info-grid">
                             ${createInfoItem('Full Name', `${trainer.first_name} ${trainer.middle_initial || ''} ${trainer.last_name} ${trainer.extension || ''}`)}
-                            ${createInfoItem('Birthday', trainer.birthday)}
+                            ${createInfoItem('Birthday', formatDate(trainer.birthday))}
                             ${createInfoItem('Sex', trainer.sex)}
                             ${createInfoItem('Address', trainer.address)}
                             ${createInfoItem('E-Mail Address', trainer.email)}
@@ -271,8 +276,8 @@
                     <div id="nc" class="tab-content">
                         <div class="info-grid">
                             ${createInfoItem('NC Cert Number', trainer.nc_cert_number)}
-                            ${createInfoItem('NC Date Issuance', trainer.nc_date_issuance)}
-                            ${createInfoItem('NC Validity', trainer.nc_validity)}
+                            ${createInfoItem('NC Date Issuance', formatDate(trainer.nc_date_issuance))}
+                            ${createInfoItem('NC Validity', formatDate(trainer.nc_validity))}
                             ${createInfoItem('Sector', trainer.sector)}
                             ${createInfoItem('Qualification', trainer.qualification)}
                         </div>
@@ -280,8 +285,8 @@
                     <div id="tm" class="tab-content">
                         <div class="info-grid">
                             ${createInfoItem('TM Cert Number', trainer.tm_cert_number)}
-                            ${createInfoItem('TM Date Issuance', trainer.tm_date_issuance)}
-                            ${createInfoItem('TM Validity', trainer.tm_validity)}
+                            ${createInfoItem('TM Date Issuance', formatDate(trainer.tm_date_issuance))}
+                            ${createInfoItem('TM Validity', formatDate(trainer.tm_validity))}
                             ${createInfoItem('Assessor 1', trainer.assessor1)}
                             ${createInfoItem('Assessor 2', trainer.assessor2)}
                             ${createInfoItem('Assessor 3', trainer.assessor3)}
@@ -291,8 +296,8 @@
                         <div class="info-grid">
                             ${createInfoItem('NTTC Serial Number', trainer.nttc_serial_number)}
                             ${createInfoItem('NTTC Cert Number', trainer.nttc_cert_number)}
-                            ${createInfoItem('NTTC Date Issuance', trainer.nttc_date_issuance)}
-                            ${createInfoItem('NTTC Validity', trainer.nttc_validity)}
+                            ${createInfoItem('NTTC Date Issuance', formatDate(trainer.nttc_date_issuance))}
+                            ${createInfoItem('NTTC Validity', formatDate(trainer.nttc_validity))}
                         </div>
                     </div>
                 </div>

@@ -291,7 +291,7 @@
                         </div>
                         <div 
                         style="flex: 0 1 400px; height: 400px; background-color: #f0f4f8; border: 2px solid var(--border-color); margin-left: auto; margin-right: 20px; position: relative;">                   
-                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #aaa; font-size: 1.2rem;">ID PICTURE (2”x 2” size)</span>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #aaa; font-size: 1.2rem;">ID PICTURE (2"x 2" size)</span>
                         </div>
                         <!-- ... existing header code ... -->
                     </header>
@@ -558,8 +558,40 @@
                 
                 <div class="form-section">
                     <h2>7. Working Experience</h2>
-
+        
                     <table id="experience-table">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="years_of_experience">Total Years of Work Experience:</label>
+                                <input type="number" id="years_of_experience" name="years_of_experience" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="training_hours">Total Training Hours:</label>
+                                <input type="number" id="training_hours" name="training_hours" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="training_institution">Training Institution:</label>
+                                <input type="text" id="training_institution" name="training_institution" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="type_training_institution">Type of Training Institution:</label>
+                                <select id="type_training_institution" name="type_training_institution" required disabled>
+                                    <option value="">Select</option>
+                                    <option value="private">Private</option>
+                                    <option value="public">Public</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="educational_attainment">Educational Attainment:</label>
+                                <select id="educational_attainment" name="educational_attainment" required disabled>
+                                    <option value="">Select</option>
+                                    <option value="high-school">High School</option>
+                                    <option value="college">College</option>
+                                    <option value="vocational">Vocational</option>
+                                    <option value="post-graduate">Post-Graduate</option>
+                                </select>
+                            </div>
+                        </div>
                         <thead>
                             <tr>
                                 <th>Company</th>
@@ -762,12 +794,11 @@
                     <div class="form-row grid">
                         <div class="form-group">
                             <label for="sector" style="text-transform: uppercase;">Sector</label>
-                            <input type="text" id="sector" name="sector" placeholder="Enter sector" required readonly style="text-transform: uppercase;" 
-                                   oninput="this.value = this.value.replace(/_/g, ' ')">
+                            <input type="text" id="sector" name="sector" placeholder="Enter sector" required readonly style="text-transform: uppercase; width: 80%;">
                         </div>
                         <div class="form-group">
                             <label for="qualification" style="text-transform: uppercase;">Qualification</label>
-                            <input type="text" id="qualification" name="qualification" placeholder="Enter qualification" required readonly style="text-transform: uppercase;">
+                            <input type="text" id="qualification" name="qualification" placeholder="Enter qualification" required readonly style="text-transform: uppercase; width: calc(118% + 20px); margin-right: 5px; margin-left: -170px;">
                         </div>
                     </div>
                     
@@ -821,12 +852,39 @@
                         <input type="text" id="assessor3" name="assessor3" placeholder="Enter assessor 3 name" readonly>
                     </div>
                 </div>
-                <button type="button" class="btn" onclick="window.history.back()">Edit</button>
+                <button type="button" class="btn" id="editToggle" onclick="toggleEdit()">Edit Form</button>
                 <button type="button" class="btn btn-secondary" onclick="savePDF()">Save as PDF</button>
+                <button type="button" class="btn btn-primary" id="importButton">Import to NTTC Registry</button>
+                
             </div>
         </form>
     </div>
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Send Application Email</h2>
+            <form id="emailForm" onsubmit="sendEmail(event)">
+                <div class="form-group">
+                    <label for="emailSubject">Subject:</label>
+                    <input type="text" id="emailSubject" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="emailBody">Message:</label>
+                    <textarea id="emailBody" rows="10" readonly></textarea>
+                </div>
+                <button type="submit" class="btn">Send Email</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal for displaying information -->
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Submitted Information</h2>
+            <div id="modalContent" style="display: flex; flex-direction: column;">
+                <!-- Information will be populated here -->
+            </div>
         </div>
     </div>
 
@@ -835,24 +893,6 @@ function savePDF() {
     window.print();
 }
 
-        // Update the close functions as well
-        function closeModal() {
-            const modal = document.getElementById('emailModal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 300); // Match the transition duration
-        }
-
-        // Update existing close handlers
-        document.querySelector('.close').onclick = closeModal;
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('emailModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
     // Function to get query parameters and populate the form
     function populateForm() {
         const params = new URLSearchParams(window.location.search);
@@ -865,7 +905,7 @@ function savePDF() {
         document.getElementById('last_name').value = params.get('last-name') || 'N/A';
         document.getElementById('first_name').value = params.get('first-name') || 'N/A';
         document.getElementById('middle_initial').value = params.get('middle-name') || 'N/A';
-        document.getElementById('extension').value = params.get('extension') || 'N/A';
+        document.getElementById('extension').value = params.get('extension') || '';
         document.getElementById('address').value = params.get('address') || 'N/A';
         document.getElementById('city').value = params.get('city') || 'N/A';
         document.getElementById('province').value = params.get('province') || 'N/A';
@@ -1005,11 +1045,8 @@ function savePDF() {
         document.getElementById('dependent-age').value = params.get('dependent-age') || 'N/A';
     
         // 12. NTTC Application Form
-        // ... existing populateForm function ...
-        // 12. NTTC Application Form
         const sectorValue = params.get('sector') || 'N/A';
         document.getElementById('sector').value = sectorValue.replace(/_/g, ' ');
-// ... rest of the function ...
         document.getElementById('qualification').value = params.get('qualification') || 'N/A';
         document.getElementById('nc_cert_number').value = params.get('nc_cert_number') || 'N/A';
         document.getElementById('nc_date_issuance').value = params.get('nc_date_issuance') || 'N/A';
@@ -1020,10 +1057,204 @@ function savePDF() {
         document.getElementById('assessor1').value = params.get('assessor1') || 'N/A';
         document.getElementById('assessor2').value = params.get('assessor2') || 'N/A';
         document.getElementById('assessor3').value = params.get('assessor3') || 'N/A';
+
+        const yearsOfExperienceInput = document.getElementById('years_of_experience');
+        const trainingInstitutionInput = document.getElementById('training_institution');
+        const typeTrainingInstitutionInput = document.getElementById('type_training_institution');
+        const educationalAttainmentInput = document.getElementById('educational_attainment');
+
+        yearsOfExperienceInput.value = params.get('years_of_experience') || 'N/A';
+        trainingInstitutionInput.value = params.get('training_institution') || 'N/A';
+        typeTrainingInstitutionInput.value = params.get('type_training_institution') || '';
+        educationalAttainmentInput.value = params.get('educational_attainment') || '';
     }
     
     // Call the function when the page loads
     window.onload = populateForm;
+
+function submitForm() {
+    const fields = [
+        "last_name", "first_name", "middle_initial", "extension", "birthdate", "sex",
+        "address", "training_institution", "type_training_institution", "contact_number",
+        "educational_attainment", "training_hours", "years_of_experience", "sector",
+        "qualification", "nc_cert_number", "nc_date_issuance", "nc_validity",
+        "tm_cert_number", "tm_date_issuance", "tm_validity", "assessor1",
+        "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
+        "nttc_date_issuance", "nttc_validity"
+    ];
+
+    // Dynamically create form fields only if formContainer exists
+    const formContainer = document.getElementById('formContainer');
+    if (formContainer) {
+        fields.forEach(field => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group';
+
+            const label = document.createElement('label');
+            label.textContent = field.replace(/_/g, ' ').toUpperCase();
+            label.setAttribute('for', field);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = field;
+            input.name = field;
+
+            formGroup.appendChild(label);
+            formGroup.appendChild(input);
+            formContainer.appendChild(formGroup);
+        });
+    }
+
+    // Handle form submission
+    document.getElementById('submitButton').addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        const formData = {};
+
+        fields.forEach(field => {
+            const input = document.getElementById(field);
+            formData[field] = input ? input.value : ''; // Check if input exists
+        });
+
+        // Create and display the modal with the form data
+        const modal = document.getElementById('dataModal');
+        const modalContent = document.getElementById('modalContent');
+        modalContent.innerHTML = ''; // Clear previous content
+
+        // Populate modal with form data
+        for (const [key, value] of Object.entries(formData)) {
+            const dataRow = document.createElement('div');
+            dataRow.style.display = 'flex';
+            dataRow.style.justifyContent = 'space-between';
+            dataRow.style.marginBottom = '10px';
+
+            const label = document.createElement('span');
+            label.textContent = key.replace(/_/g, ' ').toUpperCase() + ':';
+            label.style.fontWeight = 'bold';
+
+            const data = document.createElement('span');
+            data.textContent = value;
+
+            dataRow.appendChild(label);
+            dataRow.appendChild(data);
+            modalContent.appendChild(dataRow);
+        }
+
+        // Show the modal
+        modal.style.display = 'block';
+    });
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('dataModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+}
+
+let isEditing = false; // Track the editing state
+
+function toggleEdit() {
+    const inputs = document.querySelectorAll('#tesdaForm input');
+    isEditing = !isEditing; // Toggle the editing state
+
+    inputs.forEach(input => {
+        input.readOnly = !isEditing; // Set readonly based on editing state
+    });
+
+    // Update button text based on the current state
+    document.getElementById('editToggle').textContent = isEditing ? 'Save Changes' : 'Edit Form';
+}
+
+function openModal() {
+    const modal = document.getElementById('dataModal');
+    const modalContent = document.getElementById('modalContent');
+    modalContent.innerHTML = ''; // Clear previous content
+
+    // Populate modal with form data
+    const fields = [
+        "last_name", "first_name", "middle_initial", "extension", "birthdate", "sex",
+        "address", "training_institution", "type_training_institution", "contact_number",
+        "educational_attainment", "training_hours", "years_of_experience", "sector",
+        "qualification", "nc_cert_number", "nc_date_issuance", "nc_validity",
+        "tm_cert_number", "tm_date_issuance", "tm_validity", "assessor1",
+        "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
+        "nttc_date_issuance", "nttc_validity"
+    ];
+
+    fields.forEach(field => {
+        const input = document.getElementById(field);
+        const dataRow = document.createElement('div');
+        dataRow.style.display = 'flex';
+        dataRow.style.justifyContent = 'space-between';
+        dataRow.style.marginBottom = '10px';
+
+        const label = document.createElement('span');
+        label.textContent = field.replace(/_/g, ' ').toUpperCase() + ':';
+        label.style.fontWeight = 'bold';
+
+        const data = document.createElement('span');
+        data.textContent = input ? input.value : ''; // Check if input exists
+
+        dataRow.appendChild(label);
+        dataRow.appendChild(data);
+        modalContent.appendChild(dataRow);
+    });
+
+    modal.style.display = 'block'; // Show the modal
+}
+
+function closeModal() {
+    const modal = document.getElementById('dataModal');
+    modal.style.display = 'none'; // Hide the modal
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('dataModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+};
+
+document.getElementById('importButton').addEventListener('click', function() {
+            // This is example data. In a real application, you'd fetch this data from your backend or form.
+            const data = {
+                "last_name": document.getElementById('last_name').value,
+                "first_name": document.getElementById('first_name').value,
+                "middle_initial": document.getElementById('middle_initial').value,
+                "extension": document.getElementById('extension').value,
+                "birthdate": document.getElementById('birthdate').value,
+                "sex": document.getElementById('sex').value,
+                "address": document.getElementById('address').value,
+                "training_institution": document.getElementById('training_institution').value,
+                "type_training_institution": document.getElementById('type_training_institution').value,
+                "email": document.getElementById('email').value,
+                "contact_number": document.getElementById('contact').value,
+                "educational_attainment": "Bachelor's Degree",
+               "training_hours": document.getElementById('training_hours').value,
+               "years_of_experience": document.getElementById('years_of_experience').value,
+               "sector": document.getElementById('sector').value,
+                "qualification": document.getElementById('qualification').value,
+                "nc_cert_number": document.getElementById('nc_cert_number').value,
+                "nc_date_issuance": document.getElementById('nc_date_issuance').value,
+                "nc_validity": document.getElementById('nc_validity').value,
+               "tm_cert_number": document.getElementById('tm_cert_number').value,
+                "tm_date_issuance": document.getElementById('tm_date_issuance').value,
+                "tm_validity": document.getElementById('tm_validity').value,
+                "assessor1": document.getElementById('assessor1').value,
+                "assessor2": document.getElementById('assessor2').value,
+                "assessor3": document.getElementById('assessor3').value,
+
+            };
+
+            // Store the data in localStorage
+            localStorage.setItem('nttcData', JSON.stringify(data));
+
+            // Redirect to the nttcregistry.html page
+            window.location.href = 'nttcregistry.html';
+        });
     </script>
     
 </body>
