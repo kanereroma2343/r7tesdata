@@ -3,128 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NTTC Registry Issuances</title>
+    <title>NTTC Registry</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             padding: 20px;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .container {
+            max-width: 3000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             padding: 20px;
-            background: linear-gradient(135deg, #000000, #1a237e);
-            color: white;
+        }
+        h1 {
+            color: #2f4f4f;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 10px;
             margin-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            text-align: center;
-            flex-grow: 1;
-        }
-        .logo {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            margin-bottom: -20px;
-        }
-        .table-container {
-            overflow-x: auto;
+            font-size: 2em;
         }
         table {
-            border-collapse: collapse;
-            border: 2px solid #000;
-            background: linear-gradient(135deg, #000000, #1a237e, #ffffff);
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            overflow: hidden;
         }
         th, td {
-            padding: 12px 20px;
+            border: 1px solid #ced4da;
+            padding: 12px;
             text-align: left;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            white-space: nowrap;
         }
         th {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: #4caf50;
+            color: #ffffff;
             font-weight: bold;
         }
-        tr:hover td {
-            background-color: rgba(255, 255, 255, 0.1);
+        tr:nth-child(even) {
+            background-color: #e8f5e9;
+        }
+        tr:hover {
+            background-color: #c8e6c9;
+        }
+        .alert {
+            background-color: #dcedc8;
+            border: 1px solid #c5e1a5;
+            color: #4a4a4a;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .copy-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .copy-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <img src="../icons/tlogo.png" alt="Left Logo" class="logo";>
-        <h1>NTTC Registry Issuances</h1>
-        <img src="../icons/blogo.png" alt="Right Logo" class="logo";>
-    </header>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Initial</th>
-                <th>Extension</th>
-                <th>Birthday</th>
-                <th>Sex</th>
-                <th>Address</th>
-                <th>Training Institution</th>
-                <th>Type Training Institution</th>
-                <th>Contact Number</th>
-                <th>Educational Attainment</th>
-                <th>Training Hours</th>
-                <th>Years of Experience</th>
-                <th>Sector</th>
-                <th>Qualification</th>
-                <th>NC Cert Number</th>
-                <th>NC Date Issuance</th>
-                <th>NC Validity</th>
-                <th>TM Cert Number</th>
-                <th>TM Date Issuance</th>
-                <th>TM Validity</th>
-                <th>Assessor 1</th>
-                <th>Assessor 2</th>
-                <th>Assessor 3</th>
-                <th>NTTC Serial Number</th>
-                <th>NTTC Cert Number</th>
-                <th>NTTC Date Issuance</th>
-                <th>NTTC Validity</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+    <div class="container">
+        <h1>NTTC Registry Data</h1>
+        <div id="dataDisplay"></div>
+        <button id="copyButton" class="copy-button" style="display:none;">Copy Data</button>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataDisplay = document.getElementById('dataDisplay');
+            const copyButton = document.getElementById('copyButton');
+            const data = JSON.parse(localStorage.getItem('nttcData'));
+
+            if (data) {
+                let html = '<table><thead><tr>';
+                const headers = [];
+                const values = [];
+
+                // Create table headers and collect data
+                for (const [key, value] of Object.entries(data)) {
+                    // Capitalize headers
+                    headers.push(key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+                    
+                    // Special handling for middle initial
+                    if (key === 'middle_initial') {
+                        // Take only the first letter and add a period
+                        values.push(value ? value.charAt(0).toUpperCase() + '.' : '');
+                    } 
+                    // Selectively capitalize values
+                    else if (['email', 'address', 'educational_attainment'].includes(key)) {
+                        // Keep these fields in their original case
+                        values.push(value);
+                    } else {
+                        // Capitalize other fields
+                        values.push(typeof value === 'string' ? value.toUpperCase() : value);
+                    }
+                }
+
+                // Add headers
+                headers.forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                html += '</tr></thead><tbody><tr>';
+
+                // Add values
+                values.forEach(value => {
+                    html += `<td>${value}</td>`;
+                });
+                html += '</tr></tbody></table>';
+                
+                dataDisplay.innerHTML = html;
+
+                // Show copy button and add copy functionality
+                copyButton.style.display = 'block';
+                copyButton.addEventListener('click', function() {
+                    // Create a text representation of ONLY the values
+                    const copyText = values.join('\t');
+
+                    // Use clipboard API to copy
+                    navigator.clipboard.writeText(copyText).then(function() {
+                        alert('Data copied to clipboard!');
+                    }, function(err) {
+                        console.error('Could not copy text: ', err);
+                    });
+                });
+            } else {
+                dataDisplay.innerHTML = '<p class="alert">No data available.</p>';
+            }
+        });
+    </script>
 </body>
 </html>
