@@ -2,11 +2,12 @@
     "first_name": 
     "middle_initial": 
     "extension": 
-    "birthday": 
+    "birthdate": 
     "sex":
     "address": 
     "training_institution": 
     "type_training_institution":
+    "email":
     "contact_number": 
     "educational_attainment": 
     "training_hours": 
