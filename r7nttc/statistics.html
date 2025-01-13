@@ -162,7 +162,9 @@
         const sectorTallyBody = document.getElementById('sectorTallyBody');
         sectorTallyBody.innerHTML = ""; // Clear previous content
         let totalCount = 0; // Initialize total count
-        for (const [sector, count] of Object.entries(sectorCount)) {
+        // Sort sectors alphabetically
+        const sortedSectors = Object.entries(sectorCount).sort(([a], [b]) => a.localeCompare(b));
+        for (const [sector, count] of sortedSectors) {
             sectorTallyBody.innerHTML += `<tr><td>${sector}</td><td>${count}</td></tr>`;
             totalCount += count; // Add to total count
         }
@@ -172,7 +174,9 @@
         const qualificationTallyBody = document.getElementById('qualificationTallyBody');
         qualificationTallyBody.innerHTML = ""; // Clear previous content
         let totalQualificationCount = 0; // Initialize total count for qualifications
-        for (const [qualification, count] of Object.entries(qualificationCount)) {
+        // Sort qualifications alphabetically
+        const sortedQualifications = Object.entries(qualificationCount).sort(([a], [b]) => a.localeCompare(b));
+        for (const [qualification, count] of sortedQualifications) {
             qualificationTallyBody.innerHTML += `<tr><td>${qualification}</td><td>${count}</td></tr>`;
             totalQualificationCount += count; // Add to total count for qualifications
         }
