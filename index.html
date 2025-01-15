@@ -186,6 +186,27 @@
             margin-top: 2rem;
         }
 
+        .image-holder {
+            margin-top: 2rem;
+            height:50%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .featured-image {
+            max-width: 57%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .featured-image:hover {
+            transform: scale(1.02);
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -224,6 +245,87 @@
                 height: auto;
                 font-size: 0.8rem;
             }
+
+            .image-holder {
+                margin-top: 1.5rem;
+            }
+
+            .featured-image {
+                max-width: 100% !important;
+                width: 100%;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding: 20px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            cursor: move;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 100%;
+            max-height: 90vh;
+            transform-origin: center center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close {
+            position: fixed;
+            right: 35px;
+            top: 15px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .zoom-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+        }
+
+        .zoom-controls button {
+            padding: 8px 16px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+
+        .zoom-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
@@ -270,9 +372,12 @@
                         <a href="https://script.google.com/macros/s/AKfycbzkf1NElWnt50HmX6as-P-kTehdoA1TZWO2XcmsD1CFKFINgEjAZJYPila4_9vO2YxX/exec" class="sub-box">Scholarship System</a>
                         <div class="sub-box">Mam Ann Gwapa</div>
                     </div>
-                </div>             
-            </div>         
-        </div>        
+                </div>
+            </div>
+            <div class="image-holder">
+                <img src="icons/orgchart.png" alt="NTTC MIS" class="featured-image">
+            </div>
+        </div>
     </main>
     
 
@@ -311,6 +416,124 @@
             // Navigate to dashboard
             window.location.href = 'execdash/index.html';
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const closeBtn = document.getElementsByClassName('close')[0];
+            const featuredImage = document.querySelector('.featured-image');
+            
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // Open modal
+            featuredImage.onclick = function() {
+                modal.style.display = 'block';
+                modalImg.src = this.src;
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                
+                // Force reflow
+                modal.offsetHeight;
+                
+                // Add show classes for smooth transition
+                modal.classList.add('show');
+                modalImg.classList.add('show');
+            }
+
+            // Close modal
+            closeBtn.onclick = function() {
+                modal.classList.remove('show');
+                modalImg.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300); // Match the transition duration
+            }
+
+            // Zoom controls
+            document.getElementById('zoomIn').onclick = function() {
+                scale *= 1.2;
+                updateTransform();
+            }
+
+            document.getElementById('zoomOut').onclick = function() {
+                scale *= 0.8;
+                updateTransform();
+            }
+
+            document.getElementById('resetZoom').onclick = function() {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+            }
+
+            // Drag functionality
+            modalImg.addEventListener('mousedown', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+
+            // Touch support
+            modalImg.addEventListener('touchstart', e => {
+                const touch = e.touches[0];
+                startDragging(touch);
+            });
+            document.addEventListener('touchmove', e => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                drag(touch);
+            });
+            document.addEventListener('touchend', stopDragging);
+
+            function startDragging(e) {
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+            }
+
+            function stopDragging() {
+                isDragging = false;
+            }
+
+            function updateTransform() {
+                modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            }
+
+            // Mouse wheel zoom
+            modal.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const delta = e.deltaY * -0.01;
+                scale *= (1 + delta);
+                updateTransform();
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeBtn.onclick();
+                }
+            });
+        });
     </script>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div class="zoom-controls">
+            <button id="zoomIn">+</button>
+            <button id="zoomOut">-</button>
+            <button id="resetZoom">Reset</button>
+        </div>
+    </div>
 </body>
 </html>
