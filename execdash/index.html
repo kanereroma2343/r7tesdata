@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>TESDA Region VII - Dashboard</title>
     <link rel="icon" href="../icons/t7ilogo.png" type="image/png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -392,6 +394,168 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                height: 100vh;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.2rem;
+                margin: 10px 0;
+            }
+
+            .header-logo {
+                width: 40px !important;
+                margin: 5px auto !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                margin-bottom: 15px;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
+            /* Mobile menu trigger */
+            .mobile-menu-trigger {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1001;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                backdrop-filter: blur(10px);
+            }
+
+            /* Mobile expanded chart adjustments */
+            .chart-container.expanded {
+                width: 95vw;
+                height: 90vh;
+                padding: 15px;
+            }
+
+            .chart-container.expanded .chart-wrapper {
+                height: calc(90vh - 80px);
+            }
+
+            /* Card improvements for mobile */
+            .card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .card h3 {
+                font-size: 0.9rem;
+                margin-right: 10px;
+            }
+
+            .card p {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            /* Loading screen adjustments */
+            .loading-bar-container {
+                width: 80%;
+                max-width: 280px;
+            }
+
+            .loading-logo img {
+                width: 80px;
+            }
+
+            .loading-text {
+                font-size: 16px;
+            }
+        }
+
+        /* Add new mobile navigation styles */
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 10px;
+                justify-content: space-around;
+                z-index: 1000;
+            }
+
+            .mobile-nav-item {
+                color: white;
+                text-align: center;
+                padding: 8px;
+                border-radius: 5px;
+                transition: background 0.3s ease;
+            }
+
+            .mobile-nav-item i {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .mobile-nav-item span {
+                font-size: 12px;
+                display: block;
+            }
+
+            .mobile-nav-item:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
     </style>
 </head>
 <body>
@@ -491,6 +655,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Add mobile navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+    </nav>
+
+    <!-- Add mobile menu trigger button -->
+    <button class="mobile-menu-trigger">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -777,6 +966,39 @@
                 ...chartOptions,
                 indexAxis: 'y'
             }
+        });
+
+        // Mobile menu handling
+        const mobileMenuTrigger = document.querySelector('.mobile-menu-trigger');
+        const overlay = document.querySelector('.overlay');
+
+        mobileMenuTrigger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Handle mobile orientation changes
+        window.addEventListener('orientationchange', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+
+        // Improve chart responsiveness on mobile
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            container.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    this.classList.toggle('expanded');
+                    overlay.classList.toggle('active');
+                }
+            });
         });
     </script>
 </body>
