@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient Dashboard</title>
+    <title>TESDA Region VII - Dashboard</title>
+    <link rel="icon" href="../icons/t7ilogo.png" type="image/png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
@@ -117,6 +118,124 @@
             border-radius: 10px;
             backdrop-filter: blur(10px);
             margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 85vw;
+            height: 85vh;
+            z-index: 1000;
+            opacity: 1;
+            animation: expandAnimation 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes expandAnimation {
+            from {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 999;
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(0px);
+        }
+
+        .overlay.active {
+            display: block;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        .close-btn {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .chart-container.expanded .close-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInButton 0.3s ease 0.2s forwards;
+        }
+
+        @keyframes fadeInButton {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .chart-container.expanded .chart-wrapper {
+            height: calc(85vh - 100px);
+            animation: fadeInContent 0.4s ease forwards;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .chart-grid {
@@ -135,21 +254,161 @@
                 position: fixed;
                 z-index: 1000;
                 height: 100vh;
+                display: none;
             }
 
             .sidebar.collapsed {
                 transform: translateX(-100%);
+                display: block;
             }
 
             .chart-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        .sidebar-small {
+            display: none; /* Initially hidden */
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-small {
+                display: block; /* Show small part of the sidebar on mobile */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 50px; /* Adjust width as needed */
+                height: 100vh;
+                background: rgba(255, 255, 255, 0.1);
+                z-index: 1000;
+            }
+
+            .sidebar-small .toggle-btn-small {
+                width: 100%;
+                height: 100%;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-size: 20px;
+            }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000428, #004e92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-logo {
+            margin-bottom: 30px;
+        }
+
+        .loading-logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            border-radius: 10px;
+            animation: loading 3s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .dots {
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '.';
+            }
+            40% {
+                content: '..';
+            }
+            60%, 100% {
+                content: '...';
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="../icons/t7ilogo.png" alt="TESDA Logo" class="pulse">
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-text">Initializing Dashboard<span class="dots">...</span></div>
+        </div>
+    </div>
+    <div class="overlay"></div>
     <div class="container">
-        <div class="sidebar">
+        <div class="sidebar collapsed">
             <div class="sidebar-header">
                 <div class="logo">Dashboard</div>
                 <button class="toggle-btn">
@@ -172,41 +431,47 @@
                 <i class="fas fa-cog"></i>
                 <span class="menu-text">Settings</span>
             </div>
+            <div class="sidebar-small">
+                <button class="toggle-btn-small">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="../icons/t7ilogo.png" alt="Left Logo" class="header-logo left-logo" style="width: 50px; height: auto;">
+                <img src="../icons/t7ilogo.png" alt="Left Logo" class="header-logo left-logo" style="width: 50px; height: auto; margin-right: 100px;">
                 <h1 style="flex: 1; text-align: center;">Welcome to TESDA Region VII Monitoring and Information System</h1>
-                <img src="../icons/blogo.png" alt="Right Logo" class="header-logo right-logo" style="width: 50px; height: auto;">
+                <img src="../icons/blogo.png" alt="Right Logo" class="header-logo right-logo" style="width: 50px; height: auto; margin-left: 100px;">
             </div>
             <div class="dashboard-grid">
                 <div class="card">
-                    <h3>Total Assessment Centers</h3>
+                    <h3><i class="fas fa-building"></i> Total Assessment Centers</h3>
                     <p id="totalAssessmentCenters">1,234</p>
                 </div>
                 <div class="card">
-                    <h3>Total Competency Assessors</h3>
+                    <h3><i class="fas fa-users"></i> Total Competency Assessors</h3>
                     <p id="totalCompetencyAssessors">Loading...</p>
                 </div>
                 <div class="card">
-                    <h3>Total NTTC Holders</h3>
+                    <h3><i class="fas fa-chalkboard-teacher"></i> Total NTTC Holders</h3>
                     <p id="totalNTTCHolders">Loading...</p>
                 </div>
                 <div class="card">
-                    <h3>Total Registered Programs</h3>
+                    <h3><i class="fas fa-scroll"></i> Total Registered Programs</h3>
                     <p id="totalRegisteredPrograms">Loading...</p>
                 </div>
             </div>
             
             <div class="chart-grid">
                 <div class="chart-container">
+                    <button class="close-btn">&times;</button>
                     <h3>Assessment Centers (Top Sectors)</h3>
                     <div class="chart-wrapper">
                         <canvas id="trafficSourcesChart"></canvas>
                     </div>
                 </div>
                 <div class="chart-container">
-                    <h3>NTTC Trainers</h3>
+                    <h3>NTTC Trainers (Per Qualification)</h3>
                     <div class="chart-wrapper">
                         <canvas id="revenueChart"></canvas>
                     </div>
@@ -228,10 +493,34 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            const container = document.querySelector('.container');
+            
+            // Initially hide the main container
+            container.style.display = 'none';
+            
+            // After 3 seconds, fade out loading screen and show content
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                container.style.display = 'flex';
+                
+                // Remove loading screen from DOM after fade out
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 500);
+            }, 3000);
+        });
+
         // Sidebar Toggle
         const toggleBtn = document.querySelector('.toggle-btn');
         const sidebar = document.querySelector('.sidebar');
         const menuTexts = document.querySelectorAll('.menu-text');
+
+        // Initially hide the sidebar on mobile
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add('collapsed');
+        }
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
