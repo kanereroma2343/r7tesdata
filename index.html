@@ -215,12 +215,13 @@
             }
 
             .box {
-                height: 8rem;
+                height: auto;
                 font-size: 1rem;
+                min-height: 6rem;
             }
 
             .sub-box {
-                height: 3rem;
+                height: auto;
                 font-size: 0.8rem;
             }
         }
@@ -238,7 +239,7 @@
                 <nav>
                     <ul>
                         <li><a href="#">Home</a></li>
-                        <li><a href="execdash/index.html">Dashboard</a></li>
+                        <li><a href="#" onclick="goToDashboard()" class="dashboard">Dashboard</a></li>
                         <li><a href="./r7nttc2/">ONSTS</a></li>
                     </ul>
                 </nav>
@@ -269,10 +270,11 @@
                         <a href="https://script.google.com/macros/s/AKfycbzkf1NElWnt50HmX6as-P-kTehdoA1TZWO2XcmsD1CFKFINgEjAZJYPila4_9vO2YxX/exec" class="sub-box">Scholarship System</a>
                         <div class="sub-box">Mam Ann Gwapa</div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div>             
+            </div>         
+        </div>        
     </main>
+    
 
     <footer>
         <div class="container">
@@ -302,6 +304,13 @@
                 });
             });
         });
+
+        function goToDashboard() {
+            // Set the flag to show loading screen only when clicking the dashboard link
+            sessionStorage.setItem('showDashboardLoading', 'true');
+            // Navigate to dashboard
+            window.location.href = 'execdash/index.html';
+        }
     </script>
 </body>
 </html>

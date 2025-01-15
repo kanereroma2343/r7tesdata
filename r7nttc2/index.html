@@ -327,7 +327,7 @@
                 console.log('Searching for:', { lastName, dateOfBirth });
 
                 try {
-                    const response = await fetch('data.json');
+                    const response = await fetch('../r7nttc/data.json');
                     if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
 
                     const data = await response.json();
@@ -335,7 +335,7 @@
 
                     const results = data.filter(entry =>
                         entry.last_name === lastName &&
-                        entry.birthday === dateOfBirth
+                        entry.birthdate === dateOfBirth
                     );
 
                     if (results.length > 0) {
@@ -379,7 +379,7 @@
                     <div class="modal-slide">
                         <p><strong>Last Name:</strong> ${result.last_name}</p>
                         <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Name:</strong> ${result.middle_initial || ''}</p>
+                        <p><strong>Middle Initial:</strong> ${result.middle_initial || ''}</p>
                         <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
                         <p><strong>Qualification:</strong> ${result.qualification}</p>
                         <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
