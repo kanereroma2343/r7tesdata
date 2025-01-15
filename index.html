@@ -195,6 +195,7 @@
             height: 50%;
             width: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             order: 2;
@@ -210,6 +211,12 @@
 
         .featured-image:hover {
             transform: scale(1.02);
+        }
+
+        .website-link {
+            text-align: center;
+            margin-top: 0rem;
+            order: 3;
         }
 
         @media (max-width: 768px) {
@@ -263,6 +270,10 @@
             .featured-image {
                 max-width: 100% !important;
                 width: 100%;
+            }
+
+            .website-link {
+                order: 1;
             }
         }
 
@@ -383,10 +394,16 @@
                         <div class="sub-box">Mam Ann Gwapa</div>
                     </div>
                 </div>
-            </div>
-            <div class="image-holder">
+            </div> 
+            <div class="image-holder">       
                 <img src="icons/orgchart.png" alt="NTTC MIS" class="featured-image">
             </div>
+            <p class="website-link">
+                <a href="https://sites.google.com/a/tesda.gov.ph/tesda-regional-office-vii/home" 
+                   style="color: inherit; text-decoration: underline;">
+                    TESDA VII - Website
+                </a>
+            </p>
         </div>
     </main>
     
