@@ -604,9 +604,17 @@
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; align-items: center; justify-content: space-between;">
                 <img src="../icons/t7ilogo.png" alt="Left Logo" class="header-logo left-logo" style="width: 50px; height: auto; margin-right: 100px;">
-                <h1 style="flex: 1; text-align: center;">Welcome to TESDA Region VII Monitoring and Information System</h1>
+                <h1 style="flex: 1; text-align: center;">Welcome to TESDA Region VII Monitoring and Information System</h1>             
                 <img src="../icons/blogo.png" alt="Right Logo" class="header-logo right-logo" style="width: 50px; height: auto; margin-left: 100px;">
             </div>
+            <h3 id="updateDate">Data is updated as of:</h3>
+            <script>
+                // Get the current date
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const currentDate = new Date().toLocaleDateString(undefined, options);
+                // Update the h3 element with the current date
+                document.getElementById('updateDate').textContent += ` ${currentDate}`;
+            </script>
             <div class="dashboard-grid">
                 <div class="card">
                     <h3><i class="fas fa-building"></i> Total Assessment Centers</h3>
