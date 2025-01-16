@@ -1,197 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel to JSON Converter - R7 UTPRAS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Excel to JSON Converter</title>
+    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.5/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #000428, #004e92);
+            color: #f0f0f0;
+            margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
+        .container {
+            max-width: 600px;
+            background: linear-gradient(135deg, #333, #004e92);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #ffffff;
+        }
+
         .upload-area {
-            border: 2px dashed #ccc;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
             padding: 20px;
             text-align: center;
             margin-bottom: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: #004e92;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #004e92, #3498db);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin: 5px 0;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #00366f, #2980b9);
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .progress {
+            height: 20px;
+            width: 0;
+            background-color: #3498db;
             border-radius: 5px;
         }
-        .upload-area:hover {
-            border-color: #007bff;
-            background-color: #f8f9fa;
+
+        #status {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 class="mb-4">Excel to JSON Converter - R7 UTPRAS</h2>
-        
-        <div class="upload-area">
-            <h5>Drop Excel file here or click to select</h5>
-            <input type="file" id="fileInput" accept=".xlsx, .xls" class="form-control">
-        </div>
-
-        <div id="progress" class="progress mb-3 d-none">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-        </div>
-
-        <div id="status" class="alert d-none"></div>
+        <h2>Excel to JSON Converter</h2>
+        <form id="uploadForm">
+            <div class="upload-area" id="dropZone">
+                <p>Drag & Drop your Excel file here or</p>
+                <input type="file" id="fileInput" name="excelFile" accept=".xlsx,.xls" required hidden>
+                <button type="button" class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                <div class="file-name" id="fileName"></div>
+            </div>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <button type="submit" class="btn" id="convertBtn" disabled>Convert to JSON</button>
+            <button type="button" class="btn" id="updateBtn" style="display: none;">Update data.json</button>
+        </form>
+        <div id="status"></div>
     </div>
-
     <script>
         const fileInput = document.getElementById('fileInput');
-        const progressBar = document.querySelector('.progress-bar');
-        const progressDiv = document.getElementById('progress');
+        const fileNameDisplay = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const updateBtn = document.getElementById('updateBtn');
         const statusDiv = document.getElementById('status');
+        const uploadForm = document.getElementById('uploadForm');
+        let convertedData = null;
 
-        const targetSheets = [
-            "Copy of Bohol",
-            "Copy of Cebu",
-            "Copy of Siquijor",
-            "Copy of Negros Oriental"
-        ];
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = `Selected File: ${file.name}`;
+                fileNameDisplay.style.display = 'block';
+                convertBtn.disabled = false;
+            }
+        });
 
-        fileInput.addEventListener('change', handleFile);
+        uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        function handleFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            progressDiv.classList.remove('d-none');
-            progressBar.style.width = '30%';
-            showStatus('Processing file...', 'info');
+            const file = fileInput.files[0];
+            if (!file) {
+                statusDiv.textContent = 'No file selected';
+                statusDiv.style.color = 'red';
+                return;
+            }
 
             const reader = new FileReader();
-
             reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    progressBar.style.width = '60%';
+                const data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
 
-                    const result = {};
+                const targetSheets = [
+                    "Copy of Bohol",
+                    "Copy of Cebu",
+                    "Copy of Negros Oriental",
+                    "Copy of Siquijor"
+                ];
 
-                    // Process each target sheet
-                    targetSheets.forEach(sheetName => {
+                const allData = [];
+
+                targetSheets.forEach(sheetName => {
+                    if (workbook.SheetNames.includes(sheetName)) {
                         const worksheet = workbook.Sheets[sheetName];
-                        if (worksheet) {
-                            // First get the headers (A1-AA1)
-                            const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-                                raw: true,
-                                defval: null,
-                                header: 1,  // Use 1-based array
-                                range: 'A1:AA1000'
-                            });
+                        const range = XLSX.utils.decode_range(worksheet['!ref']);
+                        const desiredColumns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA'];
 
-                            if (jsonData.length === 0) return;
+                        // Process each row
+                        for (let rowIndex = 2; rowIndex <= range.e.r + 1; rowIndex++) {
+                            const rowData = {};
+                            let hasData = false;
 
-                            // Get headers from first row
-                            const headers = jsonData[0];
-                            
-                            // Initialize columns object using headers
-                            const columns = {};
-                            headers.forEach((header, index) => {
-                                if (header) {
-                                    columns[header] = [];
+                            desiredColumns.forEach(col => {
+                                const cellAddress = col + rowIndex;
+                                const cell = worksheet[cellAddress];
+                                if (cell && cell.v !== null && cell.v !== '') {
+                                    rowData[col] = cell.v.toString();
+                                    hasData = true;
                                 }
                             });
 
-                            // Process data rows (starting from second row)
-                            for (let i = 1; i < jsonData.length; i++) {
-                                const row = jsonData[i];
-                                headers.forEach((header, index) => {
-                                    if (header && row[index] !== undefined && row[index] !== '') {
-                                        columns[header].push(row[index].toString());
-                                    } else if (header) {
-                                        columns[header].push(null);
-                                    }
-                                });
+                            if (hasData) {
+                                allData.push(rowData);
                             }
-
-                            // Remove columns that are completely empty
-                            Object.keys(columns).forEach(header => {
-                                if (columns[header].every(val => val === null)) {
-                                    delete columns[header];
-                                }
-                            });
-
-                            result[sheetName] = columns;
                         }
-                    });
+                    }
+                });
 
-                    progressBar.style.width = '90%';
+                convertedData = allData;
 
-                    // Convert to JSON string
-                    const jsonString = JSON.stringify(result, null, 2);
+                statusDiv.textContent = 'Conversion successful! Click Update to save the data.';
+                statusDiv.style.color = 'green';
 
-                    // Create and download file
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'data.json';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
+                downloadJSON(convertedData, 'data.json');
 
-                    progressBar.style.width = '100%';
-                    showStatus('Conversion completed! File downloaded successfully.', 'success');
-
-                    setTimeout(() => {
-                        progressDiv.classList.add('d-none');
-                        progressBar.style.width = '0%';
-                    }, 3000);
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    showStatus('Error processing file: ' + error.message, 'danger');
-                    progressDiv.classList.add('d-none');
-                }
+                convertBtn.style.display = 'none';
+                updateBtn.style.display = 'block';
             };
 
-            reader.readAsArrayBuffer(file);
-        }
+            reader.onerror = function(error) {
+                statusDiv.textContent = 'Error reading the file';
+                statusDiv.style.color = 'red';
+            };
 
-        function showStatus(message, type) {
-            statusDiv.className = `alert alert-${type}`;
-            statusDiv.textContent = message;
-            statusDiv.classList.remove('d-none');
+            reader.readAsBinaryString(file);
+        });
 
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.classList.add('d-none');
-                }, 5000);
+        updateBtn.addEventListener('click', async function() {
+            if (!convertedData) {
+                statusDiv.textContent = 'No data to update';
+                statusDiv.style.color = 'red';
+                return;
             }
-        }
 
-        // Add drag and drop support
-        const uploadArea = document.querySelector('.upload-area');
+            try {
+                statusDiv.textContent = 'Updating data...';
+                statusDiv.style.color = '#3498db';
+                updateBtn.disabled = true;
 
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#f8f9fa';
-        });
+                const response = await fetch('/api/save-json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ data: convertedData })
+                });
 
-        uploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '';
-        });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Server returned ' + response.status);
+                }
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '';
-            
-            const files = e.dataTransfer.files;
-            if (files.length) {
-                fileInput.files = files;
-                fileInput.dispatchEvent(new Event('change'));
+                const result = await response.json();
+                statusDiv.textContent = 'Data successfully updated!';
+                statusDiv.style.color = 'green';
+                
+                uploadForm.reset();
+                fileNameDisplay.style.display = 'none';
+                convertBtn.style.display = 'block';
+                convertBtn.disabled = true;
+                updateBtn.style.display = 'none';
+                convertedData = null;
+            } catch (error) {
+                statusDiv.textContent = 'Error updating data: ' + error.message;
+                statusDiv.style.color = 'red';
+            } finally {
+                updateBtn.disabled = false;
             }
         });
+
+        function downloadJSON(data, filename) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
