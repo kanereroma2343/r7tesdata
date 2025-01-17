@@ -9,17 +9,18 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #1a1a1a, #1e3c72, #2a5298);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1700px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             padding: 20px;
         }
 
@@ -31,26 +32,30 @@
 
         .data-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 20px;
             background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
         }
 
         .data-table th {
-            background-color: #34495e;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-            padding: 12px;
+            padding: 15px;
             text-align: left;
             font-weight: 600;
         }
 
         .data-table td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid #eee;
         }
 
         .data-table tr:hover {
-            background-color: #f8f9fa;
+            background-color: #f0f4f8;
         }
 
         .loading {
@@ -101,7 +106,7 @@
             }
 
             .search-wrapper {
-                width: 100%;
+                width: 90%;
             }
 
             .dropdown {
@@ -123,15 +128,47 @@
             /* Table responsiveness */
             .data-table {
                 display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
+                overflow-x: hidden;
+                white-space: normal;
             }
 
-            .data-table th,
+            .data-table thead {
+                display: none; /* Hide table headers on mobile */
+            }
+
+            .data-table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            .data-table tr {
+                display: block;
+                margin-bottom: 15px;
+                background: white;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
             .data-table td {
-                padding: 8px;
-                font-size: 13px;
+                display: block;
+                padding: 8px 10px;
+                text-align: left;
+                border-bottom: 1px solid #eee;
+                font-size: 14px;
+            }
+
+            .data-table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #1e3c72;
+                margin-right: 10px;
+                min-width: 120px;
+                display: inline-block;
+            }
+
+            .data-table td:last-child {
+                border-bottom: none;
             }
 
             /* Pagination responsiveness */
@@ -194,16 +231,17 @@
 
         /* Custom scrollbar styles */
         .data-table::-webkit-scrollbar {
-            height: 6px;
+            height: 8px;
         }
 
         .data-table::-webkit-scrollbar-track {
-            background: #f5f5f5;
+            background: #f0f4f8;
+            border-radius: 4px;
         }
 
         .data-table::-webkit-scrollbar-thumb {
-            background-color: #34495e;
-            border-radius: 3px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            border-radius: 4px;
         }
 
         .pagination {
@@ -215,22 +253,24 @@
         }
 
         .pagination button {
-            padding: 8px 16px;
-            background-color: #34495e;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            padding: 10px 20px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .pagination button:disabled {
-            background-color: #95a5a6;
+            background: #95a5a6;
             cursor: not-allowed;
         }
 
         .pagination button:hover:not(:disabled) {
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            transform: translateY(-2px);
         }
 
         .pagination-info {
@@ -239,11 +279,11 @@
 
         /* Header styles */
         .header-container {
-            background-color: white;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
             padding: 20px;
             margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .header-top {
@@ -256,13 +296,15 @@
         .logo {
             height: 80px;
             width: auto;
+            margin: none;
         }
 
         .header-title {
-            color: #2c3e50;
+            color: white;
             text-align: center;
             margin: 0;
             flex-grow: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .button-container {
@@ -273,25 +315,30 @@
 
         .action-button {
             padding: 10px 20px;
-            background-color: #34495e;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-            border: none;
-            border-radius: 4px;
+            border: 2px solid white;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
         }
 
         .action-button:hover {
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         /* Footer styles */
         footer {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
             margin-top: 20px;
-            background-color: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .footer-content {
@@ -306,15 +353,17 @@
         }
 
         .footer-links a {
-            color: #34495e;
+            color: white;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 5px;
+            transition: all 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: #2c3e50;
+            color: #a8c0ff;
+            transform: translateY(-2px);
         }
 
         /* Mobile responsiveness */
@@ -355,10 +404,11 @@
             position: relative;
             display: flex;
             align-items: center;
-            background: #f8f9fa;
-            border-radius: 50px;
+            background: white;
+            border-radius: 25px;
             padding: 5px 15px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(30, 60, 114, 0.2);
         }
 
         .search-wrapper input {
@@ -377,20 +427,19 @@
         }
 
         .sort-button {
-            padding: 10px 20px;
-            background-color: #34495e;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
             border: none;
             border-radius: 25px;
+            padding: 12px 24px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .sort-button:hover {
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            transform: translateY(-2px);
         }
 
         .sort-button i {
@@ -410,16 +459,16 @@
             display: none;
             position: absolute;
             right: 0;
-            background-color: #fff;
+            background-color: white;
             min-width: 200px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
             overflow: hidden;
             z-index: 1000;
         }
 
         .dropdown-content button {
-            color: #2c3e50;
+            color: #1e3c72;
             padding: 12px 20px;
             text-decoration: none;
             display: block;
@@ -428,12 +477,13 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             font-size: 14px;
         }
 
         .dropdown-content button:hover {
-            background-color: #f8f9fa;
+            background-color: #f0f4f8;
+            color: #2a5298;
         }
 
         .sort-button {
@@ -448,25 +498,36 @@
         .show {
             display: block;
         }
+
+        .close-logo {
+            margin: 0;
+        }
+
+        /* Add this new style for the entry count */
+        .entry-count {
+            font-family: 'Arial', sans-serif; /* Change to your preferred font */
+            text-align: center; /* Center the text */
+            margin: 20px 0; /* Add some margin for spacing */
+        }
     </style>
 </head>
 <body>
     <div class="header-container">
         <div class="header-top">
-            <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
+            <img src="../icons/tlogo.png" alt="Left Logo" class="logo close-logo">
             <h1 class="header-title">TESDA VII - REGISTERED PROGRAMS</h1>
-            <img src="../icons/blogo.png" alt="Right Logo" class="logo">
+            <img src="../icons/blogo.png" alt="Right Logo" class="logo close-logo">
         </div>
         <div class="button-container">
             <button onclick="window.location.href='../index.html'" class="action-button">Home</button>
             <button onclick="window.location.href='list.html'" class="action-button">List</button>
             <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-            <button onclick="window.location.href='convert.html'" class="action-button">Convert Excel</button>
-            <button class="action-button">Export Data</button>
+            <button onclick="window.location.href='convert2.html'" class="action-button">Convert Excel</button>
         </div>
     </div>
 
     <div class="container">
+        <div id="entryCount" class="entry-count"></div>
         <div class="search-sort-container">
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
@@ -562,12 +623,13 @@
         }
 
         function createTable(data) {
-            const columns = ['B', ,'G', 'T', 'U', 'J', 'M', 'N'];
+            const columns = ['B', 'G', 'T', 'U', 'J', 'I', 'M', 'N'];
             const headerNames = {
                 'B': 'Province',
                 'G': 'Name of Institution',
                 'T': 'Qualification',
                 'J': 'Address',
+                'I': 'Head of Institution',         
                 'M': 'Contact Number',
                 'U': 'Duration',
                 'N': 'Email'
@@ -596,6 +658,7 @@
                 const tr = document.createElement('tr');
                 columns.forEach(column => {
                     const td = document.createElement('td');
+                    td.setAttribute('data-label', headerNames[column]); // Add data-label for mobile view
                     td.textContent = row[column] || '';
                     tr.appendChild(td);
                 });
@@ -648,6 +711,9 @@
             const table = createTable(filteredData);
             tableContainer.appendChild(table);
             createPagination(filteredData.length);
+            
+            // Update entry count display
+            document.getElementById('entryCount').textContent = `Showing ${filteredData.length} entries`;
         }
 
         async function initialize() {
