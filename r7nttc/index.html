@@ -84,6 +84,7 @@
         <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
         <button onclick="window.location.href='../r7nttc2/form.html'" class="action-button">Trainer's Profile</button>
+        <button onclick="exportData()" class="action-button">Export Data</button>
     </div>
 </div>
 
@@ -264,6 +265,103 @@
     window.onload = () => {
         document.body.classList.add('fade-in');
     };
+
+    function exportData() {
+    fetch('data.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!Array.isArray(data)) {
+                throw new Error("Invalid data format: Expected an array.");
+            }
+
+            // CSV headers
+            const headers = [
+                "ID",
+                "Province",
+                "Last Name",
+                "First Name",
+                "Middle Initial",
+                "Extension",
+                "Birthdate",
+                "Sex",
+                "Address",
+                "Training Institution",
+                "Type of Training Institution",
+                "Email",
+                "Contact Number",
+                "Educational Attainment",
+                "Training Hours",
+                "Years of Experience",
+                "Sector",
+                "Qualification",
+                "NC Certificate Number",
+                "NC Date Issuance",
+                "NC Validity",
+                "TM Certificate Number",
+                "TM Date Issuance",
+                "TM Validity",
+                "NTTC Serial Number",
+                "NTTC Certificate Number",
+                "NTTC Date Issuance",
+                "NTTC Validity"
+            ];
+
+            // Create rows
+            const rows = data.map(entry => [
+                entry.id,
+                entry.province,
+                entry.last_name,
+                entry.first_name,
+                entry.middle_initial,
+                entry.extension,
+                entry.birthdate,
+                entry.sex,
+                entry.address,
+                entry.training_institution,
+                entry.type_training_institution,
+                entry.email,
+                entry.contact_number,
+                entry.educational_attainment,
+                entry.training_hours,
+                entry.years_of_experience,
+                entry.sector,
+                entry.qualification,
+                entry.nc_cert_number,
+                entry.nc_date_issuance,
+                entry.nc_validity,
+                entry.tm_cert_number,
+                entry.tm_date_issuance,
+                entry.tm_validity,
+                entry.nttc_serial_number,
+                entry.nttc_cert_number,
+                entry.nttc_date_issuance,
+                entry.nttc_validity
+            ]);
+
+            // Combine headers and rows
+            const csvContent = [
+                headers.join(","),
+                ...rows.map(row => row.join(","))
+            ].join("\n");
+
+            // Encode CSV content and create download link
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "exported_data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link); // Clean up
+        })
+        .catch(error => console.error("Error exporting data:", error));
+}
+
 </script>
 
 <style>
