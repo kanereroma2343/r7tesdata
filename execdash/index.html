@@ -621,12 +621,12 @@
                     <p id="totalAssessmentCenters">1,234</p>
                 </div>
                 <div class="card">
-                    <h3><i class="fas fa-users"></i> Total Competency Assessors</h3>
-                    <p id="totalCompetencyAssessors">Loading...</p>
-                </div>
-                <div class="card">
                     <h3><i class="fas fa-chalkboard-teacher"></i> Total NTTC Holders</h3>
                     <p id="totalNTTCHolders">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-users"></i> Total Competency Assessors</h3>
+                    <p id="totalCompetencyAssessors">Loading...</p>
                 </div>
                 <div class="card">
                     <h3><i class="fas fa-scroll"></i> Total Registered Programs</h3>
@@ -643,7 +643,7 @@
                     </div>
                 </div>
                 <div class="chart-container">
-                    <h3>NTTC Trainers (Per Qualification)</h3>
+                    <h3>NTTC Trainers (Per Sector)</h3>
                     <div class="chart-wrapper">
                         <canvas id="revenueChart"></canvas>
                     </div>
@@ -750,72 +750,65 @@
         fetch('../r7nttc/data.json')
             .then(response => response.json())
             .then(data => {
-                // Process data to count occurrences by province
-                const provinceCount = {};
+                // Process data to count occurrences by sector
+                const sectorCount = {};
 
                 data.forEach(item => {
-                    const province = item.province; // Assuming 'province' is the correct key
+                    const sector = item.sector; // Change to use sector instead of province
 
-                    if (!provinceCount[province]) {
-                        provinceCount[province] = 0;
+                    if (!sectorCount[sector]) {
+                        sectorCount[sector] = 0;
                     }
-                    provinceCount[province]++; // Increment count for each province
+                    sectorCount[sector]++;
                 });
 
+                // Sort sectors by count in descending order
+                const sortedSectors = Object.entries(sectorCount)
+                    .sort((a, b) => b[1] - a[1]);
+
                 // Prepare data for the chart
-                const labels = Object.keys(provinceCount);
-                const countData = Object.values(provinceCount);
+                const labels = sortedSectors.map(([sector]) => sector);
+                const countData = sortedSectors.map(([, count]) => count);
 
-                // Define specific colors for the bars
+                // Define colors for the pie chart
                 const backgroundColors = [
-                    '#4CAF50', // Bright Green
-                    '#2196F3', // Light Blue
+                    '#4CAF50', // Green
+                    '#2196F3', // Blue
                     '#FFEB3B', // Yellow
-                    '#D7B48D'  // Light Brown
+                    '#FF5722', // Orange
+                    '#9C27B0', // Purple
+                    '#795548', // Brown
+                    '#607D8B', // Blue Grey
+                    '#E91E63', // Pink
+                    '#00BCD4', // Cyan
+                    '#FF9800'  // Deep Orange
                 ];
-
-                // Repeat colors if there are more provinces than colors
-                const colors = labels.map((_, index) => backgroundColors[index % backgroundColors.length]);
 
                 const revenueCtx = document.getElementById('revenueChart').getContext('2d');
                 new Chart(revenueCtx, {
-                    type: 'bar', // Explicitly set to bar chart
+                    type: 'pie', // Change to pie chart
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Trainer per Province',
                             data: countData,
-                            backgroundColor: colors, // Use the defined colors
+                            backgroundColor: backgroundColors,
                         }]
                     },
                     options: {
-                        ...chartOptions,
+                        responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: {
+                                position: 'right',
                                 labels: {
-                                    color: 'white' // Set legend text color to white
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Provinces',
-                                    color: 'white' // Set x-axis title color to white
-                                },
-                                ticks: {
-                                    color: 'white' // Set x-axis ticks color to white
+                                    color: 'white'
                                 }
                             },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Total Count',
-                                    color: 'white' // Set y-axis title color to white
-                                },
-                                ticks: {
-                                    color: 'white' // Set y-axis ticks color to white
+                            title: {
+                                display: true,
+                                color: 'white',
+                                font: {
+                                    size: 16
                                 }
                             }
                         }

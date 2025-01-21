@@ -314,6 +314,17 @@
         button:hover {
             background-color: #e60000;
         }
+
+        .missing-field {
+            border: 2px solid red; /* Highlight with red border */
+            animation: blink 1s infinite; /* Add blinking effect */
+        }
+
+        @keyframes blink {
+            0% { background-color: #fff; }
+            50% { background-color: #ffcccc; }
+            100% { background-color: #fff; }
+        }
     </style>
 </head>
 <body>
@@ -331,7 +342,7 @@
                         </div>
                         <div 
                         style="flex: 0 1 400px; height: 400px; background-color: #f0f4f8; border: 2px solid var(--border-color); margin-left: auto; margin-right: 20px; position: relative;">                   
-                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #aaa; font-size: 1.2rem;">ID PICTURE (2”x 2” size)</span>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #aaa; font-size: 1.2rem;">ID PICTURE (2"x 2" size)</span>
                         </div>
                     </header>
                     <div style="text-align: center; margin-top: 10px;">
@@ -357,15 +368,15 @@
                     <h2>2. Manpower Profile</h2>
                     <div class="grid">
                         <div class="form-group">
-                            <label for="last-name">Last Name:</label>
+                            <label for="last-name">Last Name:*</label>
                             <input type="text" id="last_name" name="last-name" required oninput="this.value = this.value.toUpperCase();">
                         </div>
                         <div class="form-group">
-                            <label for="first-name">First Name:</label>
+                            <label for="first-name">First Name:*</label>
                             <input type="text" id="first_name" name="first-name" required oninput="this.value = this.value.toUpperCase();">
                         </div>
                         <div class="form-group">
-                            <label for="middle-name">Middle Name:</label>
+                            <label for="middle-name">Middle Name:*</label>
                             <input type="text" id="middle_initial" name="middle-name" oninput="this.value = this.value.toUpperCase();">
                         </div>
                         <div class="form-group">
@@ -473,7 +484,7 @@
                     <h2>3. Personal Information</h2>
                     <div class="grid">
                         <div class="form-group">
-                            <label for="birthdate">3.1. Birthdate:</label>
+                            <label for="birthdate">3.1. Birthdate:*</label>
                             <input type="date" id="birthdate" name="birthdate" required>
                         </div>
                         <div class="form-group">
@@ -655,7 +666,7 @@
                     <table id="experience-table">
                         <div class="grid">
                             <div class="form-group">
-                                <label for="years_of_experience">Total Years of Work Experience:</label>
+                                <label for="years_of_experience">Total Years of Work Experience:*</label>
                                 <input type="number" id="years_of_experience" name="years_of_experience" required>
                             </div>
                             <div class="form-group">
@@ -663,11 +674,11 @@
                                 <input type="number" id="training_hours" name="training_hours" required>
                             </div>
                             <div class="form-group">
-                                <label for="training_institution">(CURRENT) Training Institution:</label>
+                                <label for="training_institution">(CURRENT) Training Institution:*</label>
                                 <input type="text" id="training_institution" name="training_institution" required>
                             </div>
                             <div class="form-group">
-                                <label for="type_training_institution">Type of Training Institution:</label>
+                                <label for="type_training_institution">Type of Training Institution:*</label>
                                 <select id="type_training_institution" name="type_training_institution" required>
                                     <option value="">Select</option>
                                     <option value="private">Private</option>
@@ -675,7 +686,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="educational_attainment">Educational Attainment:</label>
+                                <label for="educational_attainment">Educational Attainment:*</label>
                                 <select id="educational_attainment" name="educational_attainment" required>
                                     <option value="">Select</option>
                                     <option value="high-school">High School</option>
@@ -903,7 +914,7 @@
                 </div>
        
                 <div class="form-section">
-                    <h2>12. NTTC Application Form</h2>
+                    <h2>12. NTTC Application Form*</h2>
                     <div class="form-row grid">
                         <div class="form-group">
                             <label for="sector">Sector</label>
@@ -1038,6 +1049,17 @@
             });
 
             if (missingFields.length > 0) {
+                // Highlight missing fields
+                missingFields.forEach(field => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        input.classList.add('missing-field'); // Add class to highlight
+                        input.addEventListener('input', () => {
+                            input.classList.remove('missing-field'); // Remove class when user fills the field
+                        });
+                    }
+                });
+                
                 document.getElementById('modalMessage').innerText = `Please fill in the following fields: ${missingFields.join(', ')}`;
                 document.getElementById('warningModal').style.display = 'block'; // Show modal
                 return; // Prevent submission if there are missing fields
@@ -1149,7 +1171,7 @@
                 "Reinforcing Steel Works NC I",
                 "Rigging NC I",
                 "Scaffold Erection NC II",
-                "Scaffolding Works NC I (Supported Type Scaffold)",
+                "Scaffolding Works NC II (Supported Type Scaffold)",
                 "Structural Erection NC I",
                 "Technical Drafting NC II",
                 "Tile Setting NC II",
@@ -1292,6 +1314,7 @@
                 "Lifeguard Services NC II",
                 "Lifeguard Services NC III",
                 "Microfinance Technology NC II",
+                "Real Estate Services NC II",
                 "Security Services NC I",
                 "Security Services NC II",
                 "Cooperative Development and Management Level I"
@@ -1304,7 +1327,7 @@
                 "Commercial Cooking NC IV",
                 "Cookery NC II",
                 "Events Management Services NC III",
-                "Food and Beverage Services NC I",
+                "Food and Beverage Services NC II",
                 "Food and Beverage Services NC III",
                 "Food and Beverage Services NC IV",
                 "Front Office Services NC II",
