@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="icon" href="../icons/t7ilogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
 body {
     background: linear-gradient(135deg, #000000, #1e3a8a, #041653);
@@ -82,6 +83,48 @@ body {
         height: 40px;
     }
 }
+
+/* Mobile-specific table styles */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 0 -1rem; /* Negative margin to allow full-width scrolling */
+        border-radius: 0; /* Remove border radius on mobile */
+    }
+    
+    .overflow-x-auto {
+        padding: 0 1rem; /* Add padding back to the scrollable area */
+    }
+    
+    /* Ensure text doesn't wrap awkwardly */
+    .table-container td {
+        white-space: normal;
+        min-width: 160px; /* Minimum width for cells */
+        max-width: 200px; /* Maximum width for cells */
+        font-size: 0.875rem; /* Slightly smaller font on mobile */
+    }
+    
+    /* Add horizontal scroll indicator */
+    .table-container:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(0,0,0,0.2));
+        pointer-events: none;
+        opacity: 0.8;
+    }
+}
+
+/* Additional styles for very small screens */
+@media (max-width: 480px) {
+    .table-container td {
+        font-size: 0.8125rem; /* Even smaller font for very small screens */
+        min-width: 140px; /* Slightly smaller minimum width */
+        padding: 0.5rem; /* Reduced padding */
+    }
+}
     </style>
 </head>
 <body class="text-white">
@@ -116,22 +159,22 @@ body {
             <!-- Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold mb-1">Total Programs</h3>
+                    <h3 class="text-lg font-semibold mb-1">Total Programs <i class="fas fa-scroll"></i></h3>
                     <p id="totalPrograms" class="text-2xl font-bold">0</p>
                 </div>
                 
                 <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold mb-1">Total Institutions</h3>
+                    <h3 class="text-lg font-semibold mb-1">Total Institutions <i class="fas fa-school"></i></h3>
                     <p id="totalInstitutions" class="text-2xl font-bold">0</p>
                 </div>
                 
                 <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold mb-1">Total Trainers (Warm Body)</h3>
+                    <h3 class="text-lg font-semibold mb-1">Total Trainers (Warm Body) <i class="fas fa-chalkboard-teacher"></i></h3>
                     <p id="totalTrainers" class="text-2xl font-bold">0</p>
                 </div>
                 
                 <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold mb-1">Total NTTC's Issued</h3>
+                    <h3 class="text-lg font-semibold mb-1">Total NTTC's Issued <i class="fas fa-file"></i></h3>
                     <p id="totalNTTCs" class="text-2xl font-bold">0</p>
                 </div>
             </div>
@@ -159,18 +202,21 @@ body {
             <!-- Table -->
             <h3 class="text-xl font-semibold mb-4">UTPRAS Data</h3>
             <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container" style="height: auto;">
-                <table class="w-full">
-                    <thead>
-                        <tr class="bg-black bg-opacity-50">
-                            <th class="p-2 sm:p-3 text-left">Top 5 Sectors</th>
-                            <th class="p-2 sm:p-3 text-left">Top 5 Qualifications</th>
-                            <th class="p-2 sm:p-3 text-left">Top 5 Institutions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="topSectorsBody">
-                        <!-- Data will be populated here -->
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[640px]"> <!-- Set minimum width to prevent squishing -->
+                        <thead>
+                            <tr class="bg-black bg-opacity-50">
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Sectors</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Qualifications</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Institutions</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Trainers</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topSectorsBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
@@ -648,21 +694,77 @@ body {
             }
         }
 
-        async function fetchTotalTrainers() {
+        async function fetchTopTrainers() {
             try {
                 const response = await fetch('../r7nttc/data.json');
                 const data = await response.json();
                 
-                // Combine last name, first name, and middle initial to create a unique identifier
-                const uniqueNames = new Set(data.map(entry => {
+                // Combine trainer name components into a full name and count occurrences
+                const trainerCounts = {};
+                data.forEach(entry => {
                     const lastName = entry.last_name?.trim() || '';
                     const firstName = entry.first_name?.trim() || '';
                     const middleInitial = entry.middle_initial ? `${entry.middle_initial.trim()}.` : '';
-                    return `${lastName}, ${firstName} ${middleInitial}`.trim();
-                }));
-                document.getElementById('totalTrainers').textContent = uniqueNames.size.toLocaleString(); // Update the HTML with the count
+                    const extension = entry.extension ? ` ${entry.extension.trim()}` : '';
+                    const fullName = `${lastName}, ${firstName} ${middleInitial}${extension}`.trim();
+                    
+                    if (lastName && firstName) { // Only count if at least last name and first name exist
+                        trainerCounts[fullName] = (trainerCounts[fullName] || 0) + 1;
+                    }
+                });
+
+                // Sort trainers by count and get top 5
+                const topTrainers = Object.entries(trainerCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Get existing data for other columns
+                const response2 = await fetch('../r7utpras/data2.json');
+                const utprasData = await response2.json();
+                
+                // Get top sectors, qualifications, and institutions (keeping existing logic)
+                const sectorCounts = {};
+                const qualificationCounts = {};
+                const institutionCounts = {};
+                
+                utprasData.forEach(entry => {
+                    if (entry.R?.trim()) sectorCounts[entry.R.trim()] = (sectorCounts[entry.R.trim()] || 0) + 1;
+                    if (entry.S?.trim()) qualificationCounts[entry.S.trim()] = (qualificationCounts[entry.S.trim()] || 0) + 1;
+                    if (entry.G?.trim()) institutionCounts[entry.G.trim()] = (institutionCounts[entry.G.trim()] || 0) + 1;
+                });
+
+                const topSectors = Object.entries(sectorCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topQualifications = Object.entries(qualificationCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topInstitutions = Object.entries(institutionCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Update table with all data
+                const topSectorsBody = document.getElementById('topSectorsBody');
+                topSectorsBody.innerHTML = '';
+
+                // Create 5 rows with data from all categories
+                for (let i = 0; i < 5; i++) {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-gray-800 hover:bg-gray-700';
+                    
+                    row.innerHTML = `
+                        <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topInstitutions[i] ? `${topInstitutions[i][0]} (${topInstitutions[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topTrainers[i] ? `${topTrainers[i][0]} (${topTrainers[i][1]})` : ''}</td>
+                    `;
+                    
+                    topSectorsBody.appendChild(row);
+                }
             } catch (error) {
-                console.error('Error fetching total trainers:', error);
+                console.error('Error fetching and processing data:', error);
             }
         }
 
@@ -684,9 +786,9 @@ body {
             fetchChart3Data();
             fetchChart4Data();
             fetchTopSectorsQualificationsAndInstitutions();
+            fetchTopTrainers();
             fetchTotalPrograms();
             fetchTotalInstitutions();
-            fetchTotalTrainers();
             fetchTotalNTTCs();
         };
 
