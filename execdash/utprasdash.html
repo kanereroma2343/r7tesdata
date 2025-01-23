@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>TESDA Region VII - Dashboard</title>
+    <link rel="icon" href="../icons/t7ilogo.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000428, #004e92);
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            width: 250px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 85vw;
+            height: 85vh;
+            z-index: 1000;
+            opacity: 1;
+            animation: expandAnimation 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes expandAnimation {
+            from {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 999;
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(0px);
+        }
+
+        .overlay.active {
+            display: block;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        .close-btn {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .chart-container.expanded .close-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInButton 0.3s ease 0.2s forwards;
+        }
+
+        @keyframes fadeInButton {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .chart-container.expanded .chart-wrapper {
+            height: calc(85vh - 100px);
+            animation: fadeInContent 0.4s ease forwards;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 1000;
+                height: 100vh;
+                display: none;
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+                display: block;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar-small {
+            display: none; /* Initially hidden */
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-small {
+                display: block; /* Show small part of the sidebar on mobile */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 50px; /* Adjust width as needed */
+                height: 100vh;
+                background: rgba(255, 255, 255, 0.1);
+                z-index: 1000;
+            }
+
+            .sidebar-small .toggle-btn-small {
+                width: 100%;
+                height: 100%;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-size: 20px;
+            }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000428, #004e92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-logo {
+            margin-bottom: 30px;
+        }
+
+        .loading-logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            border-radius: 10px;
+            animation: loading 3s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .dots {
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '.';
+            }
+            40% {
+                content: '..';
+            }
+            60%, 100% {
+                content: '...';
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                height: 100vh;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.2rem;
+                margin: 10px 0;
+            }
+
+            .header-logo {
+                width: 40px !important;
+                margin: 5px auto !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                margin-bottom: 15px;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
+            /* Mobile menu trigger */
+            .mobile-menu-trigger {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1001;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                backdrop-filter: blur(10px);
+            }
+
+            /* Mobile expanded chart adjustments */
+            .chart-container.expanded {
+                width: 95vw;
+                height: 90vh;
+                padding: 15px;
+            }
+
+            .chart-container.expanded .chart-wrapper {
+                height: calc(90vh - 80px);
+            }
+
+            /* Card improvements for mobile */
+            .card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .card h3 {
+                font-size: 0.9rem;
+                margin-right: 10px;
+            }
+
+            .card p {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            /* Loading screen adjustments */
+            .loading-bar-container {
+                width: 80%;
+                max-width: 280px;
+            }
+
+            .loading-logo img {
+                width: 80px;
+            }
+
+            .loading-text {
+                font-size: 16px;
+            }
+        }
+
+        /* Add new mobile navigation styles */
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 10px;
+                justify-content: space-around;
+                z-index: 1000;
+            }
+
+            .mobile-nav-item {
+                color: white;
+                text-align: center;
+                padding: 8px;
+                border-radius: 5px;
+                transition: background 0.3s ease;
+            }
+
+            .mobile-nav-item i {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .mobile-nav-item span {
+                font-size: 12px;
+                display: block;
+            }
+
+            .mobile-nav-item:active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="../icons/t7ilogo.png" alt="TESDA Logo" class="pulse">
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-text">Initializing Dashboard<span class="dots">...</span></div>
+        </div>
+    </div>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="sidebar collapsed">
+            <div class="sidebar-header">
+                <div class="logo">Dashboard</div>
+                <button class="toggle-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Home</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Users</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </div>
+            <div class="sidebar-small">
+                <button class="toggle-btn-small">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="dashboard-header" style="display: flex; align-items: center; justify-content: space-between;">
+                <img src="../icons/t7ilogo.png" alt="Left Logo" class="header-logo left-logo" style="width: 50px; height: auto; margin-right: 100px;">
+                <h1 style="flex: 1; text-align: center;">Welcome to TESDA Region VII Monitoring and Information System</h1>            
+                <img src="../icons/blogo.png" alt="Right Logo" class="header-logo right-logo" style="width: 50px; height: auto; margin-left: 100px;">
+            </div>
+            <h3 id="updateDate">Data is updated as of:</h3>
+            <script>
+                // Get the current date
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const currentDate = new Date().toLocaleDateString(undefined, options);
+                // Update the h3 element with the current date
+                document.getElementById('updateDate').textContent += ` ${currentDate}`;
+            </script>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><i class="fas fa-building"></i> Total Programs</h3>
+                    <p id="totalPrograms">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-chalkboard-teacher"></i> Assessment Centers</h3>
+                    <p id="assessmentCenters">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-users"></i> Total Assessors</h3>
+                    <p id="totalAssessors">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-scroll"></i> Total Trainers</h3>
+                    <p id="totalTrainers">Loading...</p>
+                </div>
+            </div>
+           
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <button class="close-btn">&times;</button>
+                    <h3>Program Types Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <button class="close-btn">&times;</button>
+                    <h3>Program Distribution by Province and Status</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="utprasProvinceChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <button class="close-btn">&times;</button>
+                    <h3>Data Distribution by Institution Type</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart3"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <button class="close-btn">&times;</button>
+                    <h3>Program Distribution by Province and Type</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart4"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add table section -->
+            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container" style="height: 287px; margin-top: 20px;">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-black bg-opacity-50">
+                            <th class="p-2 sm:p-3 text-left">Top 5 Sectors</th>
+                            <th class="p-2 sm:p-3 text-left">Top 5 Qualifications</th>
+                            <th class="p-2 sm:p-3 text-left">Top 5 Institutions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topSectorsBody">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add mobile navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-item">
+            <a href="../index.html" style="color: white; text-decoration: none;">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <div class="mobile-nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+    </nav>
+
+    <!-- Add mobile menu trigger button -->
+    <button class="mobile-menu-trigger">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            const container = document.querySelector('.container');
+           
+            // Initially hide the main container
+            container.style.display = 'none';
+           
+            // After 3 seconds, fade out loading screen and show content
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                container.style.display = 'flex';
+               
+                // Remove loading screen from DOM after fade out
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 500);
+            }, 3000);
+        });
+
+        // Sidebar Toggle
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const menuTexts = document.querySelectorAll('.menu-text');
+
+        // Initially hide the sidebar on mobile
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add('collapsed');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        // Chart Configuration
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'white' }
+                },
+                y: {
+                    ticks: { color: 'white' }
+                }
+            }
+        };
+
+        // Province Count Chart
+        fetch('../r7nttc/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Process data to count occurrences by sector
+                const sectorCount = {};
+
+                data.forEach(item => {
+                    const sector = item.sector; // Change to use sector instead of province
+
+                    if (!sectorCount[sector]) {
+                        sectorCount[sector] = 0;
+                    }
+                    sectorCount[sector]++;
+                });
+
+                // Sort sectors by count in descending order
+                const sortedSectors = Object.entries(sectorCount)
+                    .sort((a, b) => b[1] - a[1]);
+
+                // Prepare data for the chart
+                const labels = sortedSectors.map(([sector]) => sector);
+                const countData = sortedSectors.map(([, count]) => count);
+
+                // Define colors for the pie chart
+                const backgroundColors = [
+                    '#4CAF50', // Green
+                    '#2196F3', // Blue
+                    '#FFEB3B', // Yellow
+                    '#FF5722', // Orange
+                    '#9C27B0', // Purple
+                    '#795548', // Brown
+                    '#607D8B', // Blue Grey
+                    '#E91E63', // Pink
+                    '#00BCD4', // Cyan
+                    '#FF9800'  // Deep Orange
+                ];
+
+                const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                new Chart(revenueCtx, {
+                    type: 'pie', // Change to pie chart
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: countData,
+                            backgroundColor: backgroundColors,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: 'white'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                color: 'white',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Fetch data for User Growth Chart
+        fetch('../r7ac/data2.json')
+            .then(response => response.json())
+            .then(data => {
+                // Count occurrences of each qualification
+                const qualificationCount = {};
+                data.forEach(item => {
+                    const qualification = item.J; // Assuming 'J' is the correct key for qualifications
+                    if (!qualificationCount[qualification]) {
+                        qualificationCount[qualification] = 0;
+                    }
+                    qualificationCount[qualification]++;
+                });
+
+                // Get the top 5 qualifications
+                const sortedQualifications = Object.entries(qualificationCount)
+                    .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
+                    .slice(0, 5); // Get top 5
+
+                const labels = sortedQualifications.map(item => item[0]); // Qualification names
+                const countData = sortedQualifications.map(item => item[1]); // Counts
+
+                const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+                new Chart(userGrowthCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Top 5 Qualifications',
+                            data: countData,
+                            backgroundColor: [
+                                '#FF5733', // Bright Red
+                                '#33FF57', // Bright Green
+                                '#3357FF', // Bright Blue
+                                '#FF33A1', // Bright Pink
+                                '#FFB833'  // Bright Orange
+                            ]
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        indexAxis: 'y'
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Fetch data for Assessment Centers Chart
+        fetch('../r7ac/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Update the total count of Assessment Centers
+                document.getElementById('totalAssessmentCenters').textContent = data.length;
+
+                // Initialize counts for each sector
+                const assessmentData = {
+                    'Agriculture, Forestry and Fishery': 0,
+                    'Tourism (Hotel and Restaurant)': 0,
+                    'Electrical and Electronics': 0,
+                    'Metals and Engineering': 0,
+                    'Human Health / Health Care': 0,
+                    'Construction': 0,
+                    'Automotive and Land Transportation': 0,
+                    'Social, Community Development and Other Services': 0,
+                    'Garments': 0,
+                    'Maritime': 0,
+                    // Add other sectors as needed
+                };
+
+                // Count occurrences based on the value in column 'I'
+                data.forEach(item => {
+                    if (assessmentData[item.I] !== undefined) {
+                        assessmentData[item.I]++;
+                    }
+                });
+
+                // Sort the assessmentData by count in descending order
+                const sortedAssessmentData = Object.entries(assessmentData)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([key, value]) => `${key}: ${value}`); // Format as "Label: Count"
+
+                // Update the chart with the fetched data
+                const assessmentCentersCtx = document.getElementById('trafficSourcesChart').getContext('2d');
+                new Chart(assessmentCentersCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: sortedAssessmentData.map(item => item.split(':')[0]), // Get only the labels
+                        datasets: [{
+                            data: sortedAssessmentData.map(item => item.split(': ')[1]), // Get only the counts
+                            backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF5722', '#795548', '#607D8B', '#3F51B5', '#FF9800', '#9C27B0'] // Add more colors as needed
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Fetch data for Competency Assessors
+        fetch('../r7ac/data2.json')
+            .then(response => response.json())
+            .then(data => {
+                // Update the total count of Competency Assessors
+                document.getElementById('totalCompetencyAssessors').textContent = data.length; // Assuming data.length gives the total count
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Fetch data for NTTC Holders
+        fetch('../r7nttc/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Update the total count of NTTC Holders
+                document.getElementById('totalNTTCHolders').textContent = data.length; // Assuming data.length gives the total count
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Fetch data for Total Registered Programs
+        fetch('../r7utpras/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Update the total count of Registered Programs based on the last entry's value in the column "Tota"
+                const totalRegisteredPrograms = data[data.length - 1].Total; // Accessing the last entry's value in column "Tota"
+                document.getElementById('totalRegisteredPrograms').textContent = totalRegisteredPrograms; // Update the content
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Conversion Funnel Chart
+        const conversionFunnelCtx = document.getElementById('conversionFunnelChart').getContext('2d');
+        new Chart(conversionFunnelCtx, {
+            type: 'bar',
+            data: {
+                labels: ['UTPRAS', 'PTCACs', 'Scholarships', 'Planning'],
+                datasets: [{
+                    label: 'Accomplishments Per Unit',
+                    data: [28, 79, 85, 100],
+                    backgroundColor: ['#FF5722', '#4CAF50', '#2196F3', '#FFC107'] // Different colors for each bar
+                }]
+            },
+            options: {
+                ...chartOptions,
+                indexAxis: 'y'
+            }
+        });
+
+        // Mobile menu handling
+        const mobileMenuTrigger = document.querySelector('.mobile-menu-trigger');
+        const overlay = document.querySelector('.overlay');
+
+        mobileMenuTrigger.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Handle mobile orientation changes
+        window.addEventListener('orientationchange', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+
+        // Improve chart responsiveness on mobile
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            container.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    this.classList.toggle('expanded');
+                    overlay.classList.toggle('active');
+                }
+            });
+        });
+
+        async function fetchData() {
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                
+                // Count occurrences of each program type
+                const programCounts = {
+                    'WTR': 0,
+                    'NTR': 0,
+                    'COC': 0,
+                    'MTP': 0
+                };
+                
+                data.forEach(entry => {
+                    const programType = entry.Q?.toUpperCase()?.trim();
+                    if (programCounts.hasOwnProperty(programType)) {
+                        programCounts[programType]++;
+                    }
+                });
+                
+                // Update total programs count
+                const totalPrograms = Object.values(programCounts).reduce((a, b) => a + b, 0);
+                document.getElementById('totalPrograms').textContent = totalPrograms;
+                
+                updateDoughnutChart(programCounts);
+                await fetchProvinceData();
+                await fetchChart3Data();
+                await fetchChart4Data();
+                await fetchTopSectorsQualificationsAndInstitutions();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Add the chart functions from index.html
+        function updateDoughnutChart(programCounts) {
+            // ... copy the doughnut chart code from index.html ...
+        }
+
+        async function fetchProvinceData() {
+            // ... copy the province chart code from index.html ...
+        }
+
+        async function fetchChart3Data() {
+            // ... copy the chart3 code from index.html ...
+        }
+
+        async function fetchChart4Data() {
+            // ... copy the chart4 code from index.html ...
+        }
+
+        async function fetchTopSectorsQualificationsAndInstitutions() {
+            // ... copy the table data population code from index.html ...
+        }
+
+        // Call fetchData when the page loads
+        window.onload = fetchData;
+    </script>
+</body>
+</html>

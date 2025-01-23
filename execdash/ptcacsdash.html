@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Gradient Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+body {
+    background: linear-gradient(135deg, #000000, #1e3a8a, #041653);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.chart-container {
+    height: 300px; /* Fixed height for chart containers */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.table-container {
+    height: 400px; /* Fixed height for table */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* Add new mobile styles */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+
+.mobile-sidebar {
+    transition: left 0.3s ease-in-out, width 0.3s ease-in-out; /* Add width transition */
+}
+
+.mobile-sidebar.collapsed {
+    width: 0; /* Collapse width */
+    overflow: hidden; /* Hide overflow */
+}
+
+/* Add styles for desktop retractable */
+@media (min-width: 1024px) {
+    .mobile-sidebar {
+        position: relative; /* Ensure it stays in place */
+    }
+    .mobile-sidebar.collapsed {
+        width: 64px; /* Adjust width for collapsed state on PC */
+    }
+}
+
+@media (max-width: 768px) {
+    .mobile-sidebar {
+        position: fixed;
+        left: -100%;
+        transition: left 0.3s ease-in-out;
+        width: 80%; /* Reduce sidebar width on mobile */
+        max-width: 300px;
+    }
+    .mobile-sidebar.active {
+        left: 0;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Adjust main content padding */
+    main {
+        padding: 1rem !important;
+    }
+
+    /* Adjust card content */
+    .grid-cols-4 > div {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100px;
+    }
+    .grid-cols-4 h3 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .grid-cols-4 p {
+        font-size: 1.5rem;
+        line-height: 1.75rem;
+    }
+
+    /* Adjust chart heights */
+    .h-64 {
+        height: 250px;
+    }
+
+    /* Improve table responsiveness */
+    .table-container {
+        margin-top: 1rem;
+        padding: 0.5rem;
+    }
+    table, thead, tbody, tr, th, td {
+        display: block;
+        width: 100%;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin-bottom: 1rem;
+        border-radius: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    td {
+        position: relative;
+        padding: 0.75rem;
+        padding-left: 50%;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    td:before {
+        position: absolute;
+        left: 0.75rem;
+        width: 45%;
+        padding-right: 0.75rem;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    td:last-child {
+        border-bottom: none;
+    }
+
+    /* Adjust main heading */
+    h2.text-3xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    thead {
+        display: none; /* Hide the header on small screens */
+    }
+    tr {
+        display: block; /* Make each row a block */
+        margin-bottom: 10px; /* Add space between rows */
+    }
+    td {
+        display: flex; /* Use flexbox for cell content */
+        justify-content: space-between; /* Space out content */
+        padding: 10px; /* Add padding */
+        border: 1px solid #ccc; /* Add border for clarity */
+    }
+}
+
+/* Additional styles for extra small devices */
+@media (max-width: 480px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+    .grid-cols-4 > div {
+        min-height: 90px;
+        margin-bottom: 0;
+    }
+    .grid-cols-4 h3 {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+    .grid-cols-4 p {
+        font-size: 1.25rem;
+    }
+    td {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+    td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+}
+
+.toggle-button {
+    position: fixed; /* Keep it fixed on the screen */
+    top: 20px; /* Adjust position as needed */
+    left: 20px; /* Adjust position as needed */
+    z-index: 100; /* Ensure it stays above other elements */
+    background-color: #fff; /* Background color */
+    border: none; /* No border */
+    padding: 10px; /* Padding */
+    cursor: pointer; /* Pointer cursor */
+    border-radius: 5px; /* Rounded corners */
+}
+
+    </style>
+</head>
+<body class="text-white">
+    <!-- Add sidebar overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    
+    <div class="flex h-screen">
+        <!-- Mobile menu button -->
+        <button id="mobileMenuBtn" class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
+        <!-- Updated Sidebar -->
+        <aside id="sidebar" class="mobile-sidebar w-64 bg-black bg-opacity-50 p-6 z-50 h-full lg:relative lg:left-0">
+            <img src="path/to/logo.png" alt="Logo" class="mb-4 w-32 mx-auto">
+            <h1 class="text-2xl font-bold mb-8">Dashboard</h1>
+            <nav>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-blue-300">Home</a></li>
+                    <li><a href="#" class="hover:text-blue-300">UTPRAS</a></li>
+                    <li><a href="#" class="hover:text-blue-300">PTCACs</a></li>
+                    <li><a href="#" class="hover:text-blue-300">Scholarships</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-auto lg:ml-0 ml-0">
+            <h2 class="text-3xl font-bold mb-6">Welcome to TESDA Region VII Monitoring and Information System</h2>
+            
+            <!-- Cards -->
+            <div class="grid grid-cols-4 gap-6 mb-8">
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Programs</h3>
+                    <p class="text-2xl font-bold">10,234</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Assessment Centers</h3>
+                    <p class="text-2xl font-bold">52,869</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Assessors</h3>
+                    <p class="text-2xl font-bold">25</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Trainers</h3>
+                    <p class="text-2xl font-bold">150</p>
+                </div>
+            </div>
+
+            <!-- Chart Placeholder -->
+            <div class="bg-white bg-opacity-10 p-4 sm:p-6 rounded-lg mb-8">
+                <h3 class="text-xl font-semibold mb-4">Visual Representation of Data</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Chart containers with improved responsive sizing -->
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4">
+                        <canvas id="utprasProvinceChart"></canvas>
+                    </div>
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4">
+                        <canvas id="chart3"></canvas>
+                    </div>
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4">
+                        <canvas id="chart4"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container" style="height: 287px;">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-black bg-opacity-50">
+                            <th class="p-2 sm:p-3 text-left">Top 5 Sectors</th>
+                            <th class="p-2 sm:p-3 text-left">Top 5 Qualifications</th>
+                            <th class="p-2 sm:p-3 text-left">Top 5 Institutions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topSectorsBody">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Ensure the toggle button is always present -->
+    <button id="sidebarToggle" class="toggle-button">
+        <!-- Add an icon or text for the toggle button -->
+        ☰ <!-- Example icon -->
+    </button>
+
+    <script>
+       async function fetchData() {
+    try {
+        const response = await fetch('../r7ac/data.json');
+        const data = await response.json();
+        
+        // Count values from column B (Province)
+        const provinceCounts = {};
+        
+        data.forEach(entry => {
+            const province = entry.B?.trim() || 'Unknown'; // Ensure we are using column B
+            provinceCounts[province] = (provinceCounts[province] || 0) + 1;
+        });
+        
+        updateDoughnutChart(provinceCounts);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+        function updateDoughnutChart(provinceCounts) {
+            const ctx = document.getElementById('doughnutChart').getContext('2d');
+            const doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(provinceCounts),
+                    datasets: [{
+                        data: Object.values(provinceCounts),
+                        backgroundColor: [
+                            '#36A2EB',  // Blue
+                            '#FF6384',  // Pink
+                            '#4BC0C0',  // Teal
+                            '#FFCE56',  // Yellow
+                            '#FF9800',  // Orange
+                            '#9C27B0'   // Purple
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribution by Province',
+                            color: 'white',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function fetchProvinceData() {
+            try {
+                const response = await fetch('../r7ac/data.json');
+                const data = await response.json();
+                
+                // Group data by province and sector from columns B and I
+                const provinceData = {};
+                
+                data.forEach(entry => {
+                    const province = entry.B?.trim() || 'Unknown';
+                    const sector = entry.I?.trim() || 'Unknown';
+                    
+                    if (!provinceData[province]) {
+                        provinceData[province] = {};
+                    }
+                    
+                    provinceData[province][sector] = (provinceData[province][sector] || 0) + 1;
+                });
+
+                // Get top 5 sectors for each province
+                const processedData = {};
+                Object.entries(provinceData).forEach(([province, sectors]) => {
+                    const topSectors = Object.entries(sectors)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5);
+                    processedData[province] = topSectors;
+                });
+
+                // Define the specific province order for Region 7
+                const provinceOrder = ['CEBU', 'BOHOL', 'NEGROS ORIENTAL', 'SIQUIJOR'];
+
+                // Get the container and replace canvas with table
+                const container = document.getElementById('utprasProvinceChart').parentElement;
+                container.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-transparent">
+                            <thead class="bg-gray-800">
+                                <tr class="border-b border-gray-600">
+                                    <th class="px-4 py-2 text-center text-white">Rank</th>
+                                    ${provinceOrder.map(province => `
+                                        <th class="px-4 py-2 text-center text-white">${province}</th>
+                                    `).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${[0, 1, 2, 3, 4].map(rank => `
+                                    <tr class="border-b border-gray-700 hover:bg-gray-700">
+                                        <td class="px-4 py-2 text-center text-white font-bold">#${rank + 1}</td>
+                                        ${provinceOrder.map(province => {
+                                            const sectors = processedData[province] || [];
+                                            const sector = sectors[rank] || ['', 0];
+                                            return `
+                                                <td class="px-4 py-2 text-center text-white">
+                                                    ${sector[0]} ${sector[1] ? `<span class="text-gray-400">(${sector[1]})</span>` : ''}
+                                                </td>
+                                            `;
+                                        }).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error fetching province data:', error);
+            }
+        }
+        
+
+        async function fetchChart3Data() {
+            try {
+                const response = await fetch('../r7ac/data2.json');
+                const data = await response.json();
+                
+                // Count provinces from column B and normalize the data
+                const provinceCounts = {};
+                
+                data.forEach(entry => {
+                    const province = entry.B?.toString().trim().toUpperCase() || 'Unknown';
+                    if (province !== 'Unknown') {
+                    provinceCounts[province] = (provinceCounts[province] || 0) + 1;
+                    }
+                });
+
+                // Filter for only Region 7 provinces
+                const region7Provinces = {
+                    'CEBU': provinceCounts['CEBU'] || 0,
+                    'BOHOL': provinceCounts['BOHOL'] || 0,
+                    'NEGROS ORIENTAL': provinceCounts['NEGROS ORIENTAL'] || 0,
+                    'SIQUIJOR': provinceCounts['SIQUIJOR'] || 0
+                };
+
+                updateChart3Doughnut(region7Provinces);
+            } catch (error) {
+                console.error('Error fetching data for Chart 3:', error);
+                // Show error message in the container
+                const container = document.getElementById('chart3').parentElement;
+                container.innerHTML = `
+                    <div class="text-center text-red-500 p-4">
+                        Error loading province distribution data. Please try again later.
+                    </div>
+                `;
+            }
+        }
+
+        function updateChart3Doughnut(provinceCounts) {
+            const ctx = document.getElementById('chart3').getContext('2d');
+            const doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(provinceCounts),
+                    datasets: [{
+                        data: Object.values(provinceCounts),
+                        backgroundColor: [
+                            '#36A2EB',  // Blue - Cebu
+                            '#FF6384',  // Pink - Bohol
+                            '#4BC0C0',  // Teal - Negros Oriental
+                            '#FFCE56',  // Yellow - Siquijor
+                        ],
+                        borderWidth: 1,
+                        borderColor: '#ffffff33'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'white',
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                },
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const value = data.datasets[0].data[i];
+                                            return {
+                                                text: `${label} (${value})`,
+                                                fillStyle: data.datasets[0].backgroundColor[i],
+                                                strokeStyle: data.datasets[0].borderColor,
+                                                lineWidth: 1,
+                                                hidden: isNaN(data.datasets[0].data[i]) || data.datasets[0].data[i] === 0,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribution of PTCACs by Province',
+                            color: 'white',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function fetchChart4Data() {
+            try {
+                const response = await fetch('../r7ac/data2.json');
+                const data = await response.json();
+                
+                // Group data by province and qualification
+                const provinceData = {};
+                
+                data.forEach(entry => {
+                    // Ensure we're getting valid province and qualification data
+                    const province = entry.B?.toString().trim().toUpperCase() || 'Unknown';
+                    const qualification = entry.K?.toString().trim() || 'Unknown';
+                    
+                    if (!provinceData[province]) {
+                        provinceData[province] = {};
+                    }
+                    
+                    if (qualification !== 'Unknown') {
+                        provinceData[province][qualification] = (provinceData[province][qualification] || 0) + 1;
+                    }
+                });
+
+                // Get top 5 qualifications for each province
+                const processedData = {};
+                Object.entries(provinceData).forEach(([province, qualifications]) => {
+                    const topQualifications = Object.entries(qualifications)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5);
+                    processedData[province] = topQualifications;
+                });
+
+                // Define the specific province order for Region 7
+                const provinceOrder = ['CEBU', 'BOHOL', 'NEGROS ORIENTAL', 'SIQUIJOR'];
+
+                // Get the container and replace canvas with table
+                const container = document.getElementById('chart4').parentElement;
+                container.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <h3 class="text-xl font-semibold mb-4 text-white text-center">Top 5 Qualifications per Province</h3>
+                        <table class="min-w-full bg-transparent">
+                            <thead class="bg-gray-800">
+                                <tr class="border-b border-gray-600">
+                                    <th class="px-4 py-2 text-center text-white">Rank</th>
+                                    ${provinceOrder.map(province => `
+                                        <th class="px-4 py-2 text-center text-white">${province}</th>
+                                    `).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${[0, 1, 2, 3, 4].map(rank => `
+                                    <tr class="border-b border-gray-700 hover:bg-gray-700">
+                                        <td class="px-4 py-2 text-center text-white font-bold">#${rank + 1}</td>
+                                        ${provinceOrder.map(province => {
+                                            const qualifications = processedData[province] || [];
+                                            const qualification = qualifications[rank] || ['No Data', 0];
+                                            return `
+                                                <td class="px-4 py-2 text-center text-white">
+                                                    <div class="text-sm">
+                                                        ${qualification[0] !== 'No Data' 
+                                                            ? `${qualification[0]}<br><span class="text-gray-400">(${qualification[1]})</span>`
+                                                            : '<span class="text-gray-400">No Data</span>'}
+                                                    </div>
+                                                </td>
+                                            `;
+                                        }).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error fetching data for Chart 4:', error);
+                // Show error message in the container
+                const container = document.getElementById('chart4').parentElement;
+                container.innerHTML = `
+                    <div class="text-center text-red-500 p-4">
+                        Error loading qualification data. Please try again later.
+                    </div>
+                `;
+            }
+        }
+
+        async function fetchTopSectorsQualificationsAndInstitutions() {
+            try {
+                const response = await fetch('../r7ac/data.json');
+                const data = await response.json();
+                
+                // Count occurrences of each sector in column R
+                const sectorCounts = {};
+                // Count occurrences of each qualification in column S
+                const qualificationCounts = {};
+                // Count occurrences of each institution in column J
+                const institutionCounts = {};
+                
+                data.forEach(entry => {
+                    const sector = entry.R?.trim();
+                    const qualification = entry.S?.trim();
+                    const institution = entry.G?.trim();
+                    
+                    if (sector) {
+                        sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+                    }
+                    
+                    if (qualification) {
+                        qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
+                    }
+                    
+                    if (institution) {
+                        institutionCounts[institution] = (institutionCounts[institution] || 0) + 1;
+                    }
+                });
+
+                // Sort sectors by count and get the top 5
+                const topSectors = Object.entries(sectorCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                // Sort qualifications by count and get the top 5
+                const topQualifications = Object.entries(qualificationCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                // Sort institutions by count and get the top 5
+                const topInstitutions = Object.entries(institutionCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Populate the table
+                const topSectorsBody = document.getElementById('topSectorsBody');
+                topSectorsBody.innerHTML = topSectors.map(([sector, count], index) => `
+                    <tr class="bg-gray-800 hover:bg-gray-700">
+                        <td data-label="Top 5 Sectors" class="p-3">
+                            ${sector} (${count})
+                        </td>
+                        <td data-label="Top 5 Qualifications" class="p-3">
+                            ${topQualifications[index] ? `${topQualifications[index][0]} (${topQualifications[index][1]})` : ''}
+                        </td>
+                        <td data-label="Top 5 Institutions" class="p-3">
+                            ${topInstitutions[index] ? `${topInstitutions[index][0]} (${topInstitutions[index][1]})` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching top sectors, qualifications, and institutions:', error);
+            }
+        }
+
+        // Update window.onload to call the new function
+        window.onload = function() {
+            fetchData();
+            fetchProvinceData();
+            fetchChart3Data();
+            fetchChart4Data();
+            fetchTopSectorsQualificationsAndInstitutions();
+        };
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebar.classList.toggle('collapsed');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+                sidebar.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+
+        // Ensure the toggle button works for all screen sizes
+        document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
