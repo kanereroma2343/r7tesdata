@@ -87,42 +87,58 @@ body {
 /* Mobile-specific table styles */
 @media (max-width: 768px) {
     .table-container {
-        margin: 0 -1rem; /* Negative margin to allow full-width scrolling */
-        border-radius: 0; /* Remove border radius on mobile */
+        margin: 0 -1rem;
+        border-radius: 0;
+        position: relative;
     }
     
     .overflow-x-auto {
-        padding: 0 1rem; /* Add padding back to the scrollable area */
+        padding: 0 1rem;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
     
-    /* Ensure text doesn't wrap awkwardly */
     .table-container td {
         white-space: normal;
-        min-width: 160px; /* Minimum width for cells */
-        max-width: 200px; /* Maximum width for cells */
-        font-size: 0.875rem; /* Slightly smaller font on mobile */
+        min-width: 160px;
+        max-width: 200px;
+        font-size: 0.875rem;
+        padding: 0.75rem;
+        vertical-align: top;
     }
     
-    /* Add horizontal scroll indicator */
+    .table-container th {
+        position: sticky;
+        top: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10;
+    }
+    
+    /* Improved scroll indicator */
     .table-container:after {
         content: '';
         position: absolute;
-        bottom: 0;
+        top: 0;
         right: 0;
-        width: 40px;
+        width: 20px;
         height: 100%;
-        background: linear-gradient(to right, transparent, rgba(0,0,0,0.2));
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3));
         pointer-events: none;
-        opacity: 0.8;
+        opacity: 1;
+        z-index: 5;
     }
 }
 
 /* Additional styles for very small screens */
 @media (max-width: 480px) {
     .table-container td {
-        font-size: 0.8125rem; /* Even smaller font for very small screens */
-        min-width: 140px; /* Slightly smaller minimum width */
-        padding: 0.5rem; /* Reduced padding */
+        font-size: 0.8125rem;
+        min-width: 140px;
+        padding: 0.625rem;
+    }
+    
+    .table-container th {
+        font-size: 0.875rem;
+        padding: 0.625rem;
     }
 }
     </style>
@@ -201,9 +217,9 @@ body {
 
             <!-- Table -->
             <h3 class="text-xl font-semibold mb-4">UTPRAS Data</h3>
-            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container" style="height: auto;">
+            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container relative" style="height: auto;">
                 <div class="overflow-x-auto">
-                    <table class="w-full min-w-[640px]"> <!-- Set minimum width to prevent squishing -->
+                    <table class="w-full min-w-[640px]">
                         <thead>
                             <tr class="bg-black bg-opacity-50">
                                 <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Sectors</th>
@@ -212,7 +228,7 @@ body {
                                 <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Trainers</th>
                             </tr>
                         </thead>
-                        <tbody id="topSectorsBody">
+                        <tbody id="topSectorsBody" class="divide-y divide-gray-700">
                             <!-- Data will be populated here -->
                         </tbody>
                     </table>
@@ -607,68 +623,87 @@ body {
             }
         }
 
-        async function fetchTopSectorsQualificationsAndInstitutions() {
+        async function fetchTopTrainers() {
             try {
-                const response = await fetch('../r7utpras/data2.json');
+                const response = await fetch('../r7nttc/data.json');
                 const data = await response.json();
                 
-                // Count occurrences of each sector in column R
-                const sectorCounts = {};
-                // Count occurrences of each qualification in column S
-                const qualificationCounts = {};
-                // Count occurrences of each institution in column J
-                const institutionCounts = {};
+                // Create a map to store unique trainers and their counts
+                const trainerCounts = new Map();
                 
+                // Process each entry
                 data.forEach(entry => {
-                    const sector = entry.R?.trim();
-                    const qualification = entry.S?.trim();
-                    const institution = entry.G?.trim();
+                    // Construct full name with proper formatting
+                    const lastName = (entry.last_name || '').trim();
+                    const firstName = (entry.first_name || '').trim();
+                    const middleInitial = entry.middle_initial ? `${entry.middle_initial.trim()}.` : '';
+                    const extension = entry.extension ? ` ${entry.extension.trim()}` : '';
                     
-                    if (sector) {
-                        sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
-                    }
-                    
-                    if (qualification) {
-                        qualificationCounts[qualification] = (qualificationCounts[qualification] || 0) + 1;
-                    }
-                    
-                    if (institution) {
-                        institutionCounts[institution] = (institutionCounts[institution] || 0) + 1;
+                    // Only process if we have at least a last name and first name
+                    if (lastName && firstName) {
+                        // Format: "LAST NAME, FIRST NAME M. JR"
+                        const fullName = `${lastName.toUpperCase()}, ${firstName.toUpperCase()} ${middleInitial}${extension}`.trim();
+                        
+                        // Increment count for this trainer
+                        trainerCounts.set(fullName, (trainerCounts.get(fullName) || 0) + 1);
                     }
                 });
 
-                // Sort sectors by count and get the top 5
+                // Convert to array and sort by count (descending)
+                const topTrainers = Array.from(trainerCounts.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Get existing data for other columns from UTPRAS
+                const response2 = await fetch('../r7utpras/data2.json');
+                const utprasData = await response2.json();
+                
+                // Process UTPRAS data for other columns
+                const sectorCounts = {};
+                const qualificationCounts = {};
+                const institutionCounts = {};
+                
+                utprasData.forEach(entry => {
+                    if (entry.R?.trim()) sectorCounts[entry.R.trim()] = (sectorCounts[entry.R.trim()] || 0) + 1;
+                    if (entry.S?.trim()) qualificationCounts[entry.S.trim()] = (qualificationCounts[entry.S.trim()] || 0) + 1;
+                    if (entry.G?.trim()) institutionCounts[entry.G.trim()] = (institutionCounts[entry.G.trim()] || 0) + 1;
+                });
+
                 const topSectors = Object.entries(sectorCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
                 
-                // Sort qualifications by count and get the top 5
                 const topQualifications = Object.entries(qualificationCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
                 
-                // Sort institutions by count and get the top 5
                 const topInstitutions = Object.entries(institutionCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
 
-                // Populate the table
+                // Update table
                 const topSectorsBody = document.getElementById('topSectorsBody');
-                topSectorsBody.innerHTML = topSectors.map(([sector, count], index) => `
-                    <tr class="bg-gray-800 hover:bg-gray-700">
-                        <td data-label="Top 5 Sectors" class="p-3">
-                            ${sector} (${count})
-                        </td>
-                        <td data-label="Top 5 Qualifications" class="p-3">
-                            ${topQualifications[index] ? `${topQualifications[index][0]} (${topQualifications[index][1]})` : ''}
-                        </td>
-                        <td data-label="Top 5 Institutions" class="p-3">
-                            ${topInstitutions[index] ? `${topInstitutions[index][0]} (${topInstitutions[index][1]})` : ''}
-                        </td>
-                    </tr>
-                `).join('');
+                topSectorsBody.innerHTML = '';
+
+                // Create rows
+                for (let i = 0; i < 5; i++) {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-gray-800 hover:bg-gray-700';
+                    
+                    row.innerHTML = `
+                        <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topInstitutions[i] ? `${topInstitutions[i][0]} (${topInstitutions[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topTrainers[i] ? `${topTrainers[i][0]} (${topTrainers[i][1]} NTTC${topTrainers[i][1] > 1 ? 's' : ''})` : ''}</td>
+                    `;
+                    
+                    topSectorsBody.appendChild(row);
+                }
+
+                // Update total trainers count (unique trainers)
+                document.getElementById('totalTrainers').textContent = trainerCounts.size.toLocaleString();
             } catch (error) {
-                console.error('Error fetching top sectors, qualifications, and institutions:', error);
+                console.error('Error fetching and processing trainer data:', error);
             }
         }
 
@@ -694,80 +729,6 @@ body {
             }
         }
 
-        async function fetchTopTrainers() {
-            try {
-                const response = await fetch('../r7nttc/data.json');
-                const data = await response.json();
-                
-                // Combine trainer name components into a full name and count occurrences
-                const trainerCounts = {};
-                data.forEach(entry => {
-                    const lastName = entry.last_name?.trim() || '';
-                    const firstName = entry.first_name?.trim() || '';
-                    const middleInitial = entry.middle_initial ? `${entry.middle_initial.trim()}.` : '';
-                    const extension = entry.extension ? ` ${entry.extension.trim()}` : '';
-                    const fullName = `${lastName}, ${firstName} ${middleInitial}${extension}`.trim();
-                    
-                    if (lastName && firstName) { // Only count if at least last name and first name exist
-                        trainerCounts[fullName] = (trainerCounts[fullName] || 0) + 1;
-                    }
-                });
-
-                // Sort trainers by count and get top 5
-                const topTrainers = Object.entries(trainerCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-
-                // Get existing data for other columns
-                const response2 = await fetch('../r7utpras/data2.json');
-                const utprasData = await response2.json();
-                
-                // Get top sectors, qualifications, and institutions (keeping existing logic)
-                const sectorCounts = {};
-                const qualificationCounts = {};
-                const institutionCounts = {};
-                
-                utprasData.forEach(entry => {
-                    if (entry.R?.trim()) sectorCounts[entry.R.trim()] = (sectorCounts[entry.R.trim()] || 0) + 1;
-                    if (entry.S?.trim()) qualificationCounts[entry.S.trim()] = (qualificationCounts[entry.S.trim()] || 0) + 1;
-                    if (entry.G?.trim()) institutionCounts[entry.G.trim()] = (institutionCounts[entry.G.trim()] || 0) + 1;
-                });
-
-                const topSectors = Object.entries(sectorCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                const topQualifications = Object.entries(qualificationCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                const topInstitutions = Object.entries(institutionCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-
-                // Update table with all data
-                const topSectorsBody = document.getElementById('topSectorsBody');
-                topSectorsBody.innerHTML = '';
-
-                // Create 5 rows with data from all categories
-                for (let i = 0; i < 5; i++) {
-                    const row = document.createElement('tr');
-                    row.className = 'bg-gray-800 hover:bg-gray-700';
-                    
-                    row.innerHTML = `
-                        <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
-                        <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
-                        <td class="p-3 break-words">${topInstitutions[i] ? `${topInstitutions[i][0]} (${topInstitutions[i][1]})` : ''}</td>
-                        <td class="p-3 break-words">${topTrainers[i] ? `${topTrainers[i][0]} (${topTrainers[i][1]})` : ''}</td>
-                    `;
-                    
-                    topSectorsBody.appendChild(row);
-                }
-            } catch (error) {
-                console.error('Error fetching and processing data:', error);
-            }
-        }
-
         async function fetchTotalNTTCs() {
             try {
                 const response = await fetch('../r7nttc/data.json');
@@ -785,7 +746,6 @@ body {
             fetchProvinceData();
             fetchChart3Data();
             fetchChart4Data();
-            fetchTopSectorsQualificationsAndInstitutions();
             fetchTopTrainers();
             fetchTotalPrograms();
             fetchTotalInstitutions();
