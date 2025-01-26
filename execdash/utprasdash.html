@@ -3,1026 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>TESDA Region VII - Dashboard</title>
-    <link rel="icon" href="../icons/t7ilogo.png" type="image/png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="icon" href="../icons/t7ilogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+body {
+    background: linear-gradient(135deg, #000000, #1e3a8a, #041653);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #000428, #004e92);
-            color: white;
-        }
+.chart-container {
+    height: 300px; /* Fixed height for chart containers */
+    overflow: hidden; /* Prevent overflow */
+}
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
+.table-container {
+    height: 400px; /* Fixed height for table */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
 
-        .sidebar {
-            background: rgba(255, 255, 255, 0.1);
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 350px; /* Taller charts on mobile */
+    }
+    
+    /* Adjust spacing for mobile */
+    .p-4 {
+        padding: 1rem;
+    }
+    
+    /* Make text more readable on mobile */
+    .text-xl {
+        font-size: 1.1rem;
+    }
+    
+    /* Adjust card grid spacing */
+    .gap-6 {
+        gap: 1rem;
+    }
+    
+    /* Ensure proper spacing between nav items */
+    nav ul li {
+        margin-bottom: 0.5rem;
+    }
+    
+    nav ul li:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Adjust table for mobile */
+    .table-container {
+        margin-top: 1rem;
+        overflow-x: auto;
+    }
+    
+    /* Make sure charts don't overflow their containers */
+    canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+}
+
+/* Additional styles for very small screens */
+@media (max-width: 480px) {
+    .chart-container {
+        height: 300px;
+    }
+    
+    .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    header img {
+        height: 40px;
+    }
+}
+
+/* Mobile-specific table styles */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 0 -1rem;
+        border-radius: 0;
+        position: relative;
+    }
+    
+    .overflow-x-auto {
+        padding: 0 1rem;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    .table-container td {
+        white-space: normal;
+        min-width: 160px;
+        max-width: 200px;
+        font-size: 0.875rem;
+        padding: 0.75rem;
+        vertical-align: top;
+    }
+    
+    .table-container th {
+        position: sticky;
+        top: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10;
+    }
+    
+    /* Improved scroll indicator */
+    .table-container:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.3));
+        pointer-events: none;
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+/* Additional styles for very small screens */
+@media (max-width: 480px) {
+    .table-container td {
+        font-size: 0.8125rem;
+        min-width: 140px;
+        padding: 0.625rem;
+    }
+    
+    .table-container th {
+        font-size: 0.875rem;
+        padding: 0.625rem;
+    }
+}  footer {
+            background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            width: 250px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed {
-            width: 80px;
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-item i {
-            margin-right: 15px;
-            width: 20px;
+            -webkit-backdrop-filter: blur(10px);
             text-align: center;
-        }
-
-        .menu-text {
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .dashboard-header {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .chart-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 20px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-
-        .chart-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .chart-container.expanded {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            width: 85vw;
-            height: 85vh;
-            z-index: 1000;
-            opacity: 1;
-            animation: expandAnimation 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes expandAnimation {
-            from {
-                opacity: 0.5;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0);
-            z-index: 999;
-            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(0px);
-        }
-
-        .overlay.active {
-            display: block;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                backdrop-filter: blur(0px);
-            }
-            to {
-                opacity: 1;
-                backdrop-filter: blur(5px);
-            }
-        }
-
-        .close-btn {
-            display: none;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 1001;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        .chart-container.expanded .close-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeInButton 0.3s ease 0.2s forwards;
-        }
-
-        @keyframes fadeInButton {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .chart-container.expanded .chart-wrapper {
-            height: calc(85vh - 100px);
-            animation: fadeInContent 0.4s ease forwards;
-        }
-
-        @keyframes fadeInContent {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            height: 300px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                z-index: 1000;
-                height: 100vh;
-                display: none;
-            }
-
-            .sidebar.collapsed {
-                transform: translateX(-100%);
-                display: block;
-            }
-
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .sidebar-small {
-            display: none; /* Initially hidden */
-        }
-
-        @media (max-width: 768px) {
-            .sidebar-small {
-                display: block; /* Show small part of the sidebar on mobile */
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 50px; /* Adjust width as needed */
-                height: 100vh;
-                background: rgba(255, 255, 255, 0.1);
-                z-index: 1000;
-            }
-
-            .sidebar-small .toggle-btn-small {
-                width: 100%;
-                height: 100%;
-                background: none;
-                border: none;
-                color: white;
-                cursor: pointer;
-                font-size: 20px;
-            }
-        }
-
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #000428, #004e92);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-
-        .loading-content {
-            text-align: center;
-        }
-
-        .loading-logo {
-            margin-bottom: 30px;
-        }
-
-        .loading-logo img {
-            width: 120px;
-            height: auto;
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.7;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .loading-bar-container {
-            width: 300px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #2196F3);
-            border-radius: 10px;
-            animation: loading 3s ease-in-out forwards;
-        }
-
-        @keyframes loading {
-            0% {
-                width: 0%;
-            }
-            100% {
-                width: 100%;
-            }
-        }
-
-        .loading-text {
-            color: white;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        .dots {
-            animation: dots 1.5s infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% {
-                content: '.';
-            }
-            40% {
-                content: '..';
-            }
-            60%, 100% {
-                content: '...';
-            }
-        }
-
-        .fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Mobile-specific styles */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                position: fixed;
-                left: -250px;
-                top: 0;
-                height: 100vh;
-                transition: left 0.3s ease;
-                z-index: 1000;
-            }
-
-            .sidebar.active {
-                left: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 10px;
-                width: 100%;
-            }
-
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-                padding: 15px;
-            }
-
-            .dashboard-header h1 {
-                font-size: 1.2rem;
-                margin: 10px 0;
-            }
-
-            .header-logo {
-                width: 40px !important;
-                margin: 5px auto !important;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-container {
-                margin-bottom: 15px;
-            }
-
-            .chart-wrapper {
-                height: 250px;
-            }
-
-            /* Mobile menu trigger */
-            .mobile-menu-trigger {
-                display: block;
-                position: fixed;
-                top: 10px;
-                left: 10px;
-                z-index: 1001;
-                background: rgba(255, 255, 255, 0.1);
-                border: none;
-                color: white;
-                padding: 10px;
-                border-radius: 5px;
-                backdrop-filter: blur(10px);
-            }
-
-            /* Mobile expanded chart adjustments */
-            .chart-container.expanded {
-                width: 95vw;
-                height: 90vh;
-                padding: 15px;
-            }
-
-            .chart-container.expanded .chart-wrapper {
-                height: calc(90vh - 80px);
-            }
-
-            /* Card improvements for mobile */
-            .card {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .card h3 {
-                font-size: 0.9rem;
-                margin-right: 10px;
-            }
-
-            .card p {
-                font-size: 1.2rem;
-                font-weight: bold;
-            }
-
-            /* Loading screen adjustments */
-            .loading-bar-container {
-                width: 80%;
-                max-width: 280px;
-            }
-
-            .loading-logo img {
-                width: 80px;
-            }
-
-            .loading-text {
-                font-size: 16px;
-            }
-        }
-
-        /* Add new mobile navigation styles */
-        .mobile-nav {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-nav {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                padding: 10px;
-                justify-content: space-around;
-                z-index: 1000;
-            }
-
-            .mobile-nav-item {
-                color: white;
-                text-align: center;
-                padding: 8px;
-                border-radius: 5px;
-                transition: background 0.3s ease;
-            }
-
-            .mobile-nav-item i {
-                font-size: 20px;
-                margin-bottom: 4px;
-            }
-
-            .mobile-nav-item span {
-                font-size: 12px;
-                display: block;
-            }
-
-            .mobile-nav-item:active {
-                background: rgba(255, 255, 255, 0.2);
-            }
+            padding: 1rem 0;
+            margin-top: .2 rem;
         }
     </style>
 </head>
-<body>
-    <div class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <img src="../icons/t7ilogo.png" alt="TESDA Logo" class="pulse">
-            </div>
-            <div class="loading-bar-container">
-                <div class="loading-bar"></div>
-            </div>
-            <div class="loading-text">Initializing Dashboard<span class="dots">...</span></div>
-        </div>
-    </div>
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="sidebar collapsed">
-            <div class="sidebar-header">
-                <div class="logo">Dashboard</div>
-                <button class="toggle-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-home"></i>
-                <span class="menu-text">Home</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span class="menu-text">Analytics</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-users"></i>
-                <span class="menu-text">Users</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span class="menu-text">Settings</span>
-            </div>
-            <div class="sidebar-small">
-                <button class="toggle-btn-small">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-        <div class="main-content">
-            <div class="dashboard-header" style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="../icons/t7ilogo.png" alt="Left Logo" class="header-logo left-logo" style="width: 50px; height: auto; margin-right: 100px;">
-                <h1 style="flex: 1; text-align: center;">Welcome to TESDA Region VII Monitoring and Information System</h1>            
-                <img src="../icons/blogo.png" alt="Right Logo" class="header-logo right-logo" style="width: 50px; height: auto; margin-left: 100px;">
-            </div>
-            <h3 id="updateDate">Data is updated as of:</h3>
-            <script>
-                // Get the current date
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                const currentDate = new Date().toLocaleDateString(undefined, options);
-                // Update the h3 element with the current date
-                document.getElementById('updateDate').textContent += ` ${currentDate}`;
-            </script>
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h3><i class="fas fa-building"></i> Total Programs</h3>
-                    <p id="totalPrograms">Loading...</p>
-                </div>
-                <div class="card">
-                    <h3><i class="fas fa-chalkboard-teacher"></i> Assessment Centers</h3>
-                    <p id="assessmentCenters">Loading...</p>
-                </div>
-                <div class="card">
-                    <h3><i class="fas fa-users"></i> Total Assessors</h3>
-                    <p id="totalAssessors">Loading...</p>
-                </div>
-                <div class="card">
-                    <h3><i class="fas fa-scroll"></i> Total Trainers</h3>
-                    <p id="totalTrainers">Loading...</p>
+<body class="text-white">
+    <!-- Replace sidebar and main content structure with new header-based layout -->
+    <div class="min-h-screen">
+        <!-- Header with navigation -->      
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">                 
+                    <div class="relative">                    
+                    </div>
                 </div>
             </div>
-           
-            <div class="chart-grid">
-                <div class="chart-container">
-                    <button class="close-btn">&times;</button>
-                    <h3>Program Types Distribution</h3>
-                    <div class="chart-wrapper">
+        </header>
+        <!-- Main content -->
+        <main class="pt-20 p-4 md:p-8">
+            <!-- Existing content starts here -->
+            <header class="flex items-center justify-between mb-6">
+                <img src="../icons/tlogo.png" alt="Left Logo" class="h-16 mr-2">
+                <h2 class="text-3xl font-bold text-center flex-1">Welcome to TESDA Region VII Monitoring and Information System</h2>
+                <img src="../icons/blogo.png" alt="Right Logo" class="h-16 ml-2">
+            </header>
+            <nav>
+                <ul class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mb-6">
+                    <li class="w-full md:w-auto"><a href="index.html" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out shadow-md border border-white">HOME</a></li>
+                    <li class="w-full md:w-auto"><a href="utprasdash.html" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out shadow-md border border-white">UTPRAS</a></li>
+                    <li class="w-full md:w-auto"><a href="ptcacsdash.html" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out shadow-md border border-white">PTCACs</a></li>
+                    <li class="w-full md:w-auto"><a href="scholarshipsdash.html" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out shadow-md border border-white">Scholarships</a></li>
+                    <li class="w-full md:w-auto"><a href="#" id="screenshotButton" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out shadow-md border border-white">Screenshot</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Programs <i class="fas fa-scroll"></i></h3>
+                    <p id="totalPrograms" class="text-2xl font-bold">0</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Institutions <i class="fas fa-school"></i></h3>
+                    <p id="totalInstitutions" class="text-2xl font-bold">0</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total Trainers (Warm Body) <i class="fas fa-chalkboard-teacher"></i></h3>
+                    <p id="totalTrainers" class="text-2xl font-bold">0</p>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold mb-1">Total NTTC's Issued <i class="fas fa-file"></i></h3>
+                    <p id="totalNTTCs" class="text-2xl font-bold">0</p>
+                </div>
+            </div>
+
+            <!-- Chart Placeholder -->
+            <div class="bg-white bg-opacity-10 p-4 sm:p-6 rounded-lg mb-8">
+                <h3 class="text-xl font-semibold mb-4">Unified TVET Program Registration and Accreditation System (UTPRAS)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Chart containers with improved responsive sizing -->
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4 chart-container">
                         <canvas id="doughnutChart"></canvas>
                     </div>
-                </div>
-                <div class="chart-container">
-                    <button class="close-btn">&times;</button>
-                    <h3>Program Distribution by Province and Status</h3>
-                    <div class="chart-wrapper">
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4 chart-container">
                         <canvas id="utprasProvinceChart"></canvas>
                     </div>
-                </div>
-                <div class="chart-container">
-                    <button class="close-btn">&times;</button>
-                    <h3>Data Distribution by Institution Type</h3>
-                    <div class="chart-wrapper">
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4 chart-container">
                         <canvas id="chart3"></canvas>
                     </div>
-                </div>
-                <div class="chart-container">
-                    <button class="close-btn">&times;</button>
-                    <h3>Program Distribution by Province and Type</h3>
-                    <div class="chart-wrapper">
+                    <div class="bg-gray-200 bg-opacity-20 rounded p-2 sm:p-4 chart-container">
                         <canvas id="chart4"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Add table section -->
-            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container" style="height: 287px; margin-top: 20px;">
-                <table class="w-full">
-                    <thead>
-                        <tr class="bg-black bg-opacity-50">
-                            <th class="p-2 sm:p-3 text-left">Top 5 Sectors</th>
-                            <th class="p-2 sm:p-3 text-left">Top 5 Qualifications</th>
-                            <th class="p-2 sm:p-3 text-left">Top 5 Institutions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="topSectorsBody">
-                        <!-- Data will be populated here -->
-                    </tbody>
-                </table>
+            <!-- Table -->
+            <h3 class="text-xl font-semibold mb-4">UTPRAS Data</h3>
+            <div class="bg-white bg-opacity-10 rounded-lg overflow-hidden table-container relative" style="height: auto;">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[640px]">
+                        <thead>
+                            <tr class="bg-black bg-opacity-50">
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Sectors</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Qualifications</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Institutions</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Trainers</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topSectorsBody" class="divide-y divide-gray-700">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
-
-    <!-- Add mobile navigation -->
-    <nav class="mobile-nav">
-        <div class="mobile-nav-item">
-            <a href="../index.html" style="color: white; text-decoration: none;">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Developed by TESDA Region VII</a>. All rights reserved. - ROD / <a href="ictprofile.html" style="color: inherit; text-decoration: underline;">ICT Unit</a></p>
         </div>
-        <div class="mobile-nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Analytics</span>
-        </div>
-        <div class="mobile-nav-item">
-            <i class="fas fa-users"></i>
-            <span>Users</span>
-        </div>
-        <div class="mobile-nav-item">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </div>
-    </nav>
-
-    <!-- Add mobile menu trigger button -->
-    <button class="mobile-menu-trigger">
-        <i class="fas fa-bars"></i>
-    </button>
-
+    </footer>
+    <!-- Update JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loadingScreen = document.querySelector('.loading-screen');
-            const container = document.querySelector('.container');
-           
-            // Initially hide the main container
-            container.style.display = 'none';
-           
-            // After 3 seconds, fade out loading screen and show content
-            setTimeout(() => {
-                loadingScreen.classList.add('fade-out');
-                container.style.display = 'flex';
-               
-                // Remove loading screen from DOM after fade out
-                setTimeout(() => {
-                    loadingScreen.remove();
-                }, 500);
-            }, 3000);
-        });
+        // Remove all sidebar related JavaScript and add dropdown functionality
+   
 
-        // Sidebar Toggle
-        const toggleBtn = document.querySelector('.toggle-btn');
-        const sidebar = document.querySelector('.sidebar');
-        const menuTexts = document.querySelectorAll('.menu-text');
-
-        // Initially hide the sidebar on mobile
-        if (window.innerWidth <= 768) {
-            sidebar.classList.add('collapsed');
-        }
-
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-        });
-
-        // Chart Configuration
-        const chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'white'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: { color: 'white' }
-                },
-                y: {
-                    ticks: { color: 'white' }
-                }
-            }
-        };
-
-        // Province Count Chart
-        fetch('../r7nttc/data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Process data to count occurrences by sector
-                const sectorCount = {};
-
-                data.forEach(item => {
-                    const sector = item.sector; // Change to use sector instead of province
-
-                    if (!sectorCount[sector]) {
-                        sectorCount[sector] = 0;
-                    }
-                    sectorCount[sector]++;
-                });
-
-                // Sort sectors by count in descending order
-                const sortedSectors = Object.entries(sectorCount)
-                    .sort((a, b) => b[1] - a[1]);
-
-                // Prepare data for the chart
-                const labels = sortedSectors.map(([sector]) => sector);
-                const countData = sortedSectors.map(([, count]) => count);
-
-                // Define colors for the pie chart
-                const backgroundColors = [
-                    '#4CAF50', // Green
-                    '#2196F3', // Blue
-                    '#FFEB3B', // Yellow
-                    '#FF5722', // Orange
-                    '#9C27B0', // Purple
-                    '#795548', // Brown
-                    '#607D8B', // Blue Grey
-                    '#E91E63', // Pink
-                    '#00BCD4', // Cyan
-                    '#FF9800'  // Deep Orange
-                ];
-
-                const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-                new Chart(revenueCtx, {
-                    type: 'pie', // Change to pie chart
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: countData,
-                            backgroundColor: backgroundColors,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    color: 'white'
-                                }
-                            },
-                            title: {
-                                display: true,
-                                color: 'white',
-                                font: {
-                                    size: 16
-                                }
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Fetch data for User Growth Chart
-        fetch('../r7ac/data2.json')
-            .then(response => response.json())
-            .then(data => {
-                // Count occurrences of each qualification
-                const qualificationCount = {};
-                data.forEach(item => {
-                    const qualification = item.J; // Assuming 'J' is the correct key for qualifications
-                    if (!qualificationCount[qualification]) {
-                        qualificationCount[qualification] = 0;
-                    }
-                    qualificationCount[qualification]++;
-                });
-
-                // Get the top 5 qualifications
-                const sortedQualifications = Object.entries(qualificationCount)
-                    .sort((a, b) => b[1] - a[1]) // Sort by count in descending order
-                    .slice(0, 5); // Get top 5
-
-                const labels = sortedQualifications.map(item => item[0]); // Qualification names
-                const countData = sortedQualifications.map(item => item[1]); // Counts
-
-                const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-                new Chart(userGrowthCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Top 5 Qualifications',
-                            data: countData,
-                            backgroundColor: [
-                                '#FF5733', // Bright Red
-                                '#33FF57', // Bright Green
-                                '#3357FF', // Bright Blue
-                                '#FF33A1', // Bright Pink
-                                '#FFB833'  // Bright Orange
-                            ]
-                        }]
-                    },
-                    options: {
-                        ...chartOptions,
-                        indexAxis: 'y'
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Fetch data for Assessment Centers Chart
-        fetch('../r7ac/data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Update the total count of Assessment Centers
-                document.getElementById('totalAssessmentCenters').textContent = data.length;
-
-                // Initialize counts for each sector
-                const assessmentData = {
-                    'Agriculture, Forestry and Fishery': 0,
-                    'Tourism (Hotel and Restaurant)': 0,
-                    'Electrical and Electronics': 0,
-                    'Metals and Engineering': 0,
-                    'Human Health / Health Care': 0,
-                    'Construction': 0,
-                    'Automotive and Land Transportation': 0,
-                    'Social, Community Development and Other Services': 0,
-                    'Garments': 0,
-                    'Maritime': 0,
-                    // Add other sectors as needed
-                };
-
-                // Count occurrences based on the value in column 'I'
-                data.forEach(item => {
-                    if (assessmentData[item.I] !== undefined) {
-                        assessmentData[item.I]++;
-                    }
-                });
-
-                // Sort the assessmentData by count in descending order
-                const sortedAssessmentData = Object.entries(assessmentData)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([key, value]) => `${key}: ${value}`); // Format as "Label: Count"
-
-                // Update the chart with the fetched data
-                const assessmentCentersCtx = document.getElementById('trafficSourcesChart').getContext('2d');
-                new Chart(assessmentCentersCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: sortedAssessmentData.map(item => item.split(':')[0]), // Get only the labels
-                        datasets: [{
-                            data: sortedAssessmentData.map(item => item.split(': ')[1]), // Get only the counts
-                            backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF5722', '#795548', '#607D8B', '#3F51B5', '#FF9800', '#9C27B0'] // Add more colors as needed
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    color: 'white'
-                                }
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Fetch data for Competency Assessors
-        fetch('../r7ac/data2.json')
-            .then(response => response.json())
-            .then(data => {
-                // Update the total count of Competency Assessors
-                document.getElementById('totalCompetencyAssessors').textContent = data.length; // Assuming data.length gives the total count
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Fetch data for NTTC Holders
-        fetch('../r7nttc/data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Update the total count of NTTC Holders
-                document.getElementById('totalNTTCHolders').textContent = data.length; // Assuming data.length gives the total count
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Fetch data for Total Registered Programs
-        fetch('../r7utpras/data.json')
-            .then(response => response.json())
-            .then(data => {
-                // Update the total count of Registered Programs based on the last entry's value in the column "Tota"
-                const totalRegisteredPrograms = data[data.length - 1].Total; // Accessing the last entry's value in column "Tota"
-                document.getElementById('totalRegisteredPrograms').textContent = totalRegisteredPrograms; // Update the content
-            })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Conversion Funnel Chart
-        const conversionFunnelCtx = document.getElementById('conversionFunnelChart').getContext('2d');
-        new Chart(conversionFunnelCtx, {
-            type: 'bar',
-            data: {
-                labels: ['UTPRAS', 'PTCACs', 'Scholarships', 'Planning'],
-                datasets: [{
-                    label: 'Accomplishments Per Unit',
-                    data: [28, 79, 85, 100],
-                    backgroundColor: ['#FF5722', '#4CAF50', '#2196F3', '#FFC107'] // Different colors for each bar
-                }]
-            },
-            options: {
-                ...chartOptions,
-                indexAxis: 'y'
-            }
-        });
-
-        // Mobile menu handling
-        const mobileMenuTrigger = document.querySelector('.mobile-menu-trigger');
-        const overlay = document.querySelector('.overlay');
-
-        mobileMenuTrigger.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // Handle mobile orientation changes
-        window.addEventListener('orientationchange', () => {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            }
-        });
-
-        // Improve chart responsiveness on mobile
-        const chartContainers = document.querySelectorAll('.chart-container');
-        chartContainers.forEach(container => {
-            container.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    this.classList.toggle('expanded');
-                    overlay.classList.toggle('active');
-                }
-            });
-        });
-
+        // Keep existing chart and data fetching functions
         async function fetchData() {
             try {
                 const response = await fetch('../r7utpras/data2.json');
@@ -1043,43 +274,603 @@
                     }
                 });
                 
-                // Update total programs count
-                const totalPrograms = Object.values(programCounts).reduce((a, b) => a + b, 0);
-                document.getElementById('totalPrograms').textContent = totalPrograms;
-                
                 updateDoughnutChart(programCounts);
-                await fetchProvinceData();
-                await fetchChart3Data();
-                await fetchChart4Data();
-                await fetchTopSectorsQualificationsAndInstitutions();
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-        // Add the chart functions from index.html
         function updateDoughnutChart(programCounts) {
-            // ... copy the doughnut chart code from index.html ...
+            const ctx = document.getElementById('doughnutChart').getContext('2d');
+            const doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['WTR', 'NTR', 'COC', 'MTP'],
+                    datasets: [{
+                        data: [
+                            programCounts.WTR,
+                            programCounts.NTR,
+                            programCounts.COC,
+                            programCounts.MTP
+                        ],
+                        backgroundColor: [
+                            '#36A2EB',  // Blue
+                            '#FF6384',  // Pink
+                            '#4BC0C0',  // Teal
+                            '#FFCE56'   // Yellow
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Program Types Distribution',
+                            color: 'white',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         async function fetchProvinceData() {
-            // ... copy the province chart code from index.html ...
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                
+                // Group data by province and program type
+                const provinceData = {};
+                
+                data.forEach(entry => {
+                    const province = entry.B?.trim() || 'Unknown';
+                    const programType = entry.Q?.toUpperCase()?.trim();
+                    
+                    if (!provinceData[province]) {
+                        provinceData[province] = {
+                            'WTR': 0,
+                            'NTR': 0,
+                            'COC': 0,
+                            'MTP': 0,
+                            'Total': 0
+                        };
+                    }
+                    
+                    if (programType && provinceData[province].hasOwnProperty(programType)) {
+                        provinceData[province][programType]++;
+                        provinceData[province].Total++;
+                    }
+                });
+
+                // Prepare data for the chart
+                const sortedProvinces = Object.entries(provinceData)
+                    .sort((a, b) => b[1].Total - a[1].Total)
+                    .map(entry => entry[0]);
+
+                const wtrData = sortedProvinces.map(province => provinceData[province].WTR);
+                const ntrData = sortedProvinces.map(province => provinceData[province].NTR);
+                const mtpData = sortedProvinces.map(province => provinceData[province].MTP);
+                const cocData = sortedProvinces.map(province => provinceData[province].COC);
+
+                const utprasProvinceCtx = document.getElementById('utprasProvinceChart').getContext('2d');
+                new Chart(utprasProvinceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedProvinces,
+                        datasets: [
+                            {
+                                label: 'WTR Programs',
+                                data: wtrData,
+                                backgroundColor: '#4CAF50',
+                                borderColor: '#4CAF50',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'NTR Programs',
+                                data: ntrData,
+                                backgroundColor: '#2196F3',
+                                borderColor: '#2196F3',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'MTP Programs',
+                                data: mtpData,
+                                backgroundColor: '#FFC107',
+                                borderColor: '#FFC107',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'COC Programs',
+                                data: cocData,
+                                backgroundColor: '#FF5722',
+                                borderColor: '#FF5722',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: 'white',
+                                    padding: 10,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Program Distribution by Province and by Status',
+                                color: 'white',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.dataset.label || '';
+                                        const value = context.raw || 0;
+                                        return `${label}: ${value}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching province data:', error);
+            }
         }
 
         async function fetchChart3Data() {
-            // ... copy the chart3 code from index.html ...
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                
+                // Count occurrences of each value in Column P
+                const columnPCounts = {};
+                
+                data.forEach(entry => {
+                    const value = entry.P?.toUpperCase()?.trim();
+                    if (value) {
+                        columnPCounts[value] = (columnPCounts[value] || 0) + 1;
+                    }
+                });
+                
+                updateChart3Doughnut(columnPCounts);
+            } catch (error) {
+                console.error('Error fetching data for Chart 3:', error);
+            }
+        }
+
+        function updateChart3Doughnut(columnPCounts) {
+            const ctx = document.getElementById('chart3').getContext('2d');
+            const doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(columnPCounts),
+                    datasets: [{
+                        data: Object.values(columnPCounts),
+                        backgroundColor: [
+                            '#36A2EB',  // Blue
+                            '#FF6384',  // Pink
+                            '#4BC0C0',  // Teal
+                            '#FFCE56'   // Yellow
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Data Distribution by Institution Type',
+                            color: 'white',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         async function fetchChart4Data() {
-            // ... copy the chart4 code from index.html ...
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                
+                // Group data by province and sector
+                const provinceData = {};
+                
+                data.forEach(entry => {
+                    const province = entry.B?.trim() || 'Unknown';
+                    const sector = entry.P?.trim() || 'Unknown';
+                    
+                    if (!provinceData[province]) {
+                        provinceData[province] = {
+                            sectors: {},
+                            total: 0
+                        };
+                    }
+                    
+                    if (sector) {
+                        provinceData[province].sectors[sector] = (provinceData[province].sectors[sector] || 0) + 1;
+                        provinceData[province].total++;
+                    }
+                });
+
+                // Get unique sectors across all provinces
+                const allSectors = new Set();
+                Object.values(provinceData).forEach(province => {
+                    Object.keys(province.sectors).forEach(sector => allSectors.add(sector));
+                });
+                const sectors = Array.from(allSectors);
+
+                // Prepare data for the chart
+                const provinces = Object.keys(provinceData).sort((a, b) => 
+                    provinceData[b].total - provinceData[a].total
+                );
+
+                // Create datasets for each sector
+                const datasets = sectors.map((sector, index) => ({
+                    label: sector,
+                    data: provinces.map(province => provinceData[province].sectors[sector] || 0),
+                    backgroundColor: `hsl(${(index * 360) / sectors.length}, 70%, 50%)`,
+                    borderColor: `hsl(${(index * 360) / sectors.length}, 70%, 50%)`,
+                    borderWidth: 1
+                }));
+
+                const ctx = document.getElementById('chart4').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: provinces,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: 'white',
+                                    font: {
+                                        size: 10
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Programs by Province and Sector',
+                                color: 'white',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching data for Chart 4:', error);
+            }
         }
 
-        async function fetchTopSectorsQualificationsAndInstitutions() {
-            // ... copy the table data population code from index.html ...
+        async function fetchTopTrainers() {
+            try {
+                const response = await fetch('../r7nttc/data.json');
+                const data = await response.json();
+                
+                // Create a map to store unique trainers and their counts
+                const trainerCounts = new Map();
+                
+                // Process each entry
+                data.forEach(entry => {
+                    // Construct full name with proper formatting
+                    const lastName = (entry.last_name || '').trim();
+                    const firstName = (entry.first_name || '').trim();
+                    const middleInitial = entry.middle_initial ? `${entry.middle_initial.trim()}.` : '';
+                    const extension = entry.extension ? ` ${entry.extension.trim()}` : '';
+                    
+                    // Only process if we have at least a last name and first name
+                    if (lastName && firstName) {
+                        // Format: "LAST NAME, FIRST NAME M. JR"
+                        const fullName = `${lastName.toUpperCase()}, ${firstName.toUpperCase()} ${middleInitial}${extension}`.trim();
+                        
+                        // Increment count for this trainer
+                        trainerCounts.set(fullName, (trainerCounts.get(fullName) || 0) + 1);
+                    }
+                });
+
+                // Convert to array and sort by count (descending)
+                const topTrainers = Array.from(trainerCounts.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Get existing data for other columns from UTPRAS
+                const response2 = await fetch('../r7utpras/data2.json');
+                const utprasData = await response2.json();
+                
+                // Process UTPRAS data for other columns
+                const sectorCounts = {};
+                const qualificationCounts = {};
+                const institutionCounts = {};
+                
+                utprasData.forEach(entry => {
+                    if (entry.R?.trim()) sectorCounts[entry.R.trim()] = (sectorCounts[entry.R.trim()] || 0) + 1;
+                    if (entry.S?.trim()) qualificationCounts[entry.S.trim()] = (qualificationCounts[entry.S.trim()] || 0) + 1;
+                    if (entry.G?.trim()) institutionCounts[entry.G.trim()] = (institutionCounts[entry.G.trim()] || 0) + 1;
+                });
+
+                const topSectors = Object.entries(sectorCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topQualifications = Object.entries(qualificationCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topInstitutions = Object.entries(institutionCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                // Update table
+                const topSectorsBody = document.getElementById('topSectorsBody');
+                topSectorsBody.innerHTML = '';
+
+                // Create rows
+                for (let i = 0; i < 5; i++) {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-gray-800 hover:bg-gray-700';
+                    
+                    row.innerHTML = `
+                        <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topInstitutions[i] ? `${topInstitutions[i][0]} (${topInstitutions[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topTrainers[i] ? `${topTrainers[i][0]} (${topTrainers[i][1]} NTTC${topTrainers[i][1] > 1 ? 's' : ''})` : ''}</td>
+                    `;
+                    
+                    topSectorsBody.appendChild(row);
+                }
+
+                // Update total trainers count (unique trainers)
+                document.getElementById('totalTrainers').textContent = trainerCounts.size.toLocaleString();
+            } catch (error) {
+                console.error('Error fetching and processing trainer data:', error);
+            }
         }
 
-        // Call fetchData when the page loads
-        window.onload = fetchData;
+        async function fetchTotalPrograms() {
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                const totalPrograms = data.length;
+                document.getElementById('totalPrograms').textContent = totalPrograms.toLocaleString();
+            } catch (error) {
+                console.error('Error fetching total programs:', error);
+            }
+        }
+
+        async function fetchTotalInstitutions() {
+            try {
+                const response = await fetch('../r7utpras/data2.json');
+                const data = await response.json();
+                const uniqueInstitutions = new Set(data.map(entry => entry.J?.trim())); // Use Set to get unique values
+                document.getElementById('totalInstitutions').textContent = uniqueInstitutions.size.toLocaleString(); // Update the HTML with the count
+            } catch (error) {
+                console.error('Error fetching total institutions:', error);
+            }
+        }
+
+        async function fetchTotalNTTCs() {
+            try {
+                const response = await fetch('../r7nttc/data.json');
+                const data = await response.json();
+                const totalNTTCs = data.length;
+                document.getElementById('totalNTTCs').textContent = totalNTTCs.toLocaleString();
+            } catch (error) {
+                console.error('Error fetching total NTTCs:', error);
+            }
+        }
+
+        // Update window.onload to call the new function
+        window.onload = function() {
+            fetchData();
+            fetchProvinceData();
+            fetchChart3Data();
+            fetchChart4Data();
+            fetchTopTrainers();
+            fetchTotalPrograms();
+            fetchTotalInstitutions();
+            fetchTotalNTTCs();
+        };
+
+        // Update the screenshot button event listener code
+        document.getElementById('screenshotButton').addEventListener('click', async function() {
+            // Show loading state
+            const button = this;
+            const originalText = button.textContent;
+            button.textContent = 'Capturing...';
+            button.disabled = true;
+
+            try {
+                // Add a small delay to ensure charts are fully rendered
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Capture the main content area
+                const mainContent = document.querySelector('main');
+                
+                // Force a specific size for better quality
+                const width = mainContent.offsetWidth;
+                const height = mainContent.offsetHeight;
+                
+                const canvas = await html2canvas(mainContent, {
+                    backgroundColor: '#000000',
+                    scale: 2,
+                    width: width,
+                    height: height,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: true,
+                    onrendered: function(canvas) {
+                        // This callback ensures the canvas is fully rendered
+                        console.log('Canvas rendered successfully');
+                    },
+                    onclone: function(clonedDoc) {
+                        const clonedMain = clonedDoc.querySelector('main');
+                        
+                        // Apply styles to ensure visibility
+                        clonedMain.style.width = `${width}px`;
+                        clonedMain.style.height = `${height}px`;
+                        clonedMain.style.position = 'relative';
+                        clonedMain.style.background = 'linear-gradient(135deg, #000000, #1e3a8a, #041653)';
+                        
+                        // Ensure all elements are visible
+                        const allElements = clonedMain.getElementsByTagName('*');
+                        for (let el of allElements) {
+                            const style = window.getComputedStyle(el);
+                            if (style.display !== 'none') {
+                                el.style.opacity = '1';
+                                el.style.visibility = 'visible';
+                            }
+                        }
+
+                        // Force charts to render synchronously
+                        const charts = clonedMain.querySelectorAll('canvas');
+                        charts.forEach(chart => {
+                            const originalChart = document.getElementById(chart.id);
+                            if (originalChart) {
+                                const context = chart.getContext('2d');
+                                context.drawImage(originalChart, 0, 0);
+                            }
+                        });
+                    }
+                });
+
+                // Create the final image
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = canvas.width;
+                finalCanvas.height = canvas.height;
+                const ctx = finalCanvas.getContext('2d');
+
+                // Draw gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#000000');
+                gradient.addColorStop(0.5, '#1e3a8a');
+                gradient.addColorStop(1, '#041653');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the content
+                ctx.drawImage(canvas, 0, 0);
+
+                // Convert to blob for better handling of large images
+                finalCanvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    
+                    // Generate filename
+                    const date = new Date();
+                    const filename = `TESDA_R7_Dashboard_${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}.png`;
+                    link.download = filename;
+                    
+                    // Trigger download
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Cleanup
+                    URL.revokeObjectURL(url);
+                }, 'image/png', 1.0);
+
+            } catch (error) {
+                console.error('Screenshot failed:', error);
+                alert('Failed to capture screenshot. Please try again.');
+            } finally {
+                // Restore button state
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
