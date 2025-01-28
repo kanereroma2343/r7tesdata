@@ -114,13 +114,13 @@
         
         // Filter to show only expired entries
         const today = new Date();
-        filteredData = originalData.filter(row => new Date(row.nttc_validity) < today);
+        filteredData = originalData.filter(row => new Date(row.U) < today);
         
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
         tableBody.innerHTML = paginatedData.map(row => {
-            const validityDate = new Date(row.nttc_validity);
+            const validityDate = new Date(row.U);
             const today = new Date();
             const threeMonthsFromNow = new Date();
             threeMonthsFromNow.setMonth(today.getMonth() + 3);
@@ -134,15 +134,15 @@
 
             return `
                 <tr>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
-                    <td>${row.middle_initial || ''}</td>
-                    <td>${row.extension || ''}</td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                    <td>${row.C|| ''}</td>
+                    <td>${row.D || ''}</td>
+                    <td>${row.E || ''}</td>
+                    <td>${row.F || ''}</td>
+                    <td>${row.R || ''}</td>
+                    <td>${row.AB || ''}</td>
+                    <td>${row.AE || ''}</td>
+                    <td>${formatDate(row.AC)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.U)}</td>
                 </tr>
             `;
         }).join("");

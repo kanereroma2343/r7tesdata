@@ -118,12 +118,12 @@
 
         // Apply both date and province filters
         filteredData = originalData.filter(row => {
-            const validityDate = new Date(row.nttc_validity);
+            const validityDate = new Date(row.AD);
             const dateCondition = validityDate > today && validityDate <= threeMonthsFromNow;
             
             // If province filter is set, apply it
             const provinceCondition = currentProvinceFilter 
-                ? row.province === currentProvinceFilter 
+                ? row.B === currentProvinceFilter 
                 : true;
 
             return dateCondition && provinceCondition;
@@ -134,7 +134,7 @@
         const tableBody = document.getElementById("data-table-body");
         
         tableBody.innerHTML = paginatedData.map(row => {
-            const validityDate = new Date(row.nttc_validity);
+            const validityDate = new Date(row.AD);
             const today = new Date();
             const threeMonthsFromNow = new Date();
             threeMonthsFromNow.setMonth(today.getMonth() + 3);
@@ -149,17 +149,16 @@
             return `
                 <tr>
                     <td>${row.province || ''}</td>
-                    <td>${row.last_name || ''}</td>
-                    <td>${row.first_name || ''}</td>
-                    <td>${row.middle_initial || ''}</td>
-                    <td>${row.extension || ''}</td>
-                    <td>${row.qualification || ''}</td>
-                    <td>${row.nttc_cert_number || ''}</td>
-                    <td>${row.nttc_serial_number || ''}</td>
-                    <td>${formatDate(row.nttc_date_issuance)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
-                    <td>${row.email || ''}</td>
-                    <td>${row.contact_number || ''}</td>
+                     <td>${row.D || ''}</td>
+                    <td>${row.E || ''}</td>
+                    <td>${row.F || ''}</td>
+                    <td>${row.R || ''}</td>
+                    <td>${row.AB || ''}</td>
+                    <td>${row.AE || ''}</td>
+                    <td>${formatDate(row.AC)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.AD)}</td>
+                    <td>${row.J || ''}</td>
+                    <td>${row.K || ''}</td>
                 </tr>
             `;
         }).join("");
