@@ -174,7 +174,7 @@
 
         setTimeout(() => {
             tableBody.innerHTML = paginatedData.map(row => {
-                const validityDate = new Date(row.nttc_validity);
+                const validityDate = new Date(row.AD);
                 const today = new Date();
                 const threeMonthsFromNow = new Date();
                 threeMonthsFromNow.setMonth(today.getMonth() + 3);
@@ -188,15 +188,15 @@
 
                 return `
                     <tr>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.last_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.first_name || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.middle_initial || ''}</a></td>
-                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.extension || ''}</a></td>
-                        <td>${row.qualification || ''}</td>
-                        <td>${row.nttc_cert_number || ''}</td>
-                        <td>${row.nttc_serial_number || ''}</td>
-                        <td>${formatDate(row.nttc_date_issuance)}</td>
-                        <td style="color: ${validityColor}">${formatDate(row.nttc_validity)}</td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.C || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.D || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.E || ''}</a></td>
+                        <td><a href="view_record.html?id=${encodeURIComponent(row.id)}" class="record-link">${row.F || ''}</a></td>
+                        <td>${row.R || ''}</td>
+                        <td>${row.AB || ''}</td>
+                        <td>${row.AE || ''}</td>
+                        <td>${formatDate(row.AC)}</td>
+                        <td style="color: ${validityColor}">${formatDate(row.AD)}</td>
                     </tr>
                 `;
             }).join("");
@@ -238,9 +238,9 @@
         debounceTimeout = setTimeout(() => { // Set a new timeout
             const searchTerm = document.getElementById("searchInput").value.toLowerCase(); // Get search term
             filteredData = originalData.filter(row =>
-                [row.last_name, row.first_name, row.middle_initial, row.extension, 
-                 row.qualification, row.nttc_cert_number, row.nttc_serial_number, 
-                 formatDate(row.nttc_date_issuance), formatDate(row.nttc_validity)]
+                [row.C, row.D, row.E, row.F, 
+                 row.R, row.S, row.AE, 
+                 formatDate(row.AC), formatDate(row.AD)]
                 .some(value => value && value.toString().toLowerCase().includes(searchTerm))
             );
             currentPage = 1; 
@@ -281,66 +281,80 @@
 
             // CSV headers
             const headers = [
-                "ID",
-                "Province",
-                "Last Name",
-                "First Name",
-                "Middle Initial",
-                "Extension",
-                "Birthdate",
-                "Sex",
-                "Address",
-                "Training Institution",
-                "Type of Training Institution",
-                "Email",
-                "Contact Number",
-                "Educational Attainment",
-                "Training Hours",
-                "Years of Experience",
-                "Sector",
-                "Qualification",
-                "NC Certificate Number",
-                "NC Date Issuance",
-                "NC Validity",
-                "TM Certificate Number",
-                "TM Date Issuance",
-                "TM Validity",
-                "NTTC Serial Number",
-                "NTTC Certificate Number",
-                "NTTC Date Issuance",
-                "NTTC Validity"
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "T",
+                "U",
+                "V",
+                "W",
+                "X",
+                "Y",
+                "Z",
+                "AA",
+                "AB",
+                "AC",
+                "AD",
+                "AE",
+                "AF",
+                "AG",
+                "AH",
+                "AI"
             ];
 
             // Create rows
             const rows = data.map(entry => [
-                entry.id,
-                entry.province,
-                entry.last_name,
-                entry.first_name,
-                entry.middle_initial,
-                entry.extension,
-                entry.birthdate,
-                entry.sex,
-                entry.address,
-                entry.training_institution,
-                entry.type_training_institution,
-                entry.email,
-                entry.contact_number,
-                entry.educational_attainment,
-                entry.training_hours,
-                entry.years_of_experience,
-                entry.sector,
-                entry.qualification,
-                entry.nc_cert_number,
-                entry.nc_date_issuance,
-                entry.nc_validity,
-                entry.tm_cert_number,
-                entry.tm_date_issuance,
-                entry.tm_validity,
-                entry.nttc_serial_number,
-                entry.nttc_cert_number,
-                entry.nttc_date_issuance,
-                entry.nttc_validity
+                entry.A,  // A
+                entry.B,  // B
+                entry.C,  // C
+                entry.D,  // D
+                entry.E,  // E
+                entry.F,  // F
+                entry.G,  // G
+                entry.H,  // H
+                entry.I,  // I
+                entry.J,  // J
+                entry.K,  // K
+                entry.L,  // L
+                entry.M,  // M
+                entry.N,  // N
+                entry.O,  // O
+                entry.P,  // P
+                entry.Q,  // Q
+                entry.R,  // R
+                entry.S,  // S
+                entry.T,  // T
+                entry.U,  // U
+                entry.V,  // V
+                entry.W,  // W
+                entry.X,  // X
+                entry.Y,  // Y
+                entry.Z,  // Z
+                entry.AA, // AA
+                entry.AB, // AB
+                entry.AC, // AC
+                entry.AD, // AD
+                entry.AE, // AE
+                entry.AF, // AF
+                entry.AG, // AG
+                entry.AH, // AH
+                entry.AI  // AI
             ]);
 
             // Combine headers and rows
