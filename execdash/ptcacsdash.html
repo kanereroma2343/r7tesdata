@@ -808,19 +808,22 @@ body {
                 const uniqueTrainers = new Set();
                 
                 data.forEach(entry => {
-                    // Combine name fields and normalize them
-                    const fullName = [
-                        (entry.last_name || '').trim(),
-                        (entry.first_name || '').trim(),
-                        (entry.middle_initial || '').trim(),
-                        (entry.extension || '').trim()
-                    ].filter(Boolean).join(' ').toUpperCase(); // Convert to uppercase for consistent comparison
+                    // Construct full name with proper formatting
+                    const lastName = (entry.C || '').trim();
+                    const firstName = (entry.D || '').trim();
+                    const middleInitial = entry.E ? `${entry.E.trim()}.` : '';
+                    const extension = entry.F ? ` ${entry.F.trim()}` : '';
                     
-                    // Only add if the name is not empty
-                    if (fullName) {
-                        uniqueTrainers.add(fullName);
+                    // Only process if we have at least a last name and first name
+                    if (lastName && firstName) {
+                        // Format: "LAST NAME, FIRST NAME M. JR"
+                        const fullName = `${lastName.toUpperCase()}, ${firstName.toUpperCase()} ${middleInitial}${extension}`.trim();
+                        
+                        // Increment count for this trainer
+                        trainerCounts.set(fullName, (trainerCounts.get(fullName) || 0) + 1);
                     }
                 });
+
                 
                 // Update the display with the count of unique trainers
                 document.getElementById('totalTrainers').textContent = uniqueTrainers.size.toLocaleString();

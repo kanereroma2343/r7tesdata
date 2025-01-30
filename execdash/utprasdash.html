@@ -646,10 +646,10 @@ body {
                 // Process each entry
                 data.forEach(entry => {
                     // Construct full name with proper formatting
-                    const lastName = (entry.last_name || '').trim();
-                    const firstName = (entry.first_name || '').trim();
-                    const middleInitial = entry.middle_initial ? `${entry.middle_initial.trim()}.` : '';
-                    const extension = entry.extension ? ` ${entry.extension.trim()}` : '';
+                    const lastName = (entry.C || '').trim();
+                    const firstName = (entry.D || '').trim();
+                    const middleInitial = entry.E ? `${entry.E.trim()}.` : '';
+                    const extension = entry.F ? ` ${entry.F.trim()}` : '';
                     
                     // Only process if we have at least a last name and first name
                     if (lastName && firstName) {

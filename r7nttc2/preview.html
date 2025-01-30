@@ -801,6 +801,11 @@
                             <input type="text" id="qualification" name="qualification" placeholder="Enter qualification" required readonly style="text-transform: uppercase; width: calc(118% + 20px); margin-right: 5px; margin-left: -170px;">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="status" style="text-transform: uppercase;">Status</label>
+                        <input type="text" id="status" name="status" placeholder="Enter Status" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+                    </div>
+                </div>
                     
                     <div class="form-group">
                         <label for="nc_cert_number">NC Certificate Number</label>
@@ -1048,6 +1053,7 @@ function savePDF() {
         const sectorValue = params.get('sector') || 'N/A';
         document.getElementById('sector').value = sectorValue.replace(/_/g, ' ');
         document.getElementById('qualification').value = params.get('qualification') || 'N/A';
+        document.getElementById('status').value = params.get('status') || 'N/A';
         document.getElementById('nc_cert_number').value = params.get('nc_cert_number') || 'N/A';
         document.getElementById('nc_date_issuance').value = params.get('nc_date_issuance') || 'N/A';
         document.getElementById('nc_validity').value = params.get('nc_validity') || 'N/A';
@@ -1077,7 +1083,7 @@ function submitForm() {
         "last_name", "first_name", "middle_initial", "extension", "birthdate", "sex",
         "address", "training_institution", "type_training_institution", "contact_number",
         "educational_attainment", "training_hours", "years_of_experience", "sector",
-        "qualification", "nc_cert_number", "nc_date_issuance", "nc_validity",
+        "qualification","status", "nc_cert_number", "nc_date_issuance", "nc_validity",
         "tm_cert_number", "tm_date_issuance", "tm_validity", "assessor1",
         "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
         "nttc_date_issuance", "nttc_validity"
@@ -1237,6 +1243,7 @@ document.getElementById('importButton').addEventListener('click', function() {
                "years_of_experience": document.getElementById('years_of_experience').value,
                "sector": document.getElementById('sector').value,
                 "qualification": document.getElementById('qualification').value,
+                "status": document.getElementById('status').value,
                 "nc_cert_number": document.getElementById('nc_cert_number').value,
                 "nc_date_issuance": document.getElementById('nc_date_issuance').value,
                 "nc_validity": document.getElementById('nc_validity').value,

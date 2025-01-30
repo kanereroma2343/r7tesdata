@@ -165,7 +165,7 @@
     }
 
     function renderTable() {
-        const startIndex = (currentPage - 1) * entriesPerPage;
+        const startIndex = (currentPage - 1) * entriesPerPage + 3;
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
