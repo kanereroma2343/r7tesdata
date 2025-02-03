@@ -165,12 +165,12 @@
     }
 
     function renderTable() {
-        const startIndex = (currentPage - 1) * entriesPerPage + 3;
+        const startIndex = (currentPage - 1) * entriesPerPage;
         const paginatedData = filteredData.slice(startIndex, startIndex + entriesPerPage);
         const tableBody = document.getElementById("data-table-body");
         
         // Fade out the table body before updating
-        tableBody.style.opacity = 0; // Start with invisible
+        tableBody.style.opacity = 0;
 
         setTimeout(() => {
             tableBody.innerHTML = paginatedData.map(row => {
@@ -201,9 +201,8 @@
                 `;
             }).join("");
 
-            // Fade in the table body after updating
-            tableBody.style.opacity = 1; // Make it visible again
-        }, 100); // Delay to allow fade out effect
+            tableBody.style.opacity = 1;
+        }, 100);
         
         renderPagination();
         document.getElementById("entryCount").textContent = `Total Entries: ${filteredData.length}`;
@@ -234,18 +233,32 @@
     }
 
     function searchTable() {
-        clearTimeout(debounceTimeout); // Clear the previous timeout
-        debounceTimeout = setTimeout(() => { // Set a new timeout
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase(); // Get search term
-            filteredData = originalData.filter(row =>
-                [row.C, row.D, row.E, row.F, 
-                 row.R, row.S, row.AE, 
-                 formatDate(row.AC), formatDate(row.AD)]
-                .some(value => value && value.toString().toLowerCase().includes(searchTerm))
-            );
-            currentPage = 1; 
-            renderTable(); // Render the filtered table
-        }, 300); // Adjust the delay as needed (300ms in this case)
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filteredData = originalData;
+            } else {
+                filteredData = originalData.filter(row => {
+                    // Check all relevant fields for the search term
+                    return (
+                        (row.C && row.C.toString().toLowerCase().includes(searchTerm)) || // Last Name
+                        (row.D && row.D.toString().toLowerCase().includes(searchTerm)) || // First Name
+                        (row.E && row.E.toString().toLowerCase().includes(searchTerm)) || // Middle Name
+                        (row.F && row.F.toString().toLowerCase().includes(searchTerm)) || // Extension
+                        (row.R && row.R.toString().toLowerCase().includes(searchTerm)) || // Qualification
+                        (row.AB && row.AB.toString().toLowerCase().includes(searchTerm)) || // Certificate Number
+                        (row.AE && row.AE.toString().toLowerCase().includes(searchTerm)) || // Control Number
+                        (row.AC && formatDate(row.AC).toLowerCase().includes(searchTerm)) || // Date Issuance
+                        (row.AD && formatDate(row.AD).toLowerCase().includes(searchTerm))    // Validity
+                    );
+                });
+            }
+            
+            currentPage = 1;
+            renderTable();
+        }, 300);
     }
 
     loadData();

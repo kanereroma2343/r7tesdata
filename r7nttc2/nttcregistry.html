@@ -210,6 +210,12 @@
         </div>
     </div>
     <script>
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const dataDisplay = document.getElementById('dataDisplay');
             const copyButton = document.getElementById('copyButton');
@@ -222,18 +228,19 @@
                         'last_name', 'first_name', 'middle_initial', 'extension', 'birthdate', 'sex'
                     ],
                     contactInfo: [
-                        'address', 'training_institution', 'type_training_institution'
+                        'address', 'email', 'contact_number'
                     ],
                     trainingInfo: [
-                        'email', 'contact_number', 'educational_attainment',
-                        'training_hours', 'years_of_experience', 'sector', 'qualification'
+                        'educational_attainment', 'training_institution', 'type_training_institution',
+                        'training_hours', 'years_of_experience', 'sector', 'qualification', 
                     ],
                     certificationInfo: [
                         'nc_cert_number', 'nc_date_issuance', 'nc_validity',
-                        'tm_cert_number', 'tm_date_issuance', 'tm_validity'
+                        'tm_cert_number', 'tm_date_issuance', 'tm_validity',
+                      
                     ],
                     assessors: [
-                        'assessor1', 'assessor2', 'assessor3'
+                        'assessor1', 'assessor2', 'assessor3', 'status',
                     ]
                 };
     
@@ -248,7 +255,7 @@
                             html += '<tr>'; // Open a new row
                         }
                         // Populate cells
-                        html += `<td>${key.replace(/_/g, ' ').toUpperCase()}: ${key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : 'N/A') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : 'N/A') : (data[key] ? data[key].toString().toUpperCase() : 'N/A'))}</td>`;
+                        html += `<td>${key.replace(/_/g, ' ').toUpperCase()}: ${key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : 'N/A') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : 'N/A') : (data[key] ? (['birthdate', 'nc_date_issuance', 'nc_validity', 'tm_date_issuance', 'tm_validity'].includes(key) ? formatDate(data[key]) : data[key].toString().toUpperCase()) : 'N/A'))}</td>`;
                         rowCount++; // Increment row count
                     });
                 }
@@ -264,7 +271,7 @@
                     // Extract data in the specified order
                     for (const section in orderedSections) {
                         orderedSections[section].forEach(key => {
-                            copyText.push(key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : 'N/A') : (key === 'extension' ? (data[key] ? data[key] : '') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : 'N/A') : (data[key] ? data[key] : 'N/A'))));
+                            copyText.push(key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : 'N/A') : (key === 'extension' ? (data[key] ? data[key] : '') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : 'N/A') : (data[key] ? (['birthdate', 'nc_date_issuance', 'nc_validity', 'tm_date_issuance', 'tm_validity'].includes(key) ? formatDate(data[key]) : data[key] ) : 'N/A'))));
                         });
                     }
     

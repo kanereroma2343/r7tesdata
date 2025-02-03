@@ -148,15 +148,16 @@
 
             return `
                 <tr>
-                    <td>${row.province || ''}</td>
-                     <td>${row.D || ''}</td>
+                    <td>${row.B || ''}</td>
+                     <td>${row.C || ''}</td>
+                    <td>${row.D || ''}</td>
                     <td>${row.E || ''}</td>
                     <td>${row.F || ''}</td>
                     <td>${row.R || ''}</td>
                     <td>${row.AB || ''}</td>
                     <td>${row.AE || ''}</td>
                     <td>${formatDate(row.AC)}</td>
-                    <td style="color: ${validityColor}">${formatDate(row.AD)}</td>
+                    <td style="color: ${validityColor}">${formatDate(row.AD)}</td> 
                     <td>${row.J || ''}</td>
                     <td>${row.K || ''}</td>
                 </tr>

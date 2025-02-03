@@ -926,17 +926,17 @@
                                 <option value="electrical_and_electronics">Electrical and Electronics</option>
                                 <option value="furniture">Furniture and Fixtures</option>
                                 <option value="garments">Garments and Textiles</option>
-                                <option value="hvac">Heating, Ventilation, Airconditioning and Refrigeration</option>
+                                <option value="heating_ventilation_airconditioning_and_refrigeration">Heating, Ventilation, Airconditioning and Refrigeration</option>
                                 <option value="health">Human Health / Health Care</option>
-                                <option value="ict">Information and Communication Technology</option>
+                                <option value="information_and_communication_technology">Information and Communication Technology</option>
                                 <option value="maritime">Maritime</option>
                                 <option value="metals">Metals and Engineering</option>
-                                <option value="processed_food">Processed Food & Beverages</option>
-                                <option value="social_services">Social, Community Development and Other Services</option>
+                                <option value="processed_food_and_beverages">Processed Food & Beverages</option>
+                                <option value="social_community_development_and_other_services">Social, Community Development and Other Services</option>
                                 <option value="tourism">Tourism (Hotel and Restaurant)</option>
                                 <option value="utilities">Utilities</option>
                                 <option value="visual_arts">Visual Arts</option>
-                                <option value="wholesale_retail">Wholesale and Retail Trading</option>
+                                <option value="wholesale_and_retail_trading">Wholesale and Retail Trading</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -974,7 +974,7 @@
                         <label for="tm_cert_number">TM Certificate Number</label>
                         <div style="display: flex; align-items: center;">
                             <input type="text" value="TMC-" readonly style="width: 60px; margin-right: 5px;">
-                            <input type="text" id="tm_cert_number" name="tm_cert_number" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14">
+                            <input type="text" id="tm_cert_number" name="tm_cert_number" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                         </div>
                     </div>
                     
@@ -1074,7 +1074,7 @@
 
             const tmCertNumberInput = form.querySelector('[name="tm_cert_number"]');
             if (tmCertNumberInput) {
-                const tmCertNumberWithPrefix = 'TMC-' + tmCertNumberInput.value;
+                const tmCertNumberWithPrefix = 'TMC-' + tmCertNumberInput.value.padStart(14, '0'); // Ensure it is 14 digits
                 tmCertNumberInput.value = tmCertNumberWithPrefix; // Update the input value
             }
 
@@ -1211,7 +1211,7 @@
                 "Tailoring NC II",
                 "Industrial Sewing Machine Operation"
             ],
-            hvac: [
+            heating_ventilation_airconditioning_and_refrigeration: [
                 "Air Duct Servicing NC II",
                 "Ice Plant Refrigeration Servicing NC III",
                 "RAC Servicing (DOMRAC) NC II",
@@ -1239,7 +1239,7 @@
                 "Barangay Infectious Disease Management",
                 "Contact Tracing Level II"
             ],
-            ict: [
+            information_and_communication_technology: [
                 "2D Animation NC III",
                 "2D Game Art Development NC III",
                 "3D Animation NC III",
@@ -1298,7 +1298,7 @@
                 "Submerged Arc Welding (SAW) NC II",
                 "Tool and Die Making NC II"
             ],
-            processed_food: [
+            processed_food_and_beverages: [
                 "Fish Products Packaging NC II",
                 "Food Processing NC I",
                 "Food Processing NC II",
@@ -1307,7 +1307,7 @@
                 "Slaughtering Operations (Large Animal) NC II",
                 "Slaughtering Operations (Swine) NC II"
             ],
-            social_services: [
+            social_community_development_and_other_services: [
                 "Barbering NC II",
                 "Beauty Care (Nail Care) Services NC II",
                 "Beauty Care (Skin Care) Services NC II",
@@ -1354,7 +1354,7 @@
                 "Illustration NC II",
                 "Photography NC II"
             ],
-            wholesale_retail: [
+            wholesale_and_retail_trading: [
                 "Customer Services NC II"
             ],
         };

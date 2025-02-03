@@ -158,7 +158,7 @@
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
 
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 6 });
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 3 });
                 const filteredData = jsonData.map((row, index) => ({
                 id: index +1,
                 A: row[0] !== undefined ? row[0] : null,
@@ -189,8 +189,8 @@
                 Z: row[25] !== undefined ? row[25] : null,
                 AA: row[26] !== undefined ? row[26] : null,
                 AB: row[27] !== undefined ? row[27] : null,
-                AC: row[28] !== undefined ? row[28] : null,
-                AD: row[29] !== undefined ? row[29] : null,
+                AC: typeof row[28] === 'number' ? formatDate(row[28]) : row[28] || null,
+                AD: typeof row[29] === 'number' ? formatDate(row[29]) : row[29] || null,
                 AE: row[30] !== undefined ? row[30] : null,
                 AF: row[31] !== undefined ? row[31] : null,
                 AG: row[32] !== undefined ? row[32] : null,
