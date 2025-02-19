@@ -308,35 +308,28 @@
                 loader.style.display = 'block';
                 resultDiv.style.display = 'none';
 
-                const lastNameInput = document.getElementById('lastName');
-                const lastName = lastNameInput ? lastNameInput.value.trim() : '';
-
-                if (!lastName) {
-                    resultDiv.innerHTML = '<p>Please enter a last name.</p>';
-                    resultDiv.style.display = 'block';
-                    loader.style.display = 'none';
-                    return; // Exit the function if last name is empty
-                }
-
-                const dateOfBirth = new Date(document.getElementById('dateOfBirth').value).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-
-                console.log('Searching for:', { lastName, dateOfBirth });
+                const formData = {
+                    lastName: document.getElementById('lastName').value.trim().toUpperCase(),
+                    firstName: document.getElementById('firstName').value.trim().toUpperCase(),
+                    middleInitial: document.getElementById('middleInitial').value.trim().toUpperCase(),
+                    extension: document.getElementById('extension').value.trim().toUpperCase(),
+                    dateOfBirth: formatDateForComparison(document.getElementById('dateOfBirth').value)
+                };
 
                 try {
-                    const response = await fetch('../r7nttc/data.json');
-                    if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status} ${response.statusText}`);
+                    const response = await fetch('data.json');
+                    if (!response.ok) throw new Error(`Failed to fetch data. Status: ${response.status}`);
 
                     const data = await response.json();
-                    console.log('Fetched data:', data);
-
-                    const results = data.filter(entry =>
-                        entry.last_name === lastName &&
-                        entry.birthdate === dateOfBirth
-                    );
+                    
+                    const results = data.filter(entry => {
+                        const matchesName = entry.C.toUpperCase() === formData.lastName;
+                        
+                        const entryDOB = entry.G;
+                        const matchesDOB = entryDOB === formData.dateOfBirth;
+                        
+                        return matchesName && matchesDOB;
+                    });
 
                     if (results.length > 0) {
                         showModal(results);
@@ -346,7 +339,7 @@
                     }
                 } catch (error) {
                     console.error('Fetch error:', error);
-                    resultDiv.innerHTML = `<p>Error: ${error.message}. Please check the server or the file path.</p>`;
+                    resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
                     resultDiv.style.display = 'block';
                 } finally {
                     loader.style.display = 'none';
@@ -359,7 +352,7 @@
             modalSlides.innerHTML = '';
 
             results.forEach(result => {
-                const validityDate = new Date(result.nttc_validity);
+                const validityDate = new Date(result.AD);
                 const currentDate = new Date();
                 const threeMonthsFromNow = new Date();
                 threeMonthsFromNow.setMonth(currentDate.getMonth() + 3);
@@ -377,15 +370,15 @@
 
                 modalSlides.innerHTML += `
                     <div class="modal-slide">
-                        <p><strong>Last Name:</strong> ${result.last_name}</p>
-                        <p><strong>First Name:</strong> ${result.first_name}</p>
-                        <p><strong>Middle Initial:</strong> ${result.middle_initial || ''}</p>
-                        <p><strong>Extension:</strong> ${result.extension || 'N/A'}</p>
-                        <p><strong>Qualification:</strong> ${result.qualification}</p>
-                        <p><strong>Certificate Number:</strong> ${result.nttc_cert_number || 'N/A'}</p>
-                        <p><strong>Control Number:</strong> ${result.nttc_serial_number || 'N/A'}</p>
-                        <p><strong>Date Issuance:</strong> ${formatDate(result.nttc_date_issuance) || 'N/A'}</p>
-                        <p><strong>Validity:</strong> ${formatDate(result.nttc_validity) || 'N/A'}</p>
+                        <p><strong>Region:</strong> ${result.A}</p>
+                        <p><strong>Province:</strong> ${result.B}</p>
+                        <p><strong>Name:</strong> ${result.C}, ${result.D} ${result.E || ''} ${result.F || ''}</p>
+                        <p><strong>Qualification:</strong> ${result.R}</p>
+                        <p><strong>Certificate Number:</strong> ${result.AB}</p>
+                        <p><strong>Control Number:</strong> ${result.AE}</p>
+                        <p><strong>Date of Issuance:</strong> ${formatDate(result.AC)}</p>
+                        <p><strong>Valid Until:</strong> ${formatDate(result.AD)}</p>
+                        <p><strong>Type:</strong> ${result.AF}</p>
                         <p style="color: ${statusColor};"><strong>Status:</strong> ${statusText}</p>
                     </div>`;
             });
@@ -430,11 +423,18 @@
             }
         };
 
-        // Function to format date to "Month Day, Year"
+        function formatDateForComparison(dateString) {
+            const date = new Date(dateString);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${month}/${day}/${year}`;
+        }
+
         function formatDate(dateString) {
-            if (!dateString) return null;
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
+            if (!dateString) return 'N/A';
+            const [month, day, year] = dateString.split('/');
+            return `${month}/${day}/${year}`;
         }
     </script>
 </body>

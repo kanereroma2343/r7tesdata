@@ -669,24 +669,24 @@ body {
 
         async function fetchTopTrainers() {
             try {
-                // Fetch data from r7ac/data.json for sectors
+                // Fetch data from r7ac/data.json for assessment centers
                 const responseAC = await fetch('../r7ac/data.json');
                 const acData = await responseAC.json();
                 
-                // Process sectors from column J
-                const sectorCounts = {};
+                // Process assessment centers from column C
+                const assessmentCenterCounts = {};
                 acData.forEach(entry => {
-                    if (entry.J?.trim()) {
-                        sectorCounts[entry.J.trim()] = (sectorCounts[entry.J.trim()] || 0) + 1;
+                    if (entry.C?.trim()) {
+                        assessmentCenterCounts[entry.C.trim()] = (assessmentCenterCounts[entry.C.trim()] || 0) + 1;
                     }
                 });
 
-                // Get top 5 sectors
-                const topSectors = Object.entries(sectorCounts)
+                // Get top 5 assessment centers
+                const topAssessmentCenters = Object.entries(assessmentCenterCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 5);
 
-                // Get data from r7ac/data2.json for assessor sectors
+                // Rest of the existing code for other columns...
                 const responseAssessors = await fetch('../r7ac/data2.json');
                 const assessorData = await responseAssessors.json();
                 
@@ -752,7 +752,7 @@ body {
                     row.className = 'bg-gray-800 hover:bg-gray-700';
                     
                     row.innerHTML = `
-                        <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
+                        <td class="p-3 break-words">${topAssessmentCenters[i] ? `${topAssessmentCenters[i][0]} (${topAssessmentCenters[i][1]})` : ''}</td>
                         <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
                         <td class="p-3 break-words">${topAssessorSectors[i] ? `${topAssessorSectors[i][0]} (${topAssessorSectors[i][1]})` : ''}</td>
                         <td class="p-3 break-words">${topAssessorQualifications[i] ? `${topAssessorQualifications[i][0]} (${topAssessorQualifications[i][1]})` : ''}</td>
@@ -826,9 +826,9 @@ body {
 
                 
                 // Update the display with the count of unique trainers
-                document.getElementById('totalTrainers').textContent = uniqueTrainers.size.toLocaleString();
+                document.getElementById('totalTrainers').textContent = trainerCounts.size.toLocaleString();
             } catch (error) {
-                console.error('Error fetching total trainers:', error);
+                console.error('Error fetching and processing trainer data:', error);
             }
         }
 
