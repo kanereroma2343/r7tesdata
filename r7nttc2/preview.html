@@ -826,7 +826,6 @@
                     <div class="form-group">
                         <label for="tm_cert_number">TM Certificate Number</label>
                         <div style="display: flex; align-items: center;">
-                            <input type="text" value="TMC-" readonly style="width: 60px; margin-right: 5px;">
                             <input type="text" id="tm_cert_number" name="tm_cert_number" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14" readonly>
                         </div>
                     </div>
@@ -910,7 +909,7 @@ function savePDF() {
         document.getElementById('last_name').value = params.get('last-name') || 'N/A';
         document.getElementById('first_name').value = params.get('first-name') || 'N/A';
         document.getElementById('middle_initial').value = params.get('middle-name') || 'N/A';
-        document.getElementById('extension').value = params.get('extension') || '';
+        document.getElementById('extension').value = params.get('extension');
         document.getElementById('address').value = params.get('address') || 'N/A';
         document.getElementById('city').value = params.get('city') || 'N/A';
         document.getElementById('province').value = params.get('province') || 'N/A';
@@ -977,7 +976,11 @@ function savePDF() {
         const datesInputs = document.querySelectorAll('input[name="dates[]"]');
         const salaryInputs = document.querySelectorAll('input[name="salary[]"]');
         const expYearsInputs = document.querySelectorAll('input[name="years-of-experience[]"]');
-    
+        
+        // Add this check for training_hours
+        const trainingHoursInput = document.getElementById('training_hours');
+        trainingHoursInput.value = params.get('training_hours') || ''; // Do not set to 'N/A' if empty
+
         for (let i = 0; i < companyInputs.length; i++) {
             companyInputs[i].value = params.getAll('company[]')[i] || 'N/A';
             positionInputs[i].value = params.getAll('position[]')[i] || 'N/A';
@@ -996,7 +999,7 @@ function savePDF() {
             trainingTitleInputs[i].value = params.getAll('training-title[]')[i] || 'N/A';
             trainingVenueInputs[i].value = params.getAll('training-venue[]')[i] || 'N/A';
             trainingDatesInputs[i].value = params.getAll('training-dates[]')[i] || 'N/A';
-            trainingHoursInputs[i].value = params.getAll('training-hours[]')[i] || 'N/A';
+            trainingHoursInputs[i].value = params.getAll('training-hours[]')[i] || '';
         }
     
         // 9. Licenses/Examinations
