@@ -930,7 +930,7 @@
                                 <option value="health">Human Health / Health Care</option>
                                 <option value="information_and_communication_technology">Information and Communication Technology</option>
                                 <option value="maritime">Maritime</option>
-                                <option value="metals">Metals and Engineering</option>
+                                <option value="metals_and_engineering">Metals and Engineering</option>
                                 <option value="processed_food_and_beverages">Processed Food & Beverages</option>
                                 <option value="social_community_development_and_other_services">Social, Community Development and Other Services</option>
                                 <option value="tourism">Tourism (Hotel and Restaurant)</option>
@@ -956,7 +956,8 @@
                     
                     <div class="form-group">
                         <label for="nc_cert_number">NC Certificate Number</label>
-                        <input type="text" id="nc_cert_number" name="nc_cert_number" placeholder="Enter NC certificate number" required maxlength="14">
+                        <input type="number" id="nc_cert_number" name="nc_cert_number" placeholder="Enter NC certificate number" required maxlength="14" min="0" oninput="this.value = this.value.slice(0, 14)">
+                        <small style="color: red;">Please enter all 14 digits.</small>
                     </div>
                     
                     <div class="form-row grid">
@@ -1043,7 +1044,8 @@
                 'nttc_serial_number', 
                 'nttc_cert_number', 
                 'nttc_date_issuance', 
-                'nttc_validity'
+                'nttc_validity',
+                'status'
             ];
             
             let missingFields = [];
@@ -1268,7 +1270,7 @@
                 "Ship's Catering Services NC I",
                 "Ships' Catering NC III (Ships' Cooks)"
             ],
-            metals: [
+            metals_and_engineering: [
                 "CAD/CAM Operation NC III",
                 "CNC Lathe Machine Operation NC II",
                 "CNC Lathe Machine Operation NC III",

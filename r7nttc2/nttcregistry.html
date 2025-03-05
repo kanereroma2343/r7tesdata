@@ -255,7 +255,7 @@
                             html += '<tr>'; // Open a new row
                         }
                         // Populate cells
-                        html += `<td>${key.replace(/_/g, ' ').toUpperCase()}: ${key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : 'N/A') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : 'N/A') : (data[key] ? (['birthdate', 'nc_date_issuance', 'nc_validity', 'tm_date_issuance', 'tm_validity'].includes(key) ? formatDate(data[key]) : data[key].toString().toUpperCase()) : 'N/A'))}</td>`;
+                        html += `<td>${key.replace(/_/g, ' ').toUpperCase()}: ${key === 'middle_initial' ? (data[key] && data[key].length > 0 ? data[key][0].toUpperCase() + '.' : '') : (key === 'sector' || key === 'qualification' ? (data[key] ? data[key].toUpperCase() : '') : (data[key] ? (['birthdate', 'nc_date_issuance', 'nc_validity', 'tm_date_issuance', 'tm_validity'].includes(key) ? formatDate(data[key]) : data[key].toString().toUpperCase()) : ''))}</td>`;
                         rowCount++; // Increment row count
                     });
                 }
