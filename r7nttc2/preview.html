@@ -274,6 +274,30 @@
         display: none;
     }
 }
+
+#successModal .modal-content {
+    transform: scale(0.7);
+    transition: transform 0.3s ease-in-out;
+}
+
+#successModal.show .modal-content {
+    transform: scale(1);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ff0000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
     </style>
 </head>
 <body>
@@ -859,7 +883,7 @@
                 <button type="button" class="btn" id="editToggle" onclick="toggleEdit()">Edit Form</button>
                 <button type="button" class="btn btn-secondary" onclick="savePDF()">Save as PDF</button>
                 <button type="button" class="btn btn-primary" id="importButton">Import to NTTC Registry</button>
-                
+                <button type="button" class="btn btn-primary" id="submitToProvincial" style="border: 2px solid #000000;">Submit to Provincial Office</button>
             </div>
         </form>
     </div>
@@ -889,6 +913,25 @@
             <div id="modalContent" style="display: flex; flex-direction: column;">
                 <!-- Information will be populated here -->
             </div>
+        </div>
+    </div>
+
+    <!-- Add this modal HTML before the closing body tag -->
+    <div id="successModal" class="modal">
+        <div class="modal-content" style="background-color: #fff; max-width: 400px; text-align: center; padding: 30px;">
+            <img src="../icons/success.png" alt="Success" style="width: 64px; height: 64px; margin-bottom: 20px;">
+            <h2 style="color: #28a745; margin-bottom: 15px;">Success!</h2>
+            <p style="margin-bottom: 20px;">Your application has been successfully submitted to the Provincial Office.</p>
+            <button class="btn" style="background-color: #28a745;" onclick="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Add this loading modal HTML before the closing body tag -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content" style="background-color: #fff; max-width: 400px; text-align: center; padding: 30px;">
+            <div class="loading-spinner" style="margin-bottom: 20px;"></div>
+            <h2 style="margin-bottom: 15px;">Submitting Application</h2>
+            <p>Please wait while we submit your application...</p>
         </div>
     </div>
 
@@ -1267,5 +1310,129 @@ document.getElementById('importButton').addEventListener('click', function() {
         });
     </script>
     
+    <!-- Add these before the closing </body> tag -->
+    <script type="module">
+      // Import the Firebase SDK
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+      // Your Firebase configuration
+      const firebaseConfig = {
+        // Replace with your Firebase config details
+        apiKey: "AIzaSyAmgjzLx4mVkeWyfjwKNMtxmL9o1BesaW0",
+  authDomain: "sampleform-fd82e.firebaseapp.com",
+  projectId: "sampleform-fd82e",
+  storageBucket: "sampleform-fd82e.firebasestorage.app",
+  messagingSenderId: "129137441476",
+  appId: "1:129137441476:web:e29e8ca547b93aa1d3a791",
+  measurementId: "G-DZMYEG4NHL"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      // Get the submit button by its ID
+      const submitButton = document.getElementById('submitToProvincial');
+
+      // Add click event listener to the submit button
+      submitButton.addEventListener('click', async function() {
+        // Show loading modal
+        const loadingModal = document.getElementById('loadingModal');
+        loadingModal.style.display = 'block';
+        
+        // Disable submit button
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+
+        try {
+            // Collect form data
+            const formData = {
+                personalInfo: {
+                    lastName: document.getElementById('last_name').value,
+                    firstName: document.getElementById('first_name').value,
+                    middleInitial: document.getElementById('middle_initial').value,
+                    extension: document.getElementById('extension').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    province: document.getElementById('province').value,
+                    region: document.getElementById('region').value,
+                    email: document.getElementById('email').value,
+                    contact: document.getElementById('contact').value
+                },
+                applicationDetails: {
+                    sector: document.getElementById('sector').value,
+                    qualification: document.getElementById('qualification').value,
+                    status: document.getElementById('status').value,
+                    ncCertNumber: document.getElementById('nc_cert_number').value,
+                    ncDateIssuance: document.getElementById('nc_date_issuance').value,
+                    ncValidity: document.getElementById('nc_validity').value,
+                    tmCertNumber: document.getElementById('tm_cert_number').value,
+                    tmDateIssuance: document.getElementById('tm_date_issuance').value,
+                    tmValidity: document.getElementById('tm_validity').value
+                },
+                assessors: {
+                    assessor1: document.getElementById('assessor1').value,
+                    assessor2: document.getElementById('assessor2').value,
+                    assessor3: document.getElementById('assessor3').value
+                },
+                submissionDate: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            // Create a reference to the 'applications' node in your database
+            const applicationsRef = ref(db, 'applications');
+            
+            // Push the data to Firebase
+            const result = await push(applicationsRef, formData);
+            
+            // Hide loading modal
+            loadingModal.style.display = 'none';
+            
+            if (result.key) {
+                // Show success modal
+                const successModal = document.getElementById('successModal');
+                successModal.style.display = 'block';
+                setTimeout(() => {
+                    successModal.classList.add('show');
+                }, 10);
+                
+                console.log('Application submitted successfully with ID:', result.key);
+            } else {
+                throw new Error('Failed to get submission ID');
+            }
+            
+        } catch (error) {
+            // Hide loading modal
+            loadingModal.style.display = 'none';
+            
+            console.error('Error submitting application:', error);
+            alert('Error submitting application. Please try again.');
+        } finally {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit to Provincial Office';
+        }
+    });
+    </script>
+
+    <!-- Add this function to handle closing the success modal -->
+    <script>
+        function closeSuccessModal() {
+            const successModal = document.getElementById('successModal');
+            successModal.classList.remove('show');
+            setTimeout(() => {
+                successModal.style.display = 'none';
+            }, 300);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const successModal = document.getElementById('successModal');
+            if (event.target === successModal) {
+                closeSuccessModal();
+            }
+        }
+    </script>
 </body>
 </html>
