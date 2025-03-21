@@ -1076,7 +1076,7 @@
 
             const tmCertNumberInput = form.querySelector('[name="tm_cert_number"]');
             if (tmCertNumberInput) {
-                const tmCertNumberWithPrefix = 'TMC-' + tmCertNumberInput.value.padStart(14, '0'); // Ensure it is 14 digits
+                const tmCertNumberWithPrefix = '' + tmCertNumberInput.value.padStart(14, '0'); // Ensure it is 14 digits
                 tmCertNumberInput.value = tmCertNumberWithPrefix; // Update the input value
             }
 
