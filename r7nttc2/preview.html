@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Add these Firebase SDK imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        
+        // Make Firebase functions globally available
+        window.initializeApp = initializeApp;
+        window.getDatabase = getDatabase;
+        window.ref = ref;
+        window.push = push;
+    </script>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="../icons/t7logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -273,6 +285,160 @@
     #photo-upload {
         display: none;
     }
+}
+
+#successModal .modal-content {
+    transform: scale(0.7);
+    transition: transform 0.3s ease-in-out;
+}
+
+#successModal.show .modal-content {
+    transform: scale(1);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #ff0000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 768px) {
+    .fixed-container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+
+    /* Header adjustments */
+    header {
+        flex-direction: column;
+        align-items: center !important;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem !important;
+        margin-top: 10px !important;
+    }
+
+    header h3 {
+        font-size: 1rem !important;
+    }
+
+    /* ID Picture container adjustment */
+    header div[style*="flex: 0 1 400px"] {
+        width: 200px !important;
+        height: 200px !important;
+        margin: 20px auto !important;
+    }
+
+    /* Form elements adjustments */
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    input[type="email"],
+    input[type="time"],
+    select,
+    textarea {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    /* Table adjustments */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        min-width: 120px;
+        padding: 8px;
+    }
+
+    /* Button adjustments */
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+}
+
+/* Tablet-specific adjustments */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .fixed-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    header div[style*="flex: 0 1 400px"] {
+        width: 300px !important;
+        height: 300px !important;
+    }
+}
+
+/* Print styles - keep them unchanged */
+@media print {
+    .grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    }
+
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+
+    .btn {
+        display: none;
+    }
+
+    #photo-upload {
+        display: none;
+    }
+}
+
+#importButton {
+    position: relative;
+    min-width: 200px;
+}
+
+#importButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.spinner-border {
+    margin-right: 8px;
 }
     </style>
 </head>
@@ -802,8 +968,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="status" style="text-transform: uppercase;">Status</label>
-                        <input type="text" id="status" name="status" placeholder="Enter Status" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+                        <label for="nttcstatus" style="text-transform: uppercase;">NTTC Status</label>
+                        <input type="text" id="nttcstatus" name="nttcstatus" placeholder="Enter NTTC Status" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
                     </div>
                 </div>
                     
@@ -826,7 +992,14 @@
                     <div class="form-group">
                         <label for="tm_cert_number">TM Certificate Number</label>
                         <div style="display: flex; align-items: center;">
-                            <input type="text" id="tm_cert_number" name="tm_cert_number" placeholder="Enter 14 digits" required pattern="^\d{14}$" title="Enter 14 digits only" maxlength="14" readonly>
+                            <input type="text" value="TMC-" readonly style="width: 60px; background-color: #f0f0f0; border: 1px solid #ccc; padding: 10px; margin-right: -1px; border-radius: 4px 0 0 4px;">
+                            <input type="text" id="tm_cert_number_actual" name="tm_cert_number_actual" 
+                                placeholder="Enter 14 digits" 
+                                required 
+                                pattern="[0-9]{14}" 
+                                maxlength="14" 
+                                style="width: calc(100% - 60px); border-radius: 0 4px 4px 0;"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 14);">
                         </div>
                     </div>
                     
@@ -859,7 +1032,9 @@
                 <button type="button" class="btn" id="editToggle" onclick="toggleEdit()">Edit Form</button>
                 <button type="button" class="btn btn-secondary" onclick="savePDF()">Save as PDF</button>
                 <button type="button" class="btn btn-primary" id="importButton">Import to NTTC Registry</button>
-                
+                <button type="button" class="btn btn-primary" id="sendToPO" onclick="sendToProvincialOffice()" style="border: 2px solid #000000;">
+                    Send Application to Provincial Office
+                </button>
             </div>
         </form>
     </div>
@@ -889,6 +1064,37 @@
             <div id="modalContent" style="display: flex; flex-direction: column;">
                 <!-- Information will be populated here -->
             </div>
+        </div>
+    </div>
+
+    <!-- Add this modal HTML before the closing body tag -->
+    <div id="successModal" class="modal">
+        <div class="modal-content" style="background-color: #fff; max-width: 400px; text-align: center; padding: 30px;">
+            <img src="../icons/success.png" alt="Success" style="width: 64px; height: 64px; margin-bottom: 20px;">
+            <h2 style="color: #28a745; margin-bottom: 15px;">Success!</h2>
+            <p style="margin-bottom: 20px;">Your application has been successfully submitted to the Provincial Office.</p>
+            <button class="btn" style="background-color: #28a745;" onclick="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Add this loading modal HTML before the closing body tag -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content" style="background-color: #fff; max-width: 400px; text-align: center; padding: 30px;">
+            <div class="loading-spinner" style="margin-bottom: 20px;"></div>
+            <h2 style="margin-bottom: 15px;">Submitting Application</h2>
+            <p>Please wait while we submit your application...</p>
+        </div>
+    </div>
+
+    <!-- Add a modal for displaying the ticket number -->
+    <div id="ticketModal" class="modal">
+        <div class="modal-content" style="background-color: #fff; max-width: 400px; text-align: center; padding: 30px;">
+            <img src="../icons/success.png" alt="Success" style="width: 64px; height: 64px; margin-bottom: 20px;">
+            <h2 style="color: #28a745; margin-bottom: 15px;">Application Sent Successfully!</h2>
+            <p style="margin-bottom: 20px;">Your ticket number is:</p>
+            <h3 id="ticketNumber" style="color: #ff0000; font-size: 24px; margin-bottom: 20px;"></h3>
+            <p style="margin-bottom: 20px;">Please keep this number for your records. You will need it when visiting the Provincial Office.</p>
+            <button class="btn" style="background-color: #28a745;" onclick="closeTicketModal()">OK</button>
         </div>
     </div>
 
@@ -1056,11 +1262,11 @@ function savePDF() {
         const sectorValue = params.get('sector') || 'N/A';
         document.getElementById('sector').value = sectorValue.replace(/_/g, ' ');
         document.getElementById('qualification').value = params.get('qualification') || 'N/A';
-        document.getElementById('status').value = params.get('status') || 'N/A';
+        document.getElementById('nttcstatus').value = params.get('nttcstatus') || 'N/A';
         document.getElementById('nc_cert_number').value = params.get('nc_cert_number') || 'N/A';
         document.getElementById('nc_date_issuance').value = params.get('nc_date_issuance') || 'N/A';
         document.getElementById('nc_validity').value = params.get('nc_validity') || 'N/A';
-        document.getElementById('tm_cert_number').value = params.get('tm_cert_number') || 'N/A';
+        document.getElementById('tm_cert_number_actual').value = params.get('tm_cert_number') || 'N/A';
         document.getElementById('tm_date_issuance').value = params.get('tm_date_issuance') || 'N/A';
         document.getElementById('tm_validity').value = params.get('tm_validity') || 'N/A';
         document.getElementById('assessor1').value = params.get('assessor1') || 'N/A';
@@ -1071,11 +1277,12 @@ function savePDF() {
         const trainingInstitutionInput = document.getElementById('training_institution');
         const typeTrainingInstitutionInput = document.getElementById('type_training_institution');
         const educationalAttainmentInput = document.getElementById('educational_attainment');
-
+        
         yearsOfExperienceInput.value = params.get('years_of_experience') || 'N/A';
         trainingInstitutionInput.value = params.get('training_institution') || 'N/A';
         typeTrainingInstitutionInput.value = params.get('type_training_institution') || '';
         educationalAttainmentInput.value = params.get('educational_attainment') || '';
+        
     }
     
     // Call the function when the page loads
@@ -1086,10 +1293,10 @@ function submitForm() {
         "last_name", "first_name", "middle_initial", "extension", "birthdate", "sex",
         "address", "training_institution", "type_training_institution", "contact_number",
         "educational_attainment", "training_hours", "years_of_experience", "sector",
-        "qualification","status", "nc_cert_number", "nc_date_issuance", "nc_validity",
-        "tm_cert_number", "tm_date_issuance", "tm_validity", "assessor1",
+        "qualification","nttcstatus", "nc_cert_number", "nc_date_issuance", "nc_validity",
+        "tm_cert_number_actual", "tm_date_issuance", "tm_validity", "assessor1",
         "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
-        "nttc_date_issuance", "nttc_validity"
+        "nttc_date_issuance", "nttc_validity", "status"
     ];
 
     // Dynamically create form fields only if formContainer exists
@@ -1187,7 +1394,7 @@ function openModal() {
         "address", "training_institution", "type_training_institution", "contact_number",
         "educational_attainment", "training_hours", "years_of_experience", "sector",
         "qualification", "nc_cert_number", "nc_date_issuance", "nc_validity",
-        "tm_cert_number", "tm_date_issuance", "tm_validity", "assessor1",
+        "tm_cert_number_actual", "tm_date_issuance", "tm_validity", "assessor1",
         "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
         "nttc_date_issuance", "nttc_validity"
     ];
@@ -1227,45 +1434,363 @@ window.onclick = function(event) {
     }
 };
 
-document.getElementById('importButton').addEventListener('click', function() {
-            // This is example data. In a real application, you'd fetch this data from your backend or form.
-            const data = {
-                "last_name": document.getElementById('last_name').value,
-                "first_name": document.getElementById('first_name').value,
-                "middle_initial": document.getElementById('middle_initial').value,
-                "extension": document.getElementById('extension').value,
-                "birthdate": document.getElementById('birthdate').value,
-                "sex": document.getElementById('sex').value,
-                "address": document.getElementById('address').value,
-                "training_institution": document.getElementById('training_institution').value,
-                "type_training_institution": document.getElementById('type_training_institution').value,
-                "email": document.getElementById('email').value,
-                "contact_number": document.getElementById('contact').value,
-                "educational_attainment": "Bachelor's Degree",
-               "training_hours": document.getElementById('training_hours').value,
-               "years_of_experience": document.getElementById('years_of_experience').value,
-               "sector": document.getElementById('sector').value,
-                "qualification": document.getElementById('qualification').value,
-                "status": document.getElementById('status').value,
-                "nc_cert_number": document.getElementById('nc_cert_number').value,
-                "nc_date_issuance": document.getElementById('nc_date_issuance').value,
-                "nc_validity": document.getElementById('nc_validity').value,
-               "tm_cert_number": document.getElementById('tm_cert_number').value,
-                "tm_date_issuance": document.getElementById('tm_date_issuance').value,
-                "tm_validity": document.getElementById('tm_validity').value,
-                "assessor1": document.getElementById('assessor1').value,
-                "assessor2": document.getElementById('assessor2').value,
-                "assessor3": document.getElementById('assessor3').value,
+document.getElementById('importButton').addEventListener('click', async function() {
+    try {
+        // Disable button and show loading state
+        const importButton = this;
+        const originalText = importButton.innerHTML;
+        importButton.disabled = true;
+        importButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Importing...';
 
-            };
+        // Helper function to safely get input value
+        const getValue = (elementId) => {
+            const element = document.getElementById(elementId);
+            return element ? element.value : '';
+        };
 
-            // Store the data in localStorage
-            localStorage.setItem('nttcData', JSON.stringify(data));
+        // Collect all required data
+    const data = {
+            "last_name": getValue('last_name'),
+            "first_name": getValue('first_name'),
+            "middle_initial": getValue('middle_initial'),
+            "extension": getValue('extension'),
+            "birthdate": getValue('birthdate'),
+            "sex": getValue('sex'),
+            "address": getValue('address'),
+            "training_institution": getValue('training_institution'),
+            "type_training_institution": getValue('type_training_institution'),
+            "email": getValue('email'),
+            "contact_number": getValue('contact'),
+            "educational_attainment": getValue('educational_attainment') || "Bachelor's Degree",
+            "training_hours": getValue('training_hours'),
+            "years_of_experience": getValue('years_of_experience'),
+            "sector": getValue('sector'),
+            "qualification": getValue('qualification'),
+            "nttcstatus": getValue('nttcstatus') || 'Pending',
+            "nc_cert_number": getValue('nc_cert_number'),
+            "nc_date_issuance": getValue('nc_date_issuance'),
+            "nc_validity": getValue('nc_validity'),
+            "tm_cert_number": getValue('tm_cert_number_actual'),
+            "tm_date_issuance": getValue('tm_date_issuance'),
+            "tm_validity": getValue('tm_validity'),
+            "assessor1": getValue('assessor1'),
+            "assessor2": getValue('assessor2'),
+            "assessor3": getValue('assessor3'),
+            // Remove the conflicting 'status' field since it's handled by applicationStatus
+            "applicationStatus": getValue('status') || 'Pending', // Renamed from 'status' to 'applicationStatus'
+            "importDate": new Date().toISOString(),
+            "province": getValue('province'),
+            "region": getValue('region'),
+            "city": getValue('city')
+        };
 
-            // Redirect to the nttcregistry.html page
-            window.location.href = 'nttcregistry.html';
+        // Validate required fields
+        const requiredFields = [
+            'last_name', 'first_name', 'contact_number', 
+            'sector', 'qualification', 'training_institution'
+        ];
+
+        const missingFields = requiredFields.filter(field => !data[field]);
+        
+        if (missingFields.length > 0) {
+            throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+        }
+
+        // Store in localStorage
+    localStorage.setItem('nttcData', JSON.stringify(data));
+
+        // Show success message
+        Swal.fire({
+            title: 'Success!',
+            text: 'Application data has been prepared for NTTC Registry',
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: 'Go to Registry',
+            cancelButtonText: 'Stay Here'
+        }).then((result) => {
+            if (result.isConfirmed) {
+    window.location.href = 'nttcregistry.html';
+            } else {
+                // Reset button state if staying on page
+                importButton.disabled = false;
+                importButton.innerHTML = originalText;
+            }
         });
-    </script>
+
+    } catch (error) {
+        console.error('Error preparing NTTC data:', error);
+        
+        // Show error message
+        Swal.fire({
+            title: 'Error!',
+            text: error.message || 'Failed to prepare NTTC data. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        }).finally(() => {
+            // Reset button state
+            importButton.disabled = false;
+            importButton.innerHTML = originalText;
+        });
+    }
+});
+
+// Update the setNCValidity function to calculate exactly 5 years minus 1 day
+function setNCValidity() {
+    const issuanceDate = document.getElementById('nc_date_issuance').value;
+    const validityInput = document.getElementById('nc_validity');
+
+    if (issuanceDate) {
+        const date = new Date(issuanceDate);
+        date.setFullYear(date.getFullYear() + 5); // Add 5 years
+        date.setDate(date.getDate() - 1); // Subtract 1 day
+        validityInput.value = date.toISOString().split('T')[0];
+    } else {
+        validityInput.value = '';
+    }
+}
+
+// Update the setTMValidity function to calculate exactly 5 years minus 1 day
+function setTMValidity() {
+    const issuanceDate = document.getElementById('tm_date_issuance').value;
+    const validityInput = document.getElementById('tm_validity');
+
+    if (issuanceDate) {
+        const date = new Date(issuanceDate);
+        date.setFullYear(date.getFullYear() + 5); // Add 5 years
+        date.setDate(date.getDate() - 1); // Subtract 1 day
+        validityInput.value = date.toISOString().split('T')[0];
+    } else {
+        validityInput.value = '';
+    }
+}
+
+// Update the handleTMCertInput function with a stricter implementation
+function handleTMCertInput(input) {
+    // First, get the current value
+    let value = input.value;
     
+    // Strip all TMC- prefixes and any non-numeric characters
+    value = value.replace(/""/g, '').replace(/[^0-9]/g, '');
+    
+    // Limit to 14 digits
+    value = value.slice(0, 14);
+    
+    // Add single TMC- prefix
+        value = '' + value;
+    
+    // Set the cleaned value
+    input.value = value;
+    
+    // Store the cleaned value in localStorage to persist it
+    localStorage.setItem('tmCertNumber', value);
+}
+
+// Add form submit handler
+document.getElementById('tesdaForm').addEventListener('submit', function(e) {
+        const tmCertInput = document.getElementById('tm_cert_number_actual');
+    if (tmCertInput) {
+            handleTMCertInput(tmCertInput);
+    }
+});
+
+// Add this to your existing DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    const tmCertInput = document.getElementById('tm_cert_number_actual');
+    if (tmCertInput) {
+        // Restore from localStorage if exists
+        const savedValue = localStorage.getItem('tmCertNumber');
+        if (savedValue) {
+            tmCertInput.value = savedValue;
+        }
+        
+        // Clean up on load
+        handleTMCertInput(tmCertInput);
+        
+        // Add input event listener
+        tmCertInput.addEventListener('input', function() {
+            handleTMCertInput(this);
+        });
+        
+        // Add focus event listener
+        tmCertInput.addEventListener('focus', function() {
+            handleTMCertInput(this);
+        });
+        
+        // Add blur event listener
+        tmCertInput.addEventListener('blur', function() {
+            handleTMCertInput(this);
+        });
+    }
+});
+
+// Handle browser back button
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        const tmCertInput = document.getElementById('tm_cert_number_actual');
+        if (tmCertInput) {
+            handleTMCertInput(tmCertInput);
+        }
+    }
+};
+
+// Add this to prevent multiple TMC- on form submission
+if (document.getElementById('importButton')) {
+    document.getElementById('importButton').addEventListener('click', function() {
+        const tmCertInput = document.getElementById('tm_cert_number_actual');
+        if (tmCertInput) {
+            handleTMCertInput(tmCertInput);
+        }
+    });
+}
+
+if (document.getElementById('submitToProvincial')) {
+    document.getElementById('submitToProvincial').addEventListener('click', function() {
+        const tmCertInput = document.getElementById('tm_cert_number_actual');
+        if (tmCertInput) {
+            handleTMCertInput(tmCertInput);
+        }
+    });
+}
+
+async function sendToProvincialOffice() {
+    try {
+        // Show loading modal
+        document.getElementById('loadingModal').style.display = 'block';
+
+        // Generate ticket number
+        const timestamp = new Date().getTime();
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        const ticketNumber = `PO-${timestamp}-${random}`;
+
+        // Initialize Firebase if not already initialized
+        if (!window.db) {
+            const firebaseConfig = {
+                apiKey: "AIzaSyAmgjzLx4mVkeWyfjwKNMtxmL9o1BesaW0",
+                authDomain: "sampleform-fd82e.firebaseapp.com",
+                projectId: "sampleform-fd82e",
+                storageBucket: "sampleform-fd82e.firebasestorage.app",
+                messagingSenderId: "129137441476",
+                appId: "1:129137441476:web:e29e8ca547b93aa1d3a791",
+                measurementId: "G-DZMYEG4NHL"
+            };
+            
+            const app = window.initializeApp(firebaseConfig);
+            window.db = window.getDatabase(app);
+        }
+
+        // Generate PDF
+        const element = document.getElementById('tesdaForm');
+        const opt = {
+            margin: 1,
+            filename: `application_${ticketNumber}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+        
+        // Convert blob to base64
+        const base64PDF = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(pdfBlob);
+        });
+
+        // Prepare application data
+        const applicationData = {
+            ticketNumber: ticketNumber,
+            personalInfo: {
+                lastName: document.getElementById('last_name').value,
+                firstName: document.getElementById('first_name').value,
+                middleInitial: document.getElementById('middle_initial').value,
+                contact: document.getElementById('contact').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                province: document.getElementById('province').value,
+                region: document.getElementById('region').value
+            },
+            applicationDetails: {
+                sector: document.getElementById('sector').value,
+                qualification: document.getElementById('qualification').value,
+                ncCertNumber: document.getElementById('nc_cert_number').value,
+                ncDateIssuance: document.getElementById('nc_date_issuance').value,
+                ncValidity: document.getElementById('nc_validity').value,
+                tmCertNumber: document.getElementById('tm_cert_number_actual').value,
+                tmDateIssuance: document.getElementById('tm_date_issuance').value,
+                tmValidity: document.getElementById('tm_validity').value,
+                status: 'pending',
+                submissionDate: new Date().toISOString()
+            },
+            assessors: {
+                assessor1: document.getElementById('assessor1').value,
+                assessor2: document.getElementById('assessor2').value,
+                assessor3: document.getElementById('assessor3').value
+            },
+            pdfDocument: base64PDF
+        };
+
+        // Save to Firebase
+        const applicationsRef = window.ref(window.db, 'applications');
+        await window.push(applicationsRef, applicationData);
+
+        // Hide loading modal
+        document.getElementById('loadingModal').style.display = 'none';
+
+        // Show ticket modal
+        const ticketModal = document.getElementById('ticketModal');
+        document.getElementById('ticketNumber').textContent = ticketNumber;
+        ticketModal.style.display = 'block';
+        setTimeout(() => {
+            ticketModal.classList.add('show');
+        }, 10);
+
+        // Save ticket number to localStorage
+        localStorage.setItem('lastTicketNumber', ticketNumber);
+
+    } catch (error) {
+        console.error('Error sending application:', error);
+        document.getElementById('loadingModal').style.display = 'none';
+        alert(`Error sending application: ${error.message}`);
+    }
+}
+
+function closeTicketModal() {
+    const ticketModal = document.getElementById('ticketModal');
+    ticketModal.classList.remove('show');
+    setTimeout(() => {
+        ticketModal.style.display = 'none';
+    }, 300);
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const ticketModal = document.getElementById('ticketModal');
+    if (event.target === ticketModal) {
+        closeTicketModal();
+    }
+}
+
+    </script>
+
+    <!-- Add this function to handle closing the success modal -->
+    <script>
+        function closeSuccessModal() {
+            const successModal = document.getElementById('successModal');
+            successModal.classList.remove('show');
+            setTimeout(() => {
+                successModal.style.display = 'none';
+            }, 300);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const successModal = document.getElementById('successModal');
+            if (event.target === successModal) {
+                closeSuccessModal();
+            }
+        }
+    </script>
 </body>
 </html>

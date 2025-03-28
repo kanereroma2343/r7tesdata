@@ -150,11 +150,11 @@
 
         // Count sectors and qualifications
         data.forEach(entry => {
-            if (entry.sector) {
-                sectorCount[entry.sector] = (sectorCount[entry.sector] || 0) + 1;
+            if (entry.Q) {
+                sectorCount[entry.Q] = (sectorCount[entry.Q] || 0) + 1;
             }
-            if (entry.qualification) {
-                qualificationCount[entry.qualification] = (qualificationCount[entry.qualification] || 0) + 1;
+            if (entry.R) {
+                qualificationCount[entry.R] = (qualificationCount[entry.R] || 0) + 1;
             }
         });
 

@@ -197,7 +197,7 @@ body {
                 </div>
                 
                 <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold mb-1">Total NTTC's Issued <i class="fas fa-file"></i></h3>
+                    <h3 class="text-lg font-semibold mb-1">Total Active NTTC's <i class="fas fa-file"></i></h3>
                     <p id="totalNTTCs" class="text-2xl font-bold">0</p>
                 </div>
                 
@@ -230,9 +230,9 @@ body {
                     <table class="w-full min-w-[640px]">
                         <thead>
                             <tr class="bg-black bg-opacity-50">
-                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Sectors</th>
-                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Qualifications</th>
-                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Institutions</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Sectors - Program Registration</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Qualifications - Program Registration</th>
+                                <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Institutions - Program Registration</th>
                                 <th class="p-2 sm:p-3 text-left whitespace-nowrap">Top 5 Trainers</th>
                             </tr>
                         </thead>
@@ -270,7 +270,7 @@ body {
                 };
                 
                 data.forEach(entry => {
-                    const programType = entry.Q?.toUpperCase()?.trim();
+                    const programType = entry.R?.toUpperCase()?.trim();
                     if (programCounts.hasOwnProperty(programType)) {
                         programCounts[programType]++;
                     }
@@ -348,7 +348,7 @@ body {
                 
                 data.forEach(entry => {
                     const province = entry.B?.trim() || 'Unknown';
-                    const programType = entry.Q?.toUpperCase()?.trim();
+                    const programType = entry.R?.toUpperCase()?.trim();
                     
                     if (!provinceData[province]) {
                         provinceData[province] = {
@@ -677,8 +677,8 @@ body {
                 const institutionCounts = {};
                 
                 utprasData.forEach(entry => {
-                    if (entry.R?.trim()) sectorCounts[entry.R.trim()] = (sectorCounts[entry.R.trim()] || 0) + 1;
-                    if (entry.S?.trim()) qualificationCounts[entry.S.trim()] = (qualificationCounts[entry.S.trim()] || 0) + 1;
+                    if (entry.S?.trim()) sectorCounts[entry.S.trim()] = (sectorCounts[entry.S.trim()] || 0) + 1;
+                    if (entry.T?.trim()) qualificationCounts[entry.T.trim()] = (qualificationCounts[entry.T.trim()] || 0) + 1;
                     if (entry.G?.trim()) institutionCounts[entry.G.trim()] = (institutionCounts[entry.G.trim()] || 0) + 1;
                 });
 
