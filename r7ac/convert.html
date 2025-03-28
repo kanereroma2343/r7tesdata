@@ -139,7 +139,7 @@
                 const worksheet = workbook.Sheets[sheetName];
 
                 const range = XLSX.utils.decode_range(worksheet['!ref']);
-                const desiredColumns = ['B', 'C', 'D', 'G', 'I', 'J', 'K', 'L', 'M'];
+                const desiredColumns = ['B', 'C', 'D', 'G', 'I', 'J', 'H', 'L', 'M'];
                 const filteredData = [];
 
                 for (let rowIndex = 1; rowIndex <= range.e.r; rowIndex++) {
