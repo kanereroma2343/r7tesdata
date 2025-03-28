@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./icons/nttcmis.png">
+    <title>ONAF Database</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #000428, #004e92);
+            --card-gradient: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            --text-color: #ffffff;
+            --accent-color: #00a8ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px 10px 0 0;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--accent-color);
+            flex: 1;
+            text-align: center;
+        }
+
+        .search-section {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 0 0 10px 10px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 3rem;
+            align-items: left;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        input[type="search"] {
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            width: 100%;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        input[type="search"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.1);
+        }
+
+        input[type="search"]::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .application-card {
+            background: var(--card-gradient);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .application-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .ticket-number {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .info-group {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-completed {
+            background: rgba(24, 226, 72, 0.678);
+            color: #f0f8f2fd;
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 70, 0.384);
+            color: #dc3545;
+        }
+
+        .status-spam {
+            background: rgba(243, 0, 0, 0.644);
+            color: #ffffff;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .receive-btn {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .receive-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        .receive-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .view-btn {
+            background: rgba(0, 168, 255, 0.2);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .receive-btn {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-section {
+                padding: 1rem;
+            }
+
+            input[type="search"] {
+                padding: 0.8rem 1.2rem;
+            }
+        }
+
+        .completion-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .completion-modal.show {
+            opacity: 1;
+        }
+
+        .completion-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: linear-gradient(135deg, #000428, #004e92);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            min-width: 300px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .completion-modal.show .completion-modal-content {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .completion-modal h2 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-modal p {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-confirm {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #0088cc;
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="../icons/tlogo.png" alt="Left Logo" class="logo">
+            <h1>Online NTTC Applications Database</h1>
+            <img src="../icons/blogo.png" alt="Right Logo" class="logo">
+        </header>
+        
+        <div class="search-section">
+            <div class="search-container">
+                <input type="search" id="searchInput" placeholder="Search by ticket number or applicant name...">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="spam">Spam</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner"></div>
+        <div id="applicationsGrid" class="applications-grid"></div>
+    </div>
+
+    <div class="completion-modal" id="completionModal">
+        <div class="completion-modal-content">
+            <div class="completion-icon">✨</div>
+            <h2>Great Job!</h2>
+            <p>Application has been marked as completed.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" id="modalConfirm">Okay</button>
+                <button class="modal-btn modal-btn-cancel" id="modalCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmgjzLx4mVkeWyfjwKNMtxmL9o1BesaW0",
+            authDomain: "sampleform-fd82e.firebaseapp.com",
+            projectId: "sampleform-fd82e",
+            storageBucket: "sampleform-fd82e.firebasestorage.app",
+            messagingSenderId: "129137441476",
+            appId: "1:129137441476:web:e29e8ca547b93aa1d3a791",
+            measurementId: "G-DZMYEG4NHL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const applicationsRef = ref(db, 'applications');
+
+        // DOM elements
+        const applicationsGrid = document.getElementById('applicationsGrid');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const searchInput = document.getElementById('searchInput');
+
+        // Add this to your JavaScript, before the onValue listener
+        let currentFilter = 'all';
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        let lastSnapshot = null;
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active state
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update current filter
+                currentFilter = button.dataset.filter;
+                
+                // Re-render applications with current filter
+                if (lastSnapshot) {
+                    const data = lastSnapshot.val();
+                    if (data) {
+                        const filteredApplications = filterApplications(data, searchInput.value);
+                        renderApplications(filteredApplications);
+                    }
+                }
+            });
+        });
+
+        // Function to create application card
+        function createApplicationCard(data, key) {
+            const card = document.createElement('div');
+            card.className = 'application-card';
+            
+            // Determine the button text based on status
+            const buttonText = data.applicationDetails.status === 'spam' ? 
+                'Delete Application 🗑️' : 
+                'Mark as Completed ✅';
+            
+            card.innerHTML = `
+                <div class="ticket-number">${data.ticketNumber || 'No Ticket Number'}</div>
+                <div class="info-group">
+                    <div class="info-label">Applicant Name</div>
+                    <div class="info-value">${data.personalInfo.firstName} ${data.personalInfo.lastName}</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Contact</div>
+                    <div class="info-value">${data.personalInfo.contact}</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">${data.personalInfo.email}</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Sector</div>
+                    <div class="info-value">${data.applicationDetails.sector.toUpperCase()}</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Qualification</div>
+                    <div class="info-value">${data.applicationDetails.qualification.toUpperCase()}</div>
+                </div>
+                <div class="status-badge status-${data.applicationDetails.status}">
+                    ${data.applicationDetails.status.toUpperCase()}
+                </div>
+                <div class="button-group">
+                    <button class="view-btn" data-key="${key}">View PDF Application</button>
+                    <button class="receive-btn" data-key="${key}">${buttonText}</button>
+                </div>
+            `;
+            
+            // Add click handler for the view button
+            const viewBtn = card.querySelector('.view-btn');
+            viewBtn.addEventListener('click', () => {
+                // Add console.log to debug the data
+                console.log('Application Data:', data);
+
+                const params = new URLSearchParams({
+                    // ... existing params ...
+                    'region': params.get('region') || '',
+    'ticketNumber': params.get('ticketNumber') || '',
+    'nmisCode': params.get('nmis-code') || '',
+    'nmisDate': params.get('nmis-date') || '',
+    'lastName': params.get('last-name') || '',
+    'firstName': params.get('first-name') || '',
+    'middleInitial': params.get('middle-initial') || '',
+    'extension': params.get('extension') || '',
+    'address': params.get('address') || '',
+    'city': params.get('city') || '',
+    'province': params.get('province') || '',
+    'zipCode': params.get('zip-code') || '',
+    'poBox': params.get('po-box') || '',
+    'sex': params.get('sex') || '',
+    'civilStatus': params.get('civil-status') || '',
+    'contact': params.get('contact') || '',
+    'telephone': params.get('telephone') || '',
+    'email': params.get('email') || '',
+    'fax': params.get('fax') || '',
+    'employmentType': params.get('employment-type') || '',
+    'employmentStatus': params.get('employment-status') || '',
+    'birthdate': params.get('birthdate') || '',
+    'birthplace': params.get('birthplace') || '',
+    'citizenship': params.get('citizenship') || '',
+    'religion': params.get('religion') || '',
+    'height': params.get('height') || '',
+    'weight': params.get('weight') || '',
+    'bloodType': params.get('blood-type') || '',
+    'sss': params.get('sss') || '',
+    'gsis': params.get('gsis') || '',
+    'tin': params.get('tin') || '',
+    'distinguishingMarks': params.get('distinguishing-marks') || '',
+    'educationalBackground': params.getAll('educationalBackground') || [],
+    'courseTitle': params.get('course-title') || '',
+    'trainingDuration': params.get('training-duration') || '',
+    'scheduleFrom': params.get('schedule-from') || '',
+    'scheduleTo': params.get('schedule-to') || '',
+    'aptitudeExamDate': params.get('aptitude-exam-date') || '',
+    'aptitudeExamTime': params.get('aptitude-exam-time') || '',
+    'applicationDate': params.get('application-date') || '',
+    'sectorComponent': params.get('sector-component') || '',
+    'tradeArea': params.get('trade-area') || '',
+    'occupation': params.get('occupation') || '',
+    'classification': params.get('classification') || '',
+    'competency': params.get('competency') || '',
+    'trainingProgram': params.get('training-program') || '',
+    'programSector': params.get('program-sector') || '',
+    'clientType': params.get('client-type') || '',
+    'totalYearsExperience': params.get('total-years-experience') || '',
+    'trainingHours': params.get('training-hours') || '',
+    'trainingInstitution': params.get('training-institution') || '',
+    'typeTrainingInstitution': params.get('type-training-institution') || '',
+    'educationalAttainment': params.get('educational-attainment') || '',
+    'workExperiences': params.getAll('work-experiences') || [],
+    'trainingSeminars': params.getAll('training-seminars') || [],
+    'licensesExaminations': params.getAll('licenses-examinations') || [],
+    'competencyAssessmentPassed': params.getAll('competency-assessment-passed') || [],
+    'spouseName': params.get('spouse-name') || '',
+    'spouseEducation': params.get('spouse-education') || '',
+    'spouseOccupation': params.get('spouse-occupation') || '',
+    'spouseIncome': params.get('spouse-income') || '',
+    'fatherName': params.get('father-name') || '',
+    'fatherEducation': params.get('father-education') || '',
+    'fatherOccupation': params.get('father-occupation') || '',
+    'fatherIncome': params.get('father-income') || '',
+    'motherName': params.get('mother-name') || '',
+    'motherEducation': params.get('mother-education') || '',
+    'motherOccupation': params.get('mother-occupation') || '',
+    'motherIncome': params.get('mother-income') || '',
+    'guardianName': params.get('guardian-name') || '',
+    'guardianEducation': params.get('guardian-education') || '',
+    'guardianOccupation': params.get('guardian-occupation') || '',
+    'guardianIncome': params.get('guardian-income') || '',
+    'dependents': params.getAll('dependents') || [],
+    'dependentAge': params.getAll('dependent-age') || [],
+    'sector': params.get('sector') || '',
+    'qualification': params.get('qualification') || '',
+    'nttcstatus': params.get('nttcstatus') || '',
+    'ncCertNumber': params.get('nc-cert-number') || '',
+    'ncDateIssuance': params.get('nc-date-issuance') || '',
+    'ncValidity': params.get('nc-validity') || '',
+    'tmCertNumber': params.get('tm-cert-number') || '',
+    'tmDateIssuance': params.get('tm-date-issuance') || '',
+    'tmValidity': params.get('tm-validity') || '',
+    'status': params.get('status') || 'pending',
+    'submissionDate': params.get('submission-date') || '',
+    'assessor1': params.get('assessor1') || '',
+    'assessor2': params.get('assessor2') || '',
+    'assessor3': params.get('assessor3') || '',
+    'applicationStatus': params.get('application-status') || ''
+
+                });
+
+                // Open preview.html with the application data
+                window.location.href = `preview.html?${params.toString()}`;
+            });
+
+            // Add click handler for the receive button
+            const receiveBtn = card.querySelector('.receive-btn');
+            receiveBtn.addEventListener('click', async (e) => {
+                e.target.disabled = true;
+                
+                showCompletionModal(async (confirmed) => {
+                    if (confirmed) {
+                        try {
+                            e.target.textContent = 'Processing...';
+                            const applicationRef = ref(db, `applications/${key}`);
+                            await remove(applicationRef);
+
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.8)';
+                            setTimeout(() => {
+                                card.remove();
+                                if (applicationsGrid.children.length === 0) {
+                                    applicationsGrid.innerHTML = '<div class="no-results">No applications found</div>';
+                                }
+                            }, 300);
+                        } catch (error) {
+                            console.error('Error completing application:', error);
+                            alert('Error completing application. Please try again.');
+                        }
+                    }
+                    e.target.disabled = false;
+                    e.target.textContent = 'Mark as Completed ✅';
+                });
+            });
+            
+            return card;
+        }
+
+        // Function to filter applications
+        function filterApplications(applications, searchTerm) {
+            return Object.entries(applications).filter(([key, data]) => {
+                const searchString = searchTerm.toLowerCase();
+                const fullName = `${data.personalInfo.firstName} ${data.personalInfo.lastName}`.toLowerCase();
+                const ticketNumber = (data.ticketNumber || '').toLowerCase();
+                const status = (data?.applicationDetails?.status || '').toLowerCase();
+                
+                // First check if it matches the current filter
+                if (currentFilter !== 'all') {
+                    // Make sure we're comparing the correct status
+                    if (currentFilter === 'spam' && status !== 'spam') {
+                        return false;
+                    } else if (currentFilter === 'pending' && status !== 'pending') {
+                        return false;
+                    } else if (currentFilter === 'completed' && status !== 'completed') {
+                        return false;
+                    }
+                }
+                
+                // Then check if it matches the search term
+                return fullName.includes(searchString) || ticketNumber.includes(searchString);
+            });
+        }
+
+        // Modify the isDuplicate function to be more strict
+        function isDuplicate(currentApp, otherApp) {
+            // Ensure all required fields exist before comparing
+            if (!currentApp?.personalInfo || !otherApp?.personalInfo || !currentApp?.applicationDetails || !otherApp?.applicationDetails) {
+                return false;
+            }
+
+            // Normalize strings by trimming whitespace and converting to lowercase
+            const normalize = (str) => (str || '').trim().toLowerCase();
+
+            // Check exact matches for all 5 fields
+            const isExactMatch = 
+                normalize(currentApp.personalInfo.firstName) === normalize(otherApp.personalInfo.firstName) &&
+                normalize(currentApp.personalInfo.lastName) === normalize(otherApp.personalInfo.lastName) &&
+                normalize(currentApp.personalInfo.contact) === normalize(otherApp.personalInfo.contact) &&
+                normalize(currentApp.personalInfo.email) === normalize(otherApp.personalInfo.email) &&
+                normalize(currentApp.applicationDetails.sector) === normalize(otherApp.applicationDetails.sector) &&
+                normalize(currentApp.applicationDetails.qualification) === normalize(otherApp.applicationDetails.qualification);
+
+            return isExactMatch;
+        }
+
+        // Modify the onValue listener to properly update the database with spam status
+        onValue(applicationsRef, async (snapshot) => {
+            loadingSpinner.style.display = 'none';
+            lastSnapshot = snapshot;
+            const data = snapshot.val();
+            
+            if (!data) {
+                applicationsGrid.innerHTML = '<div class="no-results">No applications found</div>';
+                return;
+            }
+
+            // Sort applications by timestamp
+            const applications = Object.entries(data).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+            
+            // Keep track of processed applications
+            const processedApplications = new Map();
+            const updatedData = {};
+            
+            applications.forEach(([key, app]) => {
+                let isDuplicateEntry = false;
+                
+                // Compare with all previous applications
+                for (const [prevKey, prevApp] of processedApplications) {
+                    if (isDuplicate(app, prevApp)) {
+                        isDuplicateEntry = true;
+                        break;
+                    }
+                }
+
+                // Add current application to processed map if not a duplicate
+                if (!isDuplicateEntry) {
+                    processedApplications.set(key, app);
+                }
+
+                // Update the application status if it's a duplicate
+                if (isDuplicateEntry) {
+                    updatedData[key] = {
+                        ...app,
+                        applicationDetails: {
+                            ...app.applicationDetails,
+                            status: 'spam'
+                        }
+                    };
+                } else {
+                    updatedData[key] = app;
+                }
+            });
+
+            // Update the lastSnapshot with the processed data
+            lastSnapshot = {
+                val: () => updatedData,
+                exists: () => true
+            };
+
+            // Initial render with processed applications
+            const filteredApplications = filterApplications(updatedData, searchInput.value);
+            renderApplications(filteredApplications);
+
+            // Search functionality
+            const searchHandler = (e) => {
+                const searchTerm = e.target.value;
+                const filtered = filterApplications(updatedData, searchTerm);
+                renderApplications(filtered);
+            };
+
+            // Remove existing listener before adding a new one
+            searchInput.removeEventListener('input', searchHandler);
+            searchInput.addEventListener('input', searchHandler);
+        }, (error) => {
+            console.error('Error fetching data:', error);
+            loadingSpinner.style.display = 'none';
+            applicationsGrid.innerHTML = '<div class="no-results">Error loading applications</div>';
+        });
+
+        // Function to render applications
+        function renderApplications(applications) {
+            applicationsGrid.innerHTML = '';
+            
+            if (applications.length === 0) {
+                applicationsGrid.innerHTML = '<div class="no-results">No matching applications found</div>';
+                return;
+            }
+
+            applications.forEach(([key, data]) => {
+                const card = createApplicationCard(data, key);
+                applicationsGrid.appendChild(card);
+            });
+        }
+
+        // Add these functions for modal handling
+        function showCompletionModal(callback) {
+            const modal = document.getElementById('completionModal');
+            const confirmBtn = document.getElementById('modalConfirm');
+            const cancelBtn = document.getElementById('modalCancel');
+
+            modal.style.display = 'block';
+            setTimeout(() => modal.classList.add('show'), 10);
+
+            function handleConfirm() {
+                callback(true);
+                closeModal();
+                cleanup();
+            }
+
+            function handleCancel() {
+                callback(false);
+                closeModal();
+                cleanup();
+            }
+
+            function closeModal() {
+                modal.classList.remove('show');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
+
+            function cleanup() {
+                confirmBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+            }
+
+            confirmBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+        }
+    </script>
+</body>
+</html>
