@@ -1657,6 +1657,12 @@ async function sendToProvincialOffice() {
         // Show loading modal
         document.getElementById('loadingModal').style.display = 'block';
 
+        // Helper function to safely get element value
+        const getValue = (id) => {
+            const element = document.getElementById(id);
+            return element ? element.value : 'N/A';
+        };
+
         // Generate ticket number
         const timestamp = new Date().getTime();
         const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
@@ -1697,37 +1703,239 @@ async function sendToProvincialOffice() {
             reader.readAsDataURL(pdfBlob);
         });
 
+        // Collect educational background data directly from the table
+        const educationTable = document.querySelector('.form-section:nth-of-type(4) table');
+        const educationRows = educationTable ? educationTable.querySelectorAll('tbody tr') : [];
+        const educationData = [];
+        
+        for (let i = 0; i < educationRows.length; i++) {
+            const row = educationRows[i];
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 4) {
+                educationData.push({
+                    name: inputs[0].value || 'N/A',
+                    level: inputs[1].value || 'N/A',
+                    year: inputs[2].value || 'N/A',
+                    degree: inputs[3].value || 'N/A'
+                });
+            }
+        }
+
+        // Collect working experience data directly from the table
+        const experienceTable = document.querySelector('.form-section:nth-of-type(7) table');
+        const experienceRows = experienceTable ? experienceTable.querySelectorAll('tbody tr') : [];
+        const experienceData = [];
+        
+        for (let i = 0; i < experienceRows.length; i++) {
+            const row = experienceRows[i];
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 5) {
+                experienceData.push({
+                    company: inputs[0].value || 'N/A',
+                    position: inputs[1].value || 'N/A',
+                    dates: inputs[2].value || 'N/A',
+                    salary: inputs[3].value || 'N/A',
+                    yearsOfExperience: inputs[4].value || 'N/A'
+                });
+            }
+        }
+
+        // Collect training/seminars data directly from the table
+        const trainingTable = document.querySelector('.form-section:nth-of-type(8) table');
+        const trainingRows = trainingTable ? trainingTable.querySelectorAll('tbody tr') : [];
+        const trainingData = [];
+        
+        for (let i = 0; i < trainingRows.length; i++) {
+            const row = trainingRows[i];
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 4) {
+                trainingData.push({
+                    title: inputs[0].value || 'N/A',
+                    venue: inputs[1].value || 'N/A',
+                    dates: inputs[2].value || 'N/A',
+                    hours: inputs[3].value || 'N/A'
+                });
+            }
+        }
+
+        // Collect licenses/examinations data directly from the table
+        const licenseTable = document.querySelector('.form-section:nth-of-type(9) table');
+        const licenseRows = licenseTable ? licenseTable.querySelectorAll('tbody tr') : [];
+        const licenseData = [];
+        
+        for (let i = 0; i < licenseRows.length; i++) {
+            const row = licenseRows[i];
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 4) {
+                licenseData.push({
+                    title: inputs[0].value || 'N/A',
+                    year: inputs[1].value || 'N/A',
+                    rating: inputs[2].value || 'N/A',
+                    expiry: inputs[3].value || 'N/A'
+                });
+            }
+        }
+
+        // Collect competency assessment data directly from the table
+        const competencyTable = document.querySelector('.form-section:nth-of-type(10) table');
+        const competencyRows = competencyTable ? competencyTable.querySelectorAll('tbody tr') : [];
+        const competencyData = [];
+        
+        for (let i = 0; i < competencyRows.length; i++) {
+            const row = competencyRows[i];
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 6) {
+                competencyData.push({
+                    sector: inputs[0].value || 'N/A',
+                    tradeArea: inputs[1].value || 'N/A',
+                    occupation: inputs[2].value || 'N/A',
+                    classificationLevel: inputs[3].value || 'N/A',
+                    competency: inputs[4].value || 'N/A',
+                    specialization: inputs[5].value || 'N/A'
+                });
+            }
+        }
+
         // Prepare application data
         const applicationData = {
             ticketNumber: ticketNumber,
+            
+            // 1. TESDA Section
+            tesdaInfo: {
+                nmisCode: getValue('nmis-code'),
+                nmisDate: getValue('nmis-date')
+            },
+
+            // 2. Manpower Profile
+            manpowerProfile: {
+                lastName: getValue('last_name'),
+                firstName: getValue('first_name'),
+                middleInitial: getValue('middle_initial'),
+                extension: getValue('extension'),
+                mailingAddress: getValue('address'),
+                city: getValue('city'),
+                province: getValue('province'),
+                region: getValue('region'),
+                zipCode: getValue('zip-code'),
+                poBox: getValue('po-box'),
+                sex: getValue('sex'),
+                civilStatus: getValue('civil-status'),
+                contact: getValue('contact'),
+                telephone: getValue('telephone'),
+                email: getValue('email'),
+                fax: getValue('fax'),
+                employmentType: getValue('employment-type'),
+                employmentStatus: getValue('employment-status')
+            },
+
+            // 3. Personal Information
             personalInfo: {
-                lastName: document.getElementById('last_name').value,
-                firstName: document.getElementById('first_name').value,
-                middleInitial: document.getElementById('middle_initial').value,
-                contact: document.getElementById('contact').value,
-                email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                province: document.getElementById('province').value,
-                region: document.getElementById('region').value
+                birthdate: getValue('birthdate'),
+                birthplace: getValue('birthplace'),
+                citizenship: getValue('citizenship'),
+                religion: getValue('religion'),
+                height: getValue('height'),
+                weight: getValue('weight'),
+                bloodType: getValue('blood-type'),
+                sssNo: getValue('sss'),
+                gsisNo: getValue('gsis'),
+                tinNo: getValue('tin'),
+                distinguishingMarks: getValue('distinguishing-marks')
             },
-            applicationDetails: {
-                sector: document.getElementById('sector').value,
-                qualification: document.getElementById('qualification').value,
-                ncCertNumber: document.getElementById('nc_cert_number').value,
-                ncDateIssuance: document.getElementById('nc_date_issuance').value,
-                ncValidity: document.getElementById('nc_validity').value,
-                tmCertNumber: document.getElementById('tm_cert_number_actual').value,
-                tmDateIssuance: document.getElementById('tm_date_issuance').value,
-                tmValidity: document.getElementById('tm_validity').value,
-                status: 'pending',
-                submissionDate: new Date().toISOString()
+
+            // 4. Educational Background
+            educationalBackground: {
+                schools: educationData
             },
-            assessors: {
-                assessor1: document.getElementById('assessor1').value,
-                assessor2: document.getElementById('assessor2').value,
-                assessor3: document.getElementById('assessor3').value
+
+            // 5. Course Title
+            courseInfo: {
+                courseTitle: getValue('course-title'),
+                trainingDuration: getValue('training-duration'),
+                scheduleFrom: getValue('schedule-from'),
+                scheduleTo: getValue('schedule-to'),
+                aptitudeExamDate: getValue('aptitude-exam-date'),
+                aptitudeExamTime: getValue('aptitude-exam-time')
             },
+
+            // 6. Competency Assessment
+            competencyAssessment: {
+                applicationDate: getValue('application-date'),
+                sectorComponent: getValue('sector-component'),
+                tradeArea: getValue('trade-area'),
+                occupation: getValue('occupation'),
+                classification: getValue('classification'),
+                competency: getValue('competency'),
+                trainingProgram: getValue('training-program'),
+                programSector: getValue('program-sector'),
+                clientType: getValue('client-type')
+            },
+
+            // 7. Working Experience
+            workingExperience: {
+                totalYears: getValue('years_of_experience'),
+                trainingHours: getValue('training_hours'),
+                trainingInstitution: getValue('training_institution'),
+                typeTrainingInstitution: getValue('type_training_institution'),
+                educationalAttainment: getValue('educational_attainment'),
+                experiences: experienceData
+            },
+
+            // 8. Training/Seminars
+            trainingSeminars: trainingData,
+
+            // 9. Licenses/Examinations
+            licenses: licenseData,
+
+            // 10. Competency Assessment Passed
+            competencyAssessmentPassed: competencyData,
+
+            // 11. Family Background
+            familyBackground: {
+                spouse: {
+                    name: getValue('spouse-name'),
+                    education: getValue('spouse-education'),
+                    occupation: getValue('spouse-occupation'),
+                    income: getValue('spouse-income')
+                },
+                father: {
+                    name: getValue('father-name'),
+                    education: getValue('father-education'),
+                    occupation: getValue('father-occupation'),
+                    income: getValue('father-income')
+                },
+                mother: {
+                    name: getValue('mother-name'),
+                    education: getValue('mother-education'),
+                    occupation: getValue('mother-occupation'),
+                    income: getValue('mother-income')
+                },
+                guardian: {
+                    name: getValue('guardian-name'),
+                    education: getValue('guardian-education'),
+                    occupation: getValue('guardian-occupation'),
+                    income: getValue('guardian-income')
+                },
+                dependents: getValue('dependents'),
+                dependentAge: getValue('dependent-age')
+            },
+
+            // 12. NTTC Application
+            nttcApplication: {
+                sector: getValue('sector'),
+                qualification: getValue('qualification'),
+                nttcstatus: getValue('nttcstatus'),
+                ncCertNumber: getValue('nc_cert_number'),
+                ncDateIssuance: getValue('nc_date_issuance'),
+                ncValidity: getValue('nc_validity'),
+                tmCertNumber: getValue('tm_cert_number_actual'),
+                tmDateIssuance: getValue('tm_date_issuance'),
+                tmValidity: getValue('tm_validity'),
+                assessor1: getValue('assessor1'),
+                assessor2: getValue('assessor2'),
+                assessor3: getValue('assessor3')
+            },
+
             pdfDocument: base64PDF
         };
 
