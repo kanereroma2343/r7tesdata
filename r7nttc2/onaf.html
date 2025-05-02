@@ -403,8 +403,13 @@
                 <input type="search" id="searchInput" placeholder="Search by ticket number or applicant name...">
                 <div class="filter-buttons">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="pending">Pending</button>
+=======
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn active" data-filter="all">All</button>                
+>>>>>>> Stashed changes
 =======
                     <button class="filter-btn" data-filter="pending">Pending</button>
                     <button class="filter-btn active" data-filter="all">All</button>                
@@ -435,7 +440,11 @@
         // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+=======
+        import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+>>>>>>> Stashed changes
 =======
         import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 >>>>>>> Stashed changes
@@ -492,11 +501,14 @@
             card.className = 'application-card';
             
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             // Determine the button text based on status
             const buttonText = data.applicationDetails.status === 'spam' ? 
                 'Delete Application 🗑️' : 
                 'Mark as Completed ✅';
 =======
+=======
+>>>>>>> Stashed changes
             // Determine status - default to 'pending' if not set
             const status = data.status || 'pending';
             
@@ -518,12 +530,16 @@
             const email = data.manpowerProfile?.email || 'N/A';
             const sector = data.nttcApplication?.sector || 'N/A';
             const qualification = data.nttcApplication?.qualification || 'N/A';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             
             card.innerHTML = `
                 <div class="ticket-number">${data.ticketNumber || 'No Ticket Number'}</div>
                 <div class="info-group">
                     <div class="info-label">Applicant Name</div>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                     <div class="info-value">${data.personalInfo.firstName} ${data.personalInfo.lastName}</div>
                 </div>
@@ -550,6 +566,8 @@
                     <button class="view-btn" data-key="${key}">View PDF Application</button>
                     <button class="receive-btn" data-key="${key}">${buttonText}</button>
 =======
+=======
+>>>>>>> Stashed changes
                     <div class="info-value">${firstName} ${lastName}</div>
                 </div>
                 <div class="info-group">
@@ -574,12 +592,16 @@
                 <div class="button-group">
                     <button class="view-btn" data-key="${key}">View PDF Application</button>
                     ${buttonHTML}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 </div>
             `;
             
             // Add click handler for the view button
             const viewBtn = card.querySelector('.view-btn');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             viewBtn.addEventListener('click', () => {
                 // Add console.log to debug the data
@@ -714,6 +736,8 @@
                 });
             });
 =======
+=======
+>>>>>>> Stashed changes
             viewBtn.addEventListener('click', function() {
                 console.log('View button clicked for application:', key); // Debugging
                 try {
@@ -961,6 +985,9 @@
                     });
                 });
             }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             
             return card;
@@ -971,10 +998,13 @@
             return Object.entries(applications).filter(([key, data]) => {
                 const searchString = searchTerm.toLowerCase();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 const fullName = `${data.personalInfo.firstName} ${data.personalInfo.lastName}`.toLowerCase();
                 const ticketNumber = (data.ticketNumber || '').toLowerCase();
                 const status = (data?.applicationDetails?.status || '').toLowerCase();
 =======
+=======
+>>>>>>> Stashed changes
                 
                 // Get name data from the correct structure
                 const firstName = data.manpowerProfile?.firstName || '';
@@ -983,6 +1013,9 @@
                 
                 const ticketNumber = (data.ticketNumber || '').toLowerCase();
                 const status = (data.status || 'pending').toLowerCase();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 
                 // First check if it matches the current filter
@@ -1006,7 +1039,11 @@
         function isDuplicate(currentApp, otherApp) {
             // Ensure all required fields exist before comparing
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             if (!currentApp?.personalInfo || !otherApp?.personalInfo || !currentApp?.applicationDetails || !otherApp?.applicationDetails) {
+=======
+            if (!currentApp?.manpowerProfile || !otherApp?.manpowerProfile || !currentApp?.nttcApplication || !otherApp?.nttcApplication) {
+>>>>>>> Stashed changes
 =======
             if (!currentApp?.manpowerProfile || !otherApp?.manpowerProfile || !currentApp?.nttcApplication || !otherApp?.nttcApplication) {
 >>>>>>> Stashed changes
@@ -1019,6 +1056,7 @@
             // Check exact matches for all 5 fields
             const isExactMatch = 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 normalize(currentApp.personalInfo.firstName) === normalize(otherApp.personalInfo.firstName) &&
                 normalize(currentApp.personalInfo.lastName) === normalize(otherApp.personalInfo.lastName) &&
                 normalize(currentApp.personalInfo.contact) === normalize(otherApp.personalInfo.contact) &&
@@ -1026,12 +1064,17 @@
                 normalize(currentApp.applicationDetails.sector) === normalize(otherApp.applicationDetails.sector) &&
                 normalize(currentApp.applicationDetails.qualification) === normalize(otherApp.applicationDetails.qualification);
 =======
+=======
+>>>>>>> Stashed changes
                 normalize(currentApp.manpowerProfile.firstName) === normalize(otherApp.manpowerProfile.firstName) &&
                 normalize(currentApp.manpowerProfile.lastName) === normalize(otherApp.manpowerProfile.lastName) &&
                 normalize(currentApp.manpowerProfile.contact) === normalize(otherApp.manpowerProfile.contact) &&
                 normalize(currentApp.manpowerProfile.email) === normalize(otherApp.manpowerProfile.email) &&
                 normalize(currentApp.nttcApplication.sector) === normalize(otherApp.nttcApplication.sector) &&
                 normalize(currentApp.nttcApplication.qualification) === normalize(otherApp.nttcApplication.qualification);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
             return isExactMatch;
@@ -1044,6 +1087,12 @@
             const data = snapshot.val();
             
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            // Debug the data structure
+            console.log("Data structure from Firebase:", data);
+            
+>>>>>>> Stashed changes
 =======
             // Debug the data structure
             console.log("Data structure from Firebase:", data);
@@ -1063,6 +1112,12 @@
             
             applications.forEach(([key, app]) => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+                // Debug each application structure
+                console.log(`Application ${key} structure:`, app);
+                
+>>>>>>> Stashed changes
 =======
                 // Debug each application structure
                 console.log(`Application ${key} structure:`, app);
@@ -1088,10 +1143,14 @@
                     updatedData[key] = {
                         ...app,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         applicationDetails: {
                             ...app.applicationDetails,
                             status: 'spam'
                         }
+=======
+                        status: 'spam'  // Use status directly at the top level
+>>>>>>> Stashed changes
 =======
                         status: 'spam'  // Use status directly at the top level
 >>>>>>> Stashed changes

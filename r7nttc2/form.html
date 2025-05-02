@@ -1444,7 +1444,13 @@
         // Assuming you have a function to handle URL parameters
         const params = new URLSearchParams(window.location.search);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         document.getElementById('nttcstatus').value = params.get('nttcstatus') || 'N/A';
+=======
+        document.getElementById('nttcstatus').value = params.get('nttcstatus') === 'new' ? 'NEW' : 
+                                                params.get('nttcstatus') === 'renewal' ? 'RENEW' : 
+                                                'NEW'; // Default to NEW if no value or invalid value
+>>>>>>> Stashed changes
 =======
         document.getElementById('nttcstatus').value = params.get('nttcstatus') === 'new' ? 'NEW' : 
                                                 params.get('nttcstatus') === 'renewal' ? 'RENEW' : 

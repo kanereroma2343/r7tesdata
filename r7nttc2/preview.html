@@ -3,7 +3,10 @@
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     <!-- Add these Firebase SDK imports -->
@@ -314,6 +317,7 @@
     100% { transform: rotate(360deg); }
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 /* Mobile-specific styles */
 @media screen and (max-width: 768px) {
@@ -444,6 +448,8 @@
 .spinner-border {
     margin-right: 8px;
 }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     </style>
@@ -976,7 +982,11 @@
                     <div class="form-group">
                         <label for="nttcstatus" style="text-transform: uppercase;">NTTC Status</label>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         <input type="text" id="nttcstatus" name="nttcstatus" placeholder="Enter NTTC Status" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+=======
+                        <input type="text" id="nttcstatus" name="nttcstatus" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+>>>>>>> Stashed changes
 =======
                         <input type="text" id="nttcstatus" name="nttcstatus" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
 >>>>>>> Stashed changes
@@ -1293,7 +1303,12 @@ function savePDF() {
         typeTrainingInstitutionInput.value = params.get('type_training_institution') || '';
         educationalAttainmentInput.value = params.get('educational_attainment') || '';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
+=======
+
+        document.getElementById('application-status').value = params.get('application-status') || 'N/A';
+>>>>>>> Stashed changes
 =======
 
         document.getElementById('application-status').value = params.get('application-status') || 'N/A';
@@ -1312,6 +1327,9 @@ function submitForm() {
         "qualification","nttcstatus", "nc_cert_number", "nc_date_issuance", "nc_validity",
 =======
         "qualification","status", "nc_cert_number", "nc_date_issuance", "nc_validity",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "tm_cert_number_actual", "tm_date_issuance", "tm_validity", "assessor1",
         "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
@@ -1454,6 +1472,7 @@ window.onclick = function(event) {
 };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 document.getElementById('importButton').addEventListener('click', async function() {
     try {
         // Disable button and show loading state
@@ -1594,6 +1613,12 @@ document.getElementById('importButton').addEventListener('click', function() {
     const tmCertInput = document.getElementById('tm_cert_number_actual');
     const fullTMCertNumber = tmCertInput.value;
     
+=======
+document.getElementById('importButton').addEventListener('click', function() {
+    const tmCertInput = document.getElementById('tm_cert_number_actual');
+    const fullTMCertNumber = tmCertInput.value;
+    
+>>>>>>> Stashed changes
     // Use the combined value when storing data
     const data = {
         "last_name": document.getElementById('last_name').value,
@@ -1663,6 +1688,9 @@ function handleTMCertInput(input) {
     // First, get the current value
     let value = input.value;
     
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     // Strip all TMC- prefixes and any non-numeric characters
     value = value.replace(/""/g, '').replace(/[^0-9]/g, '');
@@ -2032,10 +2060,13 @@ async function sendToProvincialOffice() {
             },
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             pdfDocument: base64PDF
         };
 
 =======
+=======
+>>>>>>> Stashed changes
             // Application Status and PDF
             status: 'pending',
             submissionDate: new Date().toISOString(),
@@ -2044,6 +2075,9 @@ async function sendToProvincialOffice() {
 
         console.log("Sending application data to Firebase:", applicationData);
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         // Save to Firebase
         const applicationsRef = window.ref(window.db, 'applications');
@@ -2066,6 +2100,10 @@ async function sendToProvincialOffice() {
     } catch (error) {
         console.error('Error sending application:', error);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+        console.error('Error details:', error.stack);
+>>>>>>> Stashed changes
 =======
         console.error('Error details:', error.stack);
 >>>>>>> Stashed changes
