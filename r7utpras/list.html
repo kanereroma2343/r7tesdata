@@ -140,19 +140,35 @@
 <script>
    async function loadTallyData() {
     try {
+<<<<<<< Updated upstream
         const response = await fetch('data2.json');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
+=======
+        // Reference to your Firebase database
+        const db = firebase.firestore(); // or firebase.database() depending on your setup
+        const snapshot = await db.collection('yourCollectionName').get(); // Replace 'yourCollectionName' with your actual collection name
+>>>>>>> Stashed changes
 
         const sectorCount = {};
         const qualificationCount = {};
 
+<<<<<<< Updated upstream
         // Count sectors and qualifications
         data.forEach(entry => {
             if (entry.S) {
                 sectorCount[entry.S] = (sectorCount[entry.S] || 0) + 1;
             }
             if (entry.J) {
+=======
+        // Process each document in the snapshot
+        snapshot.forEach(doc => {
+            const entry = doc.data();
+            if (entry.S) { // Assuming 'S' corresponds to sector
+                sectorCount[entry.S] = (sectorCount[entry.S] || 0) + 1;
+            }
+            if (entry.J) { // Assuming 'J' corresponds to qualification
+>>>>>>> Stashed changes
                 qualificationCount[entry.T] = (qualificationCount[entry.T] || 0) + 1;
             }
         });

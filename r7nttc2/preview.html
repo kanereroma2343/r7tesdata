@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<<<<<<< Updated upstream
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+=======
+>>>>>>> Stashed changes
     <!-- Add these Firebase SDK imports -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -310,6 +313,7 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+<<<<<<< Updated upstream
 
 /* Mobile-specific styles */
 @media screen and (max-width: 768px) {
@@ -440,6 +444,8 @@
 .spinner-border {
     margin-right: 8px;
 }
+=======
+>>>>>>> Stashed changes
     </style>
 </head>
 <body>
@@ -969,7 +975,11 @@
                     </div>
                     <div class="form-group">
                         <label for="nttcstatus" style="text-transform: uppercase;">NTTC Status</label>
+<<<<<<< Updated upstream
                         <input type="text" id="nttcstatus" name="nttcstatus" placeholder="Enter NTTC Status" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+=======
+                        <input type="text" id="nttcstatus" name="nttcstatus" required readonly style="text-transform: uppercase; width: calc(98.7% + 20px); margin-right: 5px; margin-left: -0px;">
+>>>>>>> Stashed changes
                     </div>
                 </div>
                     
@@ -1272,7 +1282,7 @@ function savePDF() {
         document.getElementById('assessor1').value = params.get('assessor1') || 'N/A';
         document.getElementById('assessor2').value = params.get('assessor2') || 'N/A';
         document.getElementById('assessor3').value = params.get('assessor3') || 'N/A';
-
+        
         const yearsOfExperienceInput = document.getElementById('years_of_experience');
         const trainingInstitutionInput = document.getElementById('training_institution');
         const typeTrainingInstitutionInput = document.getElementById('type_training_institution');
@@ -1282,7 +1292,12 @@ function savePDF() {
         trainingInstitutionInput.value = params.get('training_institution') || 'N/A';
         typeTrainingInstitutionInput.value = params.get('type_training_institution') || '';
         educationalAttainmentInput.value = params.get('educational_attainment') || '';
+<<<<<<< Updated upstream
         
+=======
+
+        document.getElementById('application-status').value = params.get('application-status') || 'N/A';
+>>>>>>> Stashed changes
     }
     
     // Call the function when the page loads
@@ -1293,7 +1308,11 @@ function submitForm() {
         "last_name", "first_name", "middle_initial", "extension", "birthdate", "sex",
         "address", "training_institution", "type_training_institution", "contact_number",
         "educational_attainment", "training_hours", "years_of_experience", "sector",
+<<<<<<< Updated upstream
         "qualification","nttcstatus", "nc_cert_number", "nc_date_issuance", "nc_validity",
+=======
+        "qualification","status", "nc_cert_number", "nc_date_issuance", "nc_validity",
+>>>>>>> Stashed changes
         "tm_cert_number_actual", "tm_date_issuance", "tm_validity", "assessor1",
         "assessor2", "assessor3", "nttc_serial_number", "nttc_cert_number",
         "nttc_date_issuance", "nttc_validity", "status"
@@ -1434,6 +1453,7 @@ window.onclick = function(event) {
     }
 };
 
+<<<<<<< Updated upstream
 document.getElementById('importButton').addEventListener('click', async function() {
     try {
         // Disable button and show loading state
@@ -1569,6 +1589,81 @@ function handleTMCertInput(input) {
     // First, get the current value
     let value = input.value;
     
+=======
+document.getElementById('importButton').addEventListener('click', function() {
+    const tmCertInput = document.getElementById('tm_cert_number_actual');
+    const fullTMCertNumber = tmCertInput.value;
+    
+    // Use the combined value when storing data
+    const data = {
+        "last_name": document.getElementById('last_name').value,
+        "first_name": document.getElementById('first_name').value,
+        "middle_initial": document.getElementById('middle_initial').value,
+        "extension": document.getElementById('extension').value,
+        "birthdate": document.getElementById('birthdate').value,
+        "sex": document.getElementById('sex').value,
+        "address": document.getElementById('address').value,
+        "training_institution": document.getElementById('training_institution').value,
+        "type_training_institution": document.getElementById('type_training_institution').value,
+        "email": document.getElementById('email').value,
+        "contact_number": document.getElementById('contact').value,
+        "educational_attainment": document.getElementById('educational_attainment').value,
+        "training_hours": document.getElementById('training_hours').value,
+        "years_of_experience": document.getElementById('years_of_experience').value,
+        "sector": document.getElementById('sector').value,
+        "qualification": document.getElementById('qualification').value,
+        "nttcstatus": document.getElementById('nttcstatus').value,
+        "nc_cert_number": document.getElementById('nc_cert_number').value,
+        "nc_date_issuance": document.getElementById('nc_date_issuance').value,
+        "nc_validity": document.getElementById('nc_validity').value,
+        "tm_cert_number": fullTMCertNumber,
+        "tm_date_issuance": document.getElementById('tm_date_issuance').value,
+        "tm_validity": document.getElementById('tm_validity').value,
+        "assessor1": document.getElementById('assessor1').value,
+        "assessor2": document.getElementById('assessor2').value,
+        "assessor3": document.getElementById('assessor3').value,
+    };
+
+    localStorage.setItem('nttcData', JSON.stringify(data));
+    window.location.href = 'nttcregistry.html';
+});
+
+// Update the setNCValidity function to calculate exactly 5 years minus 1 day
+function setNCValidity() {
+    const issuanceDate = document.getElementById('nc_date_issuance').value;
+    const validityInput = document.getElementById('nc_validity');
+
+    if (issuanceDate) {
+        const date = new Date(issuanceDate);
+        date.setFullYear(date.getFullYear() + 5); // Add 5 years
+        date.setDate(date.getDate() - 1); // Subtract 1 day
+        validityInput.value = date.toISOString().split('T')[0];
+    } else {
+        validityInput.value = '';
+    }
+}
+
+// Update the setTMValidity function to calculate exactly 5 years minus 1 day
+function setTMValidity() {
+    const issuanceDate = document.getElementById('tm_date_issuance').value;
+    const validityInput = document.getElementById('tm_validity');
+
+    if (issuanceDate) {
+        const date = new Date(issuanceDate);
+        date.setFullYear(date.getFullYear() + 5); // Add 5 years
+        date.setDate(date.getDate() - 1); // Subtract 1 day
+        validityInput.value = date.toISOString().split('T')[0];
+    } else {
+        validityInput.value = '';
+    }
+}
+
+// Update the handleTMCertInput function with a stricter implementation
+function handleTMCertInput(input) {
+    // First, get the current value
+    let value = input.value;
+    
+>>>>>>> Stashed changes
     // Strip all TMC- prefixes and any non-numeric characters
     value = value.replace(/""/g, '').replace(/[^0-9]/g, '');
     
@@ -1936,9 +2031,20 @@ async function sendToProvincialOffice() {
                 assessor3: getValue('assessor3')
             },
 
+<<<<<<< Updated upstream
             pdfDocument: base64PDF
         };
 
+=======
+            // Application Status and PDF
+            status: 'pending',
+            submissionDate: new Date().toISOString(),
+            pdfDocument: base64PDF
+        };
+
+        console.log("Sending application data to Firebase:", applicationData);
+
+>>>>>>> Stashed changes
         // Save to Firebase
         const applicationsRef = window.ref(window.db, 'applications');
         await window.push(applicationsRef, applicationData);
@@ -1959,6 +2065,10 @@ async function sendToProvincialOffice() {
 
     } catch (error) {
         console.error('Error sending application:', error);
+<<<<<<< Updated upstream
+=======
+        console.error('Error details:', error.stack);
+>>>>>>> Stashed changes
         document.getElementById('loadingModal').style.display = 'none';
         alert(`Error sending application: ${error.message}`);
     }

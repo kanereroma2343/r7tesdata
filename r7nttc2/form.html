@@ -326,6 +326,56 @@
             100% { background-color: #fff; }
         }
     </style>
+    <script>
+        // Function to get URL parameters
+        function getUrlParameters() {
+            const params = new URLSearchParams(window.location.search);
+            return Object.fromEntries(params.entries());
+        }
+
+        // Function to populate form fields
+        function populateForm() {
+            const params = getUrlParameters();
+            
+            // Helper function to set field value
+            const setFieldValue = (fieldId, value) => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.value = value;
+                    // Trigger input event to handle any oninput handlers
+                    field.dispatchEvent(new Event('input'));
+                }
+            };
+
+            // Populate all form fields
+            Object.entries(params).forEach(([key, value]) => {
+                if (value) {
+                    setFieldValue(key, value);
+                }
+            });
+
+            // Handle special cases for arrays (educational background, work experiences, etc.)
+            try {
+                if (params.educationalBackground) {
+                    const educationalBackground = JSON.parse(params.educationalBackground);
+                    // Handle educational background data
+                }
+                if (params.workExperiences) {
+                    const workExperiences = JSON.parse(params.workExperiences);
+                    // Handle work experiences data
+                }
+                if (params.trainingSeminars) {
+                    const trainingSeminars = JSON.parse(params.trainingSeminars);
+                    // Handle training seminars data
+                }
+            } catch (error) {
+                console.error('Error parsing JSON data:', error);
+            }
+        }
+
+        // Call populateForm when the page loads
+        window.addEventListener('load', populateForm);
+    </script>
 </head>
 <body>
     <div class="fixed-container">
@@ -1045,7 +1095,7 @@
                 'nttc_cert_number', 
                 'nttc_date_issuance', 
                 'nttc_validity',
-                'status'
+                'nttcstatus'
             ];
             
             let missingFields = [];
@@ -1093,7 +1143,6 @@
 
         const qualifications = {
             agriculture: [
-                "Agricultural Crops Production NC I",
                 "Agricultural Crops Production NC II",
                 "Agricultural Crops Production NC III",
                 "Agroentrepreneurship NC II",
@@ -1108,10 +1157,8 @@
                 "Artificial Insemination (Swine) NC II",
                 "Bamboo Production NC II",
                 "Drying and Milling Plant Servicing NC III",
-                "Fish Capture NC I",
                 "Fish Capture NC II",
                 "Fishing Gear Repair and Maintenance NC III",
-                "Fishport/Wharf Operation NC I",
                 "Grains Production NC II",
                 "Horticulture NC III",
                 "Landscape Installation and Maintenance",
@@ -1126,14 +1173,12 @@
                 "Mango Production Level II"
             ],
             automotive: [
-                "Automotive Body Painting/Finishing NC I",
                 "Automotive Body Painting/Finishing NC III",
                 "Automotive Body Repairing NC II",
                 "Automotive Electrical Assembly NC II",
                 "Automotive Electrical Assembly NC III",
                 "Automotive Mechanical Assembly NC II",
                 "Automotive Mechanical Assembly NC III",
-                "Automotive Servicing NC I",
                 "Automotive Servicing NC II",
                 "Automotive Servicing NC III",
                 "Automotive Servicing NC IV",
@@ -1157,15 +1202,12 @@
                 "Heavy Equipment Operation (Bulldozer) NC II",
                 "Heavy Equipment Operation (Concrete Pump) NC",
                 "Heavy Equipment Operation (Container Stacker) NC II",
-                "Heavy Equipment Operation (Crawler Crane) NC I",
                 "Heavy Equipment Operation (Gantry Crane) NC II",
                 "Heavy Equipment Operation (Hydraulic) NC II",
                 "Heavy Equipment Operation (Motor Grader) NC II",
                 "Heavy Equipment Operation (Paver) NC II",
-                "Heavy Equipment Operation (Rigid Off-Highway Dump) NC",
-                "Heavy Equipment Operation (Rigid On-Highway Dump) NC",
-                "Heavy Equipment Operation (Road Roller) NC I",
-                "Heavy Equipment Operation (Tower Crane) NC I",
+                "Heavy Equipment Operation (Rigid Off-Highway Dump) NC II",
+                "Heavy Equipment Operation (Rigid On-Highway Dump) NC II",
                 "Heavy Equipment Servicing (Mechanical) NC II",
                 "Masonry NC II",
                 "Masonry NC III",
@@ -1176,11 +1218,9 @@
                 "PV System Design NC III",
                 "PV Systems Installation NC II",
                 "PV Systems Servicing NC III",
-                "Reinforcing Steel Works NC I",
                 "Rigging NC I",
                 "Scaffold Erection NC II",
                 "Scaffolding Works NC II (Supported Type Scaffold)",
-                "Structural Erection NC I",
                 "Technical Drafting NC II",
                 "Tile Setting NC II",
                 "Construction Site Supervision Level IV"
@@ -1229,7 +1269,6 @@
                 "Caregiving NC II",
                 "Dental Hygiene Level IV",
                 "Dental Laboratory Technology Services (Fixed Dental Laboratory Technology)",
-                "Dental Laboratory Technology Services NC I",
                 "Dental Technology NC IV",
                 "Emergency Medical Services NC II",
                 "Health Care Services NC II",
@@ -1275,33 +1314,23 @@
                 "CNC Lathe Machine Operation NC III",
                 "CNC Milling Machine Operation NC II",
                 "CNC Milling Machine Operation NC III",
-                "Flux-Cored Arc Welding (FCAW) NC I",
                 "Flux-Cored Arc Welding (FCAW) NC II",
                 "Flux-Cored Arc Welding (FCAW) NC III",
-                "Gas Metal Arc Welding (GMAW) NC I",
                 "Gas Metal Arc Welding (GMAW) NC II",
                 "Gas Metal Arc Welding (GMAW) NC III",
                 "Gas Tungsten Arc Welding (GTAW) NC II",
                 "Gas Tungsten Arc Welding (GTAW) NC IV",
-                "Gas Welding NC I",
                 "Gas Welding NC II",
-                "Machining NC I",
                 "Machining NC II",
                 "Machining NC III",
-                "Mechanical Drafting NC I",
-                "Plant Maintenance NC I",
-                "Press Machine Operation NC I",
-                "Shielded Metal Arc Welding (SMAW) NC I",
                 "Shielded Metal Arc Welding (SMAW) NC II",
                 "Shielded Metal Arc Welding (SMAW) NC III",
                 "Shielded Metal Arc Welding (SMAW) NC IV",
-                "Submerged Arc Welding (SAW) NC I",
                 "Submerged Arc Welding (SAW) NC II",
                 "Tool and Die Making NC II"
             ],
             processed_food_and_beverages: [
                 "Fish Products Packaging NC II",
-                "Food Processing NC I",
                 "Food Processing NC II",
                 "Food Processing NC III",
                 "Food Processing NC IV",
@@ -1323,7 +1352,6 @@
                 "Lifeguard Services NC III",
                 "Microfinance Technology NC II",
                 "Real Estate Services NC II",
-                "Security Services NC I",
                 "Security Services NC II",
                 "Cooperative Development and Management Level I"
             ],
@@ -1415,7 +1443,13 @@
 
         // Assuming you have a function to handle URL parameters
         const params = new URLSearchParams(window.location.search);
+<<<<<<< Updated upstream
         document.getElementById('nttcstatus').value = params.get('nttcstatus') || 'N/A';
+=======
+        document.getElementById('nttcstatus').value = params.get('nttcstatus') === 'new' ? 'NEW' : 
+                                                params.get('nttcstatus') === 'renewal' ? 'RENEW' : 
+                                                'NEW'; // Default to NEW if no value or invalid value
+>>>>>>> Stashed changes
     </script>
 </body>
 </html>
