@@ -18,6 +18,56 @@
             opacity: 1; /* Fully visible */
         }
 
+        /* Button container responsive styles */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .action-button {
+            min-width: 120px;
+            padding: 8px 15px;
+            margin: 5px;
+            white-space: nowrap;
+        }
+
+        /* Mobile responsive styles */
+        @media screen and (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 5px;
+            }
+
+            .action-button {
+                width: 100%;
+                margin: 3px 0;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .header-title {
+                font-size: 18px;
+                text-align: center;
+                padding: 0 10px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .logo {
+                max-width: 80px;
+                height: auto;
+            }
+        }
+
         .glowing-button {
             position: relative;
             overflow: hidden;
@@ -83,7 +133,6 @@
         <button onclick="window.location.href='recently-expired.html'" class="action-button expired-button">Recently Expired</button> 
         <button onclick="window.location.href='dfr.html'" class="action-button glowing-button glowing-orange-button">Due For Renewal</button>
         <button onclick="window.location.href='statistics.html'" class="action-button">Statistics</button>
-        <a href="../r7nttc2/form.html" target="_blank" class="action-button" style="text-decoration: none;">Trainer's Profile</a>
         <button onclick="exportData()" class="action-button">Export Data</button>
     </div>
 </div>
