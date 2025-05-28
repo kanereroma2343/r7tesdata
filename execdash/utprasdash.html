@@ -636,36 +636,22 @@ body {
             }
         }
 
-        async function fetchTopTrainers() {
+        async function fetchTotalTrainers() {
             try {
                 const response = await fetch('../r7nttc/data.json');
                 const data = await response.json();
                 
-                // Create a map to store unique trainers and their counts
-                const trainerCounts = new Map();
+                // Create a Set to store unique trainer names
+                const uniqueTrainers = new Set();
                 
                 // Process each entry
                 data.forEach(entry => {
-                    // Construct full name with proper formatting
-                    const lastName = (entry.C || '').trim();
-                    const firstName = (entry.D || '').trim();
-                    const middleInitial = entry.E ? `${entry.E.trim()}.` : '';
-                    const extension = entry.F ? ` ${entry.F.trim()}` : '';
-                    
-                    // Only process if we have at least a last name and first name
-                    if (lastName && firstName) {
-                        // Format: "LAST NAME, FIRST NAME M. JR"
-                        const fullName = `${lastName.toUpperCase()}, ${firstName.toUpperCase()} ${middleInitial}${extension}`.trim();
-                        
-                        // Increment count for this trainer
-                        trainerCounts.set(fullName, (trainerCounts.get(fullName) || 0) + 1);
+                    // Get the trainer's name from column C
+                    const trainerName = entry.C?.trim();
+                    if (trainerName) {
+                        uniqueTrainers.add(trainerName);
                     }
                 });
-
-                // Convert to array and sort by count (descending)
-                const topTrainers = Array.from(trainerCounts.entries())
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
 
                 // Get existing data for other columns from UTPRAS
                 const response2 = await fetch('../r7utpras/data2.json');
@@ -707,14 +693,14 @@ body {
                         <td class="p-3 break-words">${topSectors[i] ? `${topSectors[i][0]} (${topSectors[i][1]})` : ''}</td>
                         <td class="p-3 break-words">${topQualifications[i] ? `${topQualifications[i][0]} (${topQualifications[i][1]})` : ''}</td>
                         <td class="p-3 break-words">${topInstitutions[i] ? `${topInstitutions[i][0]} (${topInstitutions[i][1]})` : ''}</td>
-                        <td class="p-3 break-words">${topTrainers[i] ? `${topTrainers[i][0]} (${topTrainers[i][1]} NTTC${topTrainers[i][1] > 1 ? 's' : ''})` : ''}</td>
+                        <td class="p-3 break-words">${Array.from(uniqueTrainers)[i] || ''}</td>
                     `;
                     
                     topSectorsBody.appendChild(row);
                 }
 
                 // Update total trainers count (unique trainers)
-                document.getElementById('totalTrainers').textContent = trainerCounts.size.toLocaleString();
+                document.getElementById('totalTrainers').textContent = uniqueTrainers.size.toLocaleString();
             } catch (error) {
                 console.error('Error fetching and processing trainer data:', error);
             }
@@ -759,7 +745,7 @@ body {
             fetchProvinceData();
             fetchChart3Data();
             fetchChart4Data();
-            fetchTopTrainers();
+            fetchTotalTrainers();
             fetchTotalPrograms();
             fetchTotalInstitutions();
             fetchTotalNTTCs();

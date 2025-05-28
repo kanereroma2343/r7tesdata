@@ -808,25 +808,15 @@ body {
                 const uniqueTrainers = new Set();
                 
                 data.forEach(entry => {
-                    // Construct full name with proper formatting
-                    const lastName = (entry.C || '').trim();
-                    const firstName = (entry.D || '').trim();
-                    const middleInitial = entry.E ? `${entry.E.trim()}.` : '';
-                    const extension = entry.F ? ` ${entry.F.trim()}` : '';
-                    
-                    // Only process if we have at least a last name and first name
-                    if (lastName && firstName) {
-                        // Format: "LAST NAME, FIRST NAME M. JR"
-                        const fullName = `${lastName.toUpperCase()}, ${firstName.toUpperCase()} ${middleInitial}${extension}`.trim();
-                        
-                        // Increment count for this trainer
-                        trainerCounts.set(fullName, (trainerCounts.get(fullName) || 0) + 1);
+                    // Get the trainer's name from column C (assuming it's the full name)
+                    const trainerName = entry.C?.trim();
+                    if (trainerName) {
+                        uniqueTrainers.add(trainerName);
                     }
                 });
-
                 
                 // Update the display with the count of unique trainers
-                document.getElementById('totalTrainers').textContent = trainerCounts.size.toLocaleString();
+                document.getElementById('totalTrainers').textContent = uniqueTrainers.size.toLocaleString();
             } catch (error) {
                 console.error('Error fetching and processing trainer data:', error);
             }
