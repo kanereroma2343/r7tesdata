@@ -1,28 +1,28 @@
 [
   {
     "Province": "Bohol",
-    "WTR": 151,
-    "NTR": 12,
+    "WTR": 153,
+    "NTR": 13,
     "MTP": 37,
-    "CoC": 6,
-    "Total": 206,
-    "Private_TVIs": 31,
-    "Private_Farm_School": 10,
+    "CoC": 4,
+    "Total": 207,
+    "Private_TVIs": 32,
+    "Private_Farm_School": 11,
     "Enterprise": null,
     "Private_HEIs": 1,
     "Public_LGU": 2,
     "Public_LUC": 2,
     "Public_SUC": null,
     "Public_TTI": 5,
-    "Public_Total": null
+    "Public_Total": 53
   },
   {
     "Province": "Cebu",
-    "WTR": 462,
-    "NTR": 187,
+    "WTR": 465,
+    "NTR": 185,
     "MTP": 156,
     "CoC": 7,
-    "Total": 812,
+    "Total": 813,
     "Private_TVIs": 175,
     "Private_Farm_School": 7,
     "Enterprise": 14,
@@ -31,7 +31,7 @@
     "Public_LUC": 1,
     "Public_SUC": null,
     "Public_TTI": 6,
-    "Public_Total": null
+    "Public_Total": 217
   },
   {
     "Province": "Negros Oriental",
@@ -48,7 +48,7 @@
     "Public_LUC": null,
     "Public_SUC": null,
     "Public_TTI": 1,
-    "Public_Total": null
+    "Public_Total": 45
   },
   {
     "Province": "Siquijor",
@@ -65,23 +65,23 @@
     "Public_LUC": null,
     "Public_SUC": null,
     "Public_TTI": 2,
-    "Public_Total": null
+    "Public_Total": 9
   },
   {
     "Province": "Total",
-    "WTR": 810,
-    "NTR": 231,
+    "WTR": 815,
+    "NTR": 230,
     "MTP": 224,
-    "CoC": 13,
-    "Total": 1278,
-    "Private_TVIs": 238,
-    "Private_Farm_School": 26,
+    "CoC": 11,
+    "Total": 1280,
+    "Private_TVIs": 239,
+    "Private_Farm_School": 27,
     "Enterprise": 20,
     "Private_HEIs": 7,
     "Public_LGU": 14,
     "Public_LUC": 3,
     "Public_SUC": null,
     "Public_TTI": 14,
-    "Public_Total": null
+    "Public_Total": 324
   }
 ]

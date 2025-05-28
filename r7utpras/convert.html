@@ -159,7 +159,7 @@
                     return;
                 }
 
-                const range = "B6:O10";
+                const range = "B6:P10";
                 const extractedData = XLSX.utils.sheet_to_json(sheet, { header: 1, range });
 
                 const jsonData = extractedData.map(row => ({
